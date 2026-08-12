@@ -1,0 +1,26 @@
+{
+  "name": "@dashboard/server",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@dashboard/common": "workspace:*",
+    "@dashboard/integrations": "workspace:*",
+    "@trpc/server": "catalog:",
+    "fastify": "catalog:",
+    "superjson": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@trpc/client": "catalog:",
+    "@types/node": "catalog:",
+    "dotenv": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  }
+}

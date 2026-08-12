@@ -1,0 +1,13 @@
+references/*
+
+# dependencies
+node_modules
+.pnpm-store/
+
+*.ignore.*
+*.test.*
+
+# environment
+.env
+.env.*
+!.env.example
