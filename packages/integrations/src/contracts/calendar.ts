@@ -1,11 +1,21 @@
 import { z } from "zod";
+import type { Integration } from "../base/integration";
 
 export interface ICalendarIntegration {
   getCalendarEventsAsync(
     start: Date,
     end: Date,
+    includeUnmonitored: boolean,
   ): Promise<CalendarEvent[]>;
 }
+
+
+const calendarCapability: keyof ICalendarIntegration = "getCalendarEventsAsync";
+
+export const supportsCalendar = (
+  integration: Integration,
+): integration is Integration & ICalendarIntegration =>
+  typeof (integration as Partial<ICalendarIntegration>)[calendarCapability] === "function";
 
 export const calendarImageBadgeSchema = z.object({
   content: z.string(),
@@ -81,17 +91,4 @@ export const calendarResultGroupSchema = z.object({
 
 export const calendarResultSchema = z.array(calendarResultGroupSchema);
 
-export type CalendarImageBadge = z.infer<typeof calendarImageBadgeSchema>;
-export type CalendarImage = z.infer<typeof calendarImageSchema>;
-export type CalendarLink = z.infer<typeof calendarLinkSchema>;
-export type CalendarEventMetadata = z.infer<
-  typeof calendarEventMetadataSchema
->;
 export type CalendarEvent = z.infer<typeof calendarEventSchema>;
-
-export interface ICalendarIntegration {
-  getCalendarEventsAsync(
-    start: Date,
-    end: Date,
-  ): Promise<CalendarEvent[]>;
-}

@@ -1,21 +1,13 @@
-import { SonarrIntegration } from "@dashboard/integrations";
-import { config } from "../config";
-import type { IntegrationRegistry } from "../trpc";
+import { Integration, SonarrIntegration } from "@dashboard/integrations";
+import { Config } from "../config";
 
-export const integrationRegistry: IntegrationRegistry = {
-    sonarr: config.integrations.sonarr.map(
-        (integration) => new SonarrIntegration({
-            kind: integration.kind,
-            id: integration.id,
-            name: integration.name,
-            url: integration.url,
-            port: integration.port,
-            decryptedSecrets: [
-                {
-                    kind: "apiKey",
-                    value: integration.apiKey
-                }
-            ]
-        })
-    )
-}
+export const createIntegrationRegistry = (appConfig: Config): Integration[] =>
+    appConfig.integrations.map((integration) => {
+        switch (integration.kind) {
+            case "sonarr": {
+                const { apiKey, ...rest } = integration;
+                return new SonarrIntegration({ ...rest, secrets: [{ kind: "apiKey", value: apiKey }] });
+            }
+
+        }
+    });

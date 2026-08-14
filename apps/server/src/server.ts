@@ -6,14 +6,10 @@ import {
 } from "@trpc/server/adapters/fastify";
 import { appRouter, type AppRouter } from "./index";
 import type { TRPCContext } from "./trpc";
-import { integrationRegistry } from "./bootstrap/integrations";
+import { createIntegrationRegistry } from "./bootstrap/integrations";
+import { Config } from "./config";
 
-export async function startServer(appConfig: {
-  server: {
-    host: string;
-    port: number;
-  };
-}) {
+export async function startServer(appConfig: Config) {
   const server = Fastify({
     logger: true,
     routerOptions: {
@@ -24,7 +20,7 @@ export async function startServer(appConfig: {
   const createContext = (
   _opts: CreateFastifyContextOptions,
 ): TRPCContext => ({
-  integrations: integrationRegistry,
+  integrations: createIntegrationRegistry(appConfig),
   logger: server.log,
 });
 

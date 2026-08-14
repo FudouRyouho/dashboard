@@ -1,9 +1,6 @@
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
-import type { SonarrIntegration } from "@dashboard/integrations";
-export interface IntegrationRegistry {
-  sonarr: SonarrIntegration[];
-}
+import type { Integration } from "@dashboard/integrations";
 
 export interface TRPCContext {
   integrations: IntegrationRegistry;
@@ -24,3 +21,5 @@ export interface AppLogger {
     message: string,
   ): void;
 }
+
+export type IntegrationRegistry = Integration[]

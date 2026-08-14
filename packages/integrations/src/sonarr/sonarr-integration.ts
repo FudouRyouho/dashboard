@@ -4,22 +4,32 @@ import type {
   ICalendarIntegration,
 } from "../contracts/calendar";
 import {
-    sonarrCalendarResponseSchema,
+    sonarrCalendarResponseSchema,imageCoverTypes, type SonarrImage, type SonarrCoverType
 } from "./schemas/sonarr-calendar";
+
+const aspectRatioByCoverType: Record<(SonarrCoverType), { width: number; height: number }> = {
+  poster: { width: 2, height: 3 },
+  banner: { width: 758, height: 140 },
+  fanart: { width: 16, height: 9 },
+  screenshot: { width: 16, height: 9 },
+  clearlogo: { width: 16, height: 9 },
+  headshot: { width: 1, height: 1 },
+  unknown: { width: 2, height: 3 },
+};
+
+const chooseBestImage = (images: SonarrImage[]): SonarrImage | undefined =>
+  [...images]
+    .filter((image) => image.remoteUrl)
+    .sort((a, b) => imageCoverTypes.indexOf(a.coverType) - imageCoverTypes.indexOf(b.coverType))[0];
+
 export class SonarrIntegration extends Integration
     implements ICalendarIntegration {
     private apiKey(): string {
         return this.getSecretValue("apiKey");
     }
 
-    private readonly DEFAULT_PORT = 8989;
-
     public async getSeries(): Promise<Array<{ id: number; title: string }>> {
-        const path = this.createUrl(
-            this.integration.url,
-            "/api/v3/series",
-            this.integration.port ?? this.DEFAULT_PORT
-        );
+        const path = this.url("/api/v3/series");
         const data = await this.fetchJson<any[]>(path, {
             headers: {
                 "X-Api-Key": this.apiKey(),
@@ -31,11 +41,12 @@ export class SonarrIntegration extends Integration
     async getCalendarEventsAsync(
         start: Date,
         end: Date,
+        includeUnmonitored = false,
     ): Promise<CalendarEvent[]> {
         const url = this.url("/api/v3/calendar", {
             start,
             end,
-            unmonitored: true,
+            unmonitored: includeUnmonitored,
             includeSeries: true,
             includeEpisodeFile: true,
             includeEpisodeImages: true,
@@ -50,8 +61,8 @@ export class SonarrIntegration extends Integration
         const data = sonarrCalendarResponseSchema.parse(rawData);
 
         return data.map((episode) => {
-            const imageUrl =
-                episode.series.images[0]?.remoteUrl ?? null;
+            const bestImage =
+                chooseBestImage([...episode.images, ...episode.series.images])
 
             return {
                 id: `${this.integration.id}:episode:${episode.id}`,
@@ -63,13 +74,10 @@ export class SonarrIntegration extends Integration
                 startDate: episode.airDateUtc.toISOString(),
                 endDate: null,
 
-                image: imageUrl
+                image: bestImage?.remoteUrl
                     ? {
-                        src: imageUrl,
-                        aspectRatio: {
-                            width: 7,
-                            height: 12,
-                        },
+                        src: bestImage.remoteUrl,
+                        aspectRatio: aspectRatioByCoverType[bestImage.coverType],
                         badge: {
                             content: `S${episode.seasonNumber}/E${episode.episodeNumber}`,
                             color: "red",
@@ -91,7 +99,7 @@ export class SonarrIntegration extends Integration
                 links: [
                     {
                         name: "Sonarr",
-                        href: this.url(
+                        href: this.externalUrl(
                             `/series/${episode.series.titleSlug}`,
                         ),
                         isDark: true,

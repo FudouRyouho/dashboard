@@ -3,12 +3,14 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import {
   calendarResultSchema,
+  supportsCalendar,
 } from "@dashboard/integrations";
 
 const calendarRangeInput = z
   .object({
     start: z.coerce.date(),
     end: z.coerce.date(),
+    includeUnmonitored: z.boolean().default(false),
   })
   .refine(
     ({ start, end }) => start < end,
@@ -23,7 +25,7 @@ export const calendarRouter = createTRPCRouter({
     .input(calendarRangeInput)
     .output(calendarResultSchema)
     .query(async ({ ctx, input }) => {
-      const integrations = ctx.integrations.sonarr;
+      const integrations = ctx.integrations.filter(supportsCalendar);
 
       const settled = await Promise.allSettled(
         integrations.map(async (integration) => ({
@@ -31,6 +33,7 @@ export const calendarRouter = createTRPCRouter({
           events: await integration.getCalendarEventsAsync(
             input.start,
             input.end,
+            input.includeUnmonitored,
           ),
         })),
       );
