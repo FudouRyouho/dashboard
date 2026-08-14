@@ -1,3 +1,3 @@
- export * from "./sonarr/sonarr-integration";
- export * from "./contracts/calendar";
- export * from "./base/integration";
+export * from './sonarr/sonarr-integration';
+export * from './contracts/calendar';
+export * from './base/integration';

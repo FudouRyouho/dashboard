@@ -1,5 +1,5 @@
-import { z } from "zod";
-import type { Integration } from "../base/integration";
+import { z } from 'zod';
+import type { Integration } from '../base/integration';
 
 export interface ICalendarIntegration {
   getCalendarEventsAsync(
@@ -9,13 +9,13 @@ export interface ICalendarIntegration {
   ): Promise<CalendarEvent[]>;
 }
 
-
-const calendarCapability: keyof ICalendarIntegration = "getCalendarEventsAsync";
+const calendarCapability: keyof ICalendarIntegration = 'getCalendarEventsAsync';
 
 export const supportsCalendar = (
   integration: Integration,
-): integration is Integration & ICalendarIntegration =>
-  typeof (integration as Partial<ICalendarIntegration>)[calendarCapability] === "function";
+): integration is ICalendarIntegration & Integration =>
+  typeof (integration as Partial<ICalendarIntegration>)[calendarCapability] ===
+  'function';
 
 export const calendarImageBadgeSchema = z.object({
   content: z.string(),
@@ -41,22 +41,22 @@ export const calendarLinkSchema = z.object({
   isDark: z.boolean().optional(),
 });
 
-export const calendarEventMetadataSchema = z.discriminatedUnion("type", [
+export const calendarEventMetadataSchema = z.discriminatedUnion('type', [
   z.object({
-    type: z.literal("episode"),
+    type: z.literal('episode'),
     seriesId: z.number(),
     seasonNumber: z.number(),
     episodeNumber: z.number(),
   }),
 
   z.object({
-    type: z.literal("movie"),
+    type: z.literal('movie'),
     movieId: z.number(),
     releaseType: z.string(),
   }),
 
   z.object({
-    type: z.literal("other"),
+    type: z.literal('other'),
   }),
 ]);
 

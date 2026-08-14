@@ -1,6 +1,6 @@
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
-import type { Integration } from "@dashboard/integrations";
+import { initTRPC } from '@trpc/server';
+import superjson from 'superjson';
+import type { Integration } from '@dashboard/integrations';
 
 export interface TRPCContext {
   integrations: IntegrationRegistry;
@@ -16,10 +16,7 @@ export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
 
 export interface AppLogger {
-  warn(
-    bindings: Record<string, unknown>,
-    message: string,
-  ): void;
+  warn(bindings: Record<string, unknown>, message: string): void;
 }
 
-export type IntegrationRegistry = Integration[]
+export type IntegrationRegistry = Integration[];

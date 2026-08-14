@@ -1,13 +1,13 @@
-import Fastify from "fastify";
+import Fastify from 'fastify';
 import {
   fastifyTRPCPlugin,
   type CreateFastifyContextOptions,
   type FastifyTRPCPluginOptions,
-} from "@trpc/server/adapters/fastify";
-import { appRouter, type AppRouter } from "./index";
-import type { TRPCContext } from "./trpc";
-import { createIntegrationRegistry } from "./bootstrap/integrations";
-import { Config } from "./config";
+} from '@trpc/server/adapters/fastify';
+import { appRouter, type AppRouter } from './index';
+import type { TRPCContext } from './trpc';
+import { createIntegrationRegistry } from './bootstrap/integrations';
+import type { Config } from './config';
 
 export async function startServer(appConfig: Config) {
   const server = Fastify({
@@ -17,19 +17,17 @@ export async function startServer(appConfig: Config) {
     },
   });
 
-  const createContext = (
-  _opts: CreateFastifyContextOptions,
-): TRPCContext => ({
-  integrations: createIntegrationRegistry(appConfig),
-  logger: server.log,
-});
+  const createContext = (_opts: CreateFastifyContextOptions): TRPCContext => ({
+    integrations: createIntegrationRegistry(appConfig),
+    logger: server.log,
+  });
 
-  server.get("/health", async () => ({
-    status: "ok",
+  server.get('/health', () => ({
+    status: 'ok',
   }));
 
   server.register(fastifyTRPCPlugin, {
-    prefix: "/trpc",
+    prefix: '/trpc',
     trpcOptions: {
       router: appRouter,
       createContext,
@@ -41,10 +39,10 @@ export async function startServer(appConfig: Config) {
             type,
             error,
           },
-          "tRPC request failed",
+          'tRPC request failed',
         );
       },
-    } satisfies FastifyTRPCPluginOptions<AppRouter>["trpcOptions"],
+    } satisfies FastifyTRPCPluginOptions<AppRouter>['trpcOptions'],
   });
 
   await server.listen({

@@ -1,10 +1,10 @@
-import { createTRPCRouter, publicProcedure } from "../trpc";
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
+import { createTRPCRouter, publicProcedure } from '../trpc';
+import { z } from 'zod';
+import { TRPCError } from '@trpc/server';
 import {
   calendarResultSchema,
   supportsCalendar,
-} from "@dashboard/integrations";
+} from '@dashboard/integrations';
 
 const calendarRangeInput = z
   .object({
@@ -12,13 +12,10 @@ const calendarRangeInput = z
     end: z.coerce.date(),
     includeUnmonitored: z.boolean().default(false),
   })
-  .refine(
-    ({ start, end }) => start < end,
-    {
-      path: ["end"],
-      message: "The calendar end date must be after the start date.",
-    },
-  );
+  .refine(({ start, end }) => start < end, {
+    path: ['end'],
+    message: 'The calendar end date must be after the start date.',
+  });
 
 export const calendarRouter = createTRPCRouter({
   getEvents: publicProcedure
@@ -39,25 +36,28 @@ export const calendarRouter = createTRPCRouter({
       );
 
       settled.forEach((result, index) => {
-        if (result.status === "fulfilled") {
+        if (result.status === 'fulfilled') {
           return;
         }
 
         const integration = integrations[index];
+        if (!integration) {
+          return;
+        }
 
         ctx.logger.warn(
           {
             err: result.reason,
-            operation: "calendar.getEvents",
+            operation: 'calendar.getEvents',
             integrationId: integration.publicIntegration.id,
             integrationKind: integration.publicIntegration.kind,
           },
-          "Calendar integration request failed",
+          'Calendar integration request failed',
         );
       });
 
       const groups = settled.flatMap((result) => {
-        if (result.status === "rejected") {
+        if (result.status === 'rejected') {
           return [];
         }
 
@@ -71,8 +71,8 @@ export const calendarRouter = createTRPCRouter({
 
       if (integrations.length > 0 && groups.length === 0) {
         throw new TRPCError({
-          code: "SERVICE_UNAVAILABLE",
-          message: "No calendar integrations are currently available.",
+          code: 'SERVICE_UNAVAILABLE',
+          message: 'No calendar integrations are currently available.',
         });
       }
 
