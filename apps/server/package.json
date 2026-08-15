@@ -6,7 +6,8 @@
   "main": "src/main.ts",
   "scripts": {
     "dev": "tsx watch src/main.ts",
-    "start": "tsx src/main.ts"
+    "start": "tsx src/main.ts",
+    "smoke": "tsx src/scripts/trpc-error-smoke.test.ts"
   },
   "dependencies": {
     "@dashboard/common": "workspace:*",

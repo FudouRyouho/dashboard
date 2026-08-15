@@ -6,6 +6,7 @@ node_modules
 
 *.ignore.*
 *.test.*
+!**/scripts/*
 
 # environment
 .env
