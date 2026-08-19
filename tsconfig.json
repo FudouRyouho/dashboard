@@ -16,5 +16,6 @@
     "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["packages/**/*", "apps/**/*"]
+  "include": ["packages/**/*", "apps/**/*"],
+  "exclude": ["apps/clients/**"]
 }

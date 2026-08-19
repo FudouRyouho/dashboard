@@ -1,7 +1,7 @@
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
-export default tseslint.config(
+export const baseConfig = tseslint.config(
   {
     ignores: [
       '**/node_modules/**',
@@ -12,7 +12,7 @@ export default tseslint.config(
   },
   ...tseslint.configs.recommendedTypeChecked,
   {
-    files: ['**/*.ts'],
+    files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parserOptions: {
         projectService: true,
