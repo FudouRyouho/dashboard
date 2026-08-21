@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { Integration } from '../base/integration';
+import { integrationKinds } from '@dashboard/definitions';
 
 export interface ICalendarIntegration {
   getCalendarEventsAsync(
@@ -78,7 +79,7 @@ export const calendarEventSchema = z.object({
 });
 
 export const calendarIntegrationSchema = z.object({
-  kind: z.string(),
+  kind: z.enum(integrationKinds),
   id: z.string(),
   name: z.string(),
   url: z.string(),
