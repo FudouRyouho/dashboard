@@ -175,6 +175,9 @@ importers:
       '@dashboard/common':
         specifier: workspace:*
         version: link:../common
+      '@dashboard/definitions':
+        specifier: workspace:*
+        version: link:../definitions
       zod:
         specifier: 'catalog:'
         version: 3.25.76
