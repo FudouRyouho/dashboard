@@ -38,7 +38,6 @@ export const config = configSchema.parse({
       apiKey: process.env.SONARR_APIKEY,
     },
   ],
-
 });
 
 export type Config = z.infer<typeof configSchema>;
