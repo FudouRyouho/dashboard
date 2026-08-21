@@ -1,8 +1,8 @@
 import { AppShell } from "@mantine/core";
-import { Header } from "./shell/header/header";
+import { Header } from "./shell/header/Header";
+import { MainBody } from "./shell/MainBody";
 
 function App() {
-
   return (
     <AppShell
       padding="sm"
@@ -11,7 +11,7 @@ function App() {
       <AppShell.Header>
         <Header />
       </AppShell.Header>
-      <AppShell.Main>Main</AppShell.Main>
+      <AppShell.Main><MainBody /></AppShell.Main>
     </AppShell>
   );
 }
