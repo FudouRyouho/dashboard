@@ -1,7 +1,9 @@
 import { removeTrailingSlash } from '@dashboard/common';
+import { IntegrationKind } from '@dashboard/definitions';
+import { IntegrationError } from './integration-error';
 
 export interface IntegrationInput {
-  kind: string;
+  kind: IntegrationKind;
   id: string;
   name: string;
   url: string;
@@ -73,9 +75,7 @@ export abstract class Integration {
         : timeoutSignal,
     });
     if (!res.ok) {
-      throw new Error(
-        `Integration request failed with HTTP ${res.status} ${res.statusText}`,
-      );
+      throw IntegrationError.fromHttpResponse(res.status, res.statusText);
     }
     return (await res.json()) as T;
   }
