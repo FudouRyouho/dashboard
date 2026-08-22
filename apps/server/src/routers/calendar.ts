@@ -1,10 +1,10 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import { TRPCError } from '@trpc/server';
 import {
   calendarResultSchema,
   supportsCalendar,
 } from '@dashboard/integrations';
+import { getCalendarCached } from '../cache/cached-integration-call';
 
 const calendarRangeInput = z
   .object({
@@ -24,58 +24,26 @@ export const calendarRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const integrations = ctx.integrations.filter(supportsCalendar);
 
-      const settled = await Promise.allSettled(
-        integrations.map(async (integration) => ({
-          integration,
-          events: await integration.getCalendarEventsAsync(
+      return await Promise.all(
+        integrations.map(async (integration) => {
+          const result = await getCalendarCached(
+            ctx.cache,
+            integration,
             input.start,
             input.end,
             input.includeUnmonitored,
-          ),
-        })),
+            ctx.logger,
+          );
+
+          return {
+            integration: integration.publicIntegration,
+            status: {
+              ...result.status,
+              updatedAt: result.status.updatedAt?.toISOString() ?? null,
+            },
+            events: result.events,
+          };
+        }),
       );
-
-      settled.forEach((result, index) => {
-        if (result.status === 'fulfilled') {
-          return;
-        }
-
-        const integration = integrations[index];
-        if (!integration) {
-          return;
-        }
-
-        ctx.logger.warn(
-          {
-            err: result.reason,
-            operation: 'calendar.getEvents',
-            integrationId: integration.publicIntegration.id,
-            integrationKind: integration.publicIntegration.kind,
-          },
-          'Calendar integration request failed',
-        );
-      });
-
-      const groups = settled.flatMap((result) => {
-        if (result.status === 'rejected') {
-          return [];
-        }
-
-        return [
-          {
-            integration: result.value.integration.publicIntegration,
-            events: result.value.events,
-          },
-        ];
-      });
-
-      if (integrations.length > 0 && groups.length === 0) {
-        throw new TRPCError({
-          code: 'SERVICE_UNAVAILABLE',
-          message: 'No calendar integrations are currently available.',
-        });
-      }
-
-      return groups;
     }),
 });
