@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { Integration } from '../base/integration';
 import { integrationKinds } from '@dashboard/definitions';
+import { withResultStatus } from './result';
 
 export interface ICalendarIntegration {
   getCalendarEventsAsync(
@@ -85,10 +86,12 @@ export const calendarIntegrationSchema = z.object({
   url: z.string(),
 });
 
-export const calendarResultGroupSchema = z.object({
-  integration: calendarIntegrationSchema,
-  events: z.array(calendarEventSchema),
-});
+export const calendarResultGroupSchema = withResultStatus(
+  z.object({
+    integration: calendarIntegrationSchema,
+    events: z.array(calendarEventSchema),
+  }),
+);
 
 export const calendarResultSchema = z.array(calendarResultGroupSchema);
 
