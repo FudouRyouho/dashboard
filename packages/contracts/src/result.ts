@@ -1,5 +1,14 @@
 import { z } from 'zod';
-import { integrationErrorReasons } from '../base/integration-error';
+
+export const integrationErrorReasons = [
+  'unauthorized',
+  'unreachable',
+  'timeout',
+  'invalid-response',
+  'unknown',
+] as const;
+
+export type IntegrationErrorReason = (typeof integrationErrorReasons)[number];
 
 export const resultCodeSchema = z.enum(['ok', 'stale', 'failed']);
 

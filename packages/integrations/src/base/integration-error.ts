@@ -1,14 +1,5 @@
+import { IntegrationErrorReason } from '@dashboard/contracts';
 import { z } from 'zod';
-
-export const integrationErrorReasons = [
-  'unauthorized',
-  'unreachable',
-  'timeout',
-  'invalid-response',
-  'unknown',
-] as const;
-
-export type IntegrationErrorReason = (typeof integrationErrorReasons)[number];
 
 export class IntegrationError extends Error {
   constructor(

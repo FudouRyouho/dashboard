@@ -1,10 +1,8 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import {
-  calendarResultSchema,
-  supportsCalendar,
-} from '@dashboard/integrations';
+import { calendarResultSchema } from '@dashboard/contracts';
 import { getCalendarCached } from '../cache/cached-integration-call';
+import { supportsCalendar } from '@dashboard/integrations';
 
 const calendarRangeInput = z
   .object({

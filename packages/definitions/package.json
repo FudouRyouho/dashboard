@@ -8,6 +8,9 @@
   "scripts": {
     "build:icons": "tsx scripts/build-icons.ts"
   },
+  "dependencies": {
+    "@dashboard/contracts": "workspace:*"
+  },
   "devDependencies": {
     "tsx": "catalog:",
     "typescript": "catalog:"

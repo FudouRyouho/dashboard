@@ -1,11 +1,10 @@
 import type { CacheStore } from '@dashboard/common';
 import {
   classifyIntegrationError,
-  type CalendarEvent,
   type ICalendarIntegration,
   type Integration,
-  type ResultStatus,
 } from '@dashboard/integrations';
+import { ResultStatus, type CalendarEvent } from '@dashboard/contracts';
 
 const TTL_MS = 60_000;
 

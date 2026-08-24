@@ -1,5 +1,5 @@
 import { removeTrailingSlash } from '@dashboard/common';
-import { IntegrationKind } from '@dashboard/definitions';
+import { IntegrationKind } from '@dashboard/contracts';
 import { IntegrationError } from './integration-error';
 
 export interface IntegrationInput {

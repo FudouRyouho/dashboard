@@ -3,13 +3,12 @@ import assert from 'node:assert/strict';
 import type { CacheEntry, CacheStore } from '@dashboard/common';
 import { z } from 'zod';
 import {
+  ICalendarIntegration,
   Integration,
   IntegrationError,
-  type CalendarEvent,
-  type ICalendarIntegration,
 } from '@dashboard/integrations';
 import { getCalendarCached } from './cached-integration-call';
-
+import { type CalendarEvent } from '@dashboard/contracts';
 const evento = (id: string): CalendarEvent => ({
   id,
   title: `Episodio ${id}`,
@@ -37,7 +36,8 @@ const createFakeStore = (seed?: CacheEntry<CalendarEvent[]>) => {
 
 class FakeCalendarIntegration
   extends Integration
-  implements ICalendarIntegration {
+  implements ICalendarIntegration
+{
   public llamadas = 0;
   public debeFallar = false;
   /** Error concreto a lanzar; por defecto uno genérico. */
@@ -65,7 +65,10 @@ class FakeCalendarIntegration
 const createFakeLogger = () => {
   const warnings: string[] = [];
   return {
-    logger: { warn: (_obj: Record<string, unknown>, msg: string) => void warnings.push(msg) },
+    logger: {
+      warn: (_obj: Record<string, unknown>, msg: string) =>
+        void warnings.push(msg),
+    },
     warnings,
   };
 };
@@ -74,7 +77,6 @@ const start = new Date('2026-08-01T00:00:00.000Z');
 const end = new Date('2026-08-31T00:00:00.000Z');
 
 const hace = (ms: number) => new Date(Date.now() - ms);
-
 
 test('1. sin caché + integración responde → ok, guarda el dato', async () => {
   const { store, current } = createFakeStore();
@@ -158,7 +160,11 @@ test('4. caché vencido + integración caída → stale con el dato viejo', asyn
 
   assert.equal(result.status.code, 'stale');
   assert.equal(result.events[0]?.id, 'viejo', 'devuelve el último dato bueno');
-  assert.deepEqual(result.status.updatedAt, updatedAt, 'updatedAt es el del dato viejo');
+  assert.deepEqual(
+    result.status.updatedAt,
+    updatedAt,
+    'updatedAt es el del dato viejo',
+  );
   assert.equal(warnings.length, 1, 'debe loguear el fallo');
 });
 
@@ -207,7 +213,12 @@ const errorDeRed = (code: string) => {
   return err;
 };
 
-const casos: { nombre: string; error: unknown; reason: string; httpStatus?: number }[] = [
+const casos: {
+  nombre: string;
+  error: unknown;
+  reason: string;
+  httpStatus?: number;
+}[] = [
   {
     nombre: 'API key rechazada (401)',
     error: IntegrationError.fromHttpResponse(401, 'Unauthorized'),
@@ -238,9 +249,12 @@ const casos: { nombre: string; error: unknown; reason: string; httpStatus?: numb
   },
   {
     nombre: 'timeout del AbortSignal',
-    error: Object.assign(new Error('The operation was aborted due to timeout'), {
-      name: 'TimeoutError',
-    }),
+    error: Object.assign(
+      new Error('The operation was aborted due to timeout'),
+      {
+        name: 'TimeoutError',
+      },
+    ),
     reason: 'timeout',
   },
   {
@@ -283,10 +297,21 @@ test('8. un stale también informa por qué falló el refresco', async () => {
   integration.error = IntegrationError.fromHttpResponse(401, 'Unauthorized');
   const { logger } = createFakeLogger();
 
-  const result = await getCalendarCached(store, integration, start, end, false, logger);
+  const result = await getCalendarCached(
+    store,
+    integration,
+    start,
+    end,
+    false,
+    logger,
+  );
 
   assert.equal(result.status.code, 'stale');
-  assert.equal(result.status.reason, 'unauthorized', 'no es lo mismo caído que sin permiso');
+  assert.equal(
+    result.status.reason,
+    'unauthorized',
+    'no es lo mismo caído que sin permiso',
+  );
   assert.equal(result.status.httpStatus, 401);
   assert.equal(result.events[0]?.id, 'viejo');
 });
@@ -296,7 +321,14 @@ test('9. un ok no lleva reason ni httpStatus', async () => {
   const integration = new FakeCalendarIntegration();
   const { logger } = createFakeLogger();
 
-  const result = await getCalendarCached(store, integration, start, end, false, logger);
+  const result = await getCalendarCached(
+    store,
+    integration,
+    start,
+    end,
+    false,
+    logger,
+  );
 
   assert.equal(result.status.code, 'ok');
   assert.equal(result.status.reason, undefined);

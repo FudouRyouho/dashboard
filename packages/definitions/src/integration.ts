@@ -1,3 +1,4 @@
+import { IntegrationKind } from '@dashboard/contracts';
 import { iconDataUris } from './icons.generated';
 
 interface IntegrationDef {
@@ -9,15 +10,8 @@ export const integrationDefs = {
   sonarr: {
     name: 'Sonarr',
     iconUrl: iconDataUris.sonarr,
-  },
-} as const satisfies Record<string, IntegrationDef>;
-
-export type IntegrationKind = keyof typeof integrationDefs;
-
-export const integrationKinds = Object.keys(integrationDefs) as [
-  IntegrationKind,
-  ...IntegrationKind[],
-];
+  }
+} as const satisfies Record<IntegrationKind, IntegrationDef>;
 
 export const getIconUrl = (kind: IntegrationKind): string =>
   integrationDefs[kind].iconUrl;

@@ -3,7 +3,7 @@ import superjson from 'superjson';
 import type { AppRouter } from '..';
 import 'dotenv/config';
 
-const port = Number(process.env.DASHBOARD_SERVER_PORT || 3000);
+const port = Number(process.env.DASHBOARD_SERVER_PORT || 3050);
 
 const trpc = createTRPCClient<AppRouter>({
   links: [

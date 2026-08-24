@@ -1,57 +1,16 @@
+import { type CalendarEvent } from '@dashboard/contracts';
 import { Integration } from '../base/integration';
-import type {
-  CalendarEvent,
-  ICalendarIntegration,
-} from '../contracts/calendar';
-import {
-  sonarrCalendarResponseSchema,
-  imageCoverTypes,
-  type SonarrImage,
-  type SonarrCoverType,
-} from './schemas/sonarr-calendar';
-import { sonarrSeriesListResponseSchema } from './schemas/sonarr-series';
-
-const aspectRatioByCoverType: Record<
-  SonarrCoverType,
-  { width: number; height: number }
-> = {
-  poster: { width: 2, height: 3 },
-  banner: { width: 758, height: 140 },
-  fanart: { width: 16, height: 9 },
-  screenshot: { width: 16, height: 9 },
-  clearlogo: { width: 16, height: 9 },
-  headshot: { width: 1, height: 1 },
-  unknown: { width: 2, height: 3 },
-};
-
-const chooseBestImage = (images: SonarrImage[]): SonarrImage | undefined =>
-  [...images]
-    .filter((image) => image.remoteUrl)
-    .sort(
-      (a, b) =>
-        imageCoverTypes.indexOf(a.coverType) -
-        imageCoverTypes.indexOf(b.coverType),
-    )[0];
+import { aspectRatioByCoverType, chooseBestImage } from '../image';
+import { sonarrCalendarResponseSchema } from './schemas/sonarr-calendar';
+import { ICalendarIntegration } from '../base/calendar';
 
 export class SonarrIntegration
   extends Integration
-  implements ICalendarIntegration
-{
-  public async getSeries(): Promise<{ id: number; title: string }[]> {
-    const path = this.url('/api/v3/series');
-    const rawData = await this.fetchJson<unknown>(path, {
-      headers: {
-        'X-Api-Key': this.apiKey(),
-      },
-    });
-    const data = sonarrSeriesListResponseSchema.parse(rawData);
-    return data.map((s) => ({ id: s.id, title: s.title }));
-  }
-
+  implements ICalendarIntegration {
   async getCalendarEventsAsync(
     start: Date,
     end: Date,
-    includeUnmonitored = false,
+    includeUnmonitored: boolean,
   ): Promise<CalendarEvent[]> {
     const url = this.url('/api/v3/calendar', {
       start,
@@ -70,56 +29,44 @@ export class SonarrIntegration
 
     const data = sonarrCalendarResponseSchema.parse(rawData);
 
-    return data.map((episode) => {
+    return data.map((event) => {
       const bestImage = chooseBestImage([
-        ...episode.images,
-        ...episode.series.images,
+        ...event.images,
+        ...event.series.images,
       ]);
-
       return {
-        id: `${this.integration.id}:episode:${episode.id}`,
-
-        title: episode.title,
-        subtitle: episode.series.title,
-        description: episode.series.overview ?? null,
-
-        startDate: episode.airDateUtc.toISOString(),
+        id: `${this.integration.id}:episode:${event.id}`,
+        title: event.title,
+        subtitle: event.series.title,
+        description: event.series.overview ?? null,
+        startDate: event.airDateUtc.toISOString(),
         endDate: null,
-
         image: bestImage?.remoteUrl
           ? {
-              src: bestImage.remoteUrl,
-              aspectRatio: aspectRatioByCoverType[bestImage.coverType],
-              badge: {
-                content: `S${episode.seasonNumber}/E${episode.episodeNumber}`,
-                color: 'red',
-              },
-            }
+            src: bestImage.remoteUrl,
+            aspectRatio: aspectRatioByCoverType[bestImage.coverType],
+            badge: {
+              content: `S${event.seasonNumber}/E${event.episodeNumber}`,
+              color: 'red',
+            },
+          }
           : null,
-
         location: null,
-
         metadata: {
           type: 'episode',
-          seriesId: episode.series.id,
-          seasonNumber: episode.seasonNumber,
-          episodeNumber: episode.episodeNumber,
+          seriesId: event.series.id,
+          seasonNumber: event.seasonNumber,
+          episodeNumber: event.episodeNumber,
         },
-
         indicatorColor: 'blue',
-
         links: [
           {
             name: 'Sonarr',
-            href: this.externalUrl(`/series/${episode.series.titleSlug}`),
+            href: this.externalUrl(`/series/${event.series.titleSlug}`),
             isDark: true,
           },
         ],
       };
     });
-  }
-
-  private apiKey(): string {
-    return this.getSecretValue('apiKey');
   }
 }
