@@ -10,7 +10,11 @@ export const integrationDefs = {
   sonarr: {
     name: 'Sonarr',
     iconUrl: iconDataUris.sonarr,
-  }
+  },
+  radarr: {
+    name: 'Radarr',
+    iconUrl: iconDataUris.radarr,
+  },
 } as const satisfies Record<IntegrationKind, IntegrationDef>;
 
 export const getIconUrl = (kind: IntegrationKind): string =>

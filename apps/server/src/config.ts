@@ -14,8 +14,15 @@ const sonarrConfigSchema = baseIntegrationSchema.extend({
   apiKey: z.string().min(1, 'SONARR_APIKEY es obligatorio'),
 });
 
+const radarrConfigSchema = baseIntegrationSchema.extend({
+  kind: z.literal('radarr'),
+  port: z.number().int().positive().default(7878),
+  apiKey: z.string().min(1, 'RADARR_APIKEY es obligatorio'),
+});
+
 const integrationConfigSchema = z.discriminatedUnion('kind', [
   sonarrConfigSchema,
+  radarrConfigSchema,
 ]);
 
 const configSchema = z.object({
@@ -26,7 +33,7 @@ const configSchema = z.object({
 export const config = configSchema.parse({
   server: {
     host: process.env.DASHBOARD_SERVER_HOST || '127.0.0.1',
-    port: Number(process.env.DASHBOARD_SERVER_PORT || 3000),
+    port: Number(process.env.DASHBOARD_SERVER_PORT || 3050),
   },
   integrations: [
     {
@@ -36,6 +43,14 @@ export const config = configSchema.parse({
       url: process.env.SERVER_2_URL || 'http://192.168.10.197',
       port: 8989,
       apiKey: process.env.SONARR_APIKEY,
+    },
+    {
+      kind: 'radarr',
+      id: 'radarr',
+      name: 'radarr',
+      url: process.env.SERVER_2_URL || 'http://192.168.10.197',
+      port: 7878,
+      apiKey: process.env.RADARR_APIKEY,
     },
   ],
 });

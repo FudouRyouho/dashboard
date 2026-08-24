@@ -1,5 +1,5 @@
 import type { Integration } from '@dashboard/integrations';
-import { SonarrIntegration } from '@dashboard/integrations';
+import { RadarrIntegration, SonarrIntegration } from '@dashboard/integrations';
 import type { Config } from '../config';
 
 export const createIntegrationRegistry = (appConfig: Config): Integration[] =>
@@ -8,6 +8,13 @@ export const createIntegrationRegistry = (appConfig: Config): Integration[] =>
       case 'sonarr': {
         const { apiKey, ...rest } = integration;
         return new SonarrIntegration({
+          ...rest,
+          secrets: [{ kind: 'apiKey', value: apiKey }],
+        });
+      }
+      case 'radarr': {
+        const { apiKey, ...rest } = integration;
+        return new RadarrIntegration({
           ...rest,
           secrets: [{ kind: 'apiKey', value: apiKey }],
         });
