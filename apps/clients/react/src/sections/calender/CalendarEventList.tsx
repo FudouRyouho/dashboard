@@ -1,4 +1,3 @@
-import { type CalendarEvent } from '@dashboard/integrations';
 import {
   Badge,
   Box,
@@ -14,6 +13,7 @@ import {
 } from '@mantine/core';
 import { IconPin } from '@tabler/icons-react';
 import { iconDataUris, type IconSlug } from '@dashboard/definitions';
+import { type CalendarEvent } from '@dashboard/contracts';
 
 export function CalendarEventList({ events }: { events: CalendarEvent[] }) {
   const { colorScheme } = useMantineColorScheme();

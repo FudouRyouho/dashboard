@@ -1,4 +1,4 @@
-import type { CalendarEvent } from '@dashboard/integrations';
+import type { CalendarEvent } from '@dashboard/contracts';
 
 export const calendarEvents: CalendarEvent[] = [
   {

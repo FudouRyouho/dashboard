@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Popover, Text } from '@mantine/core';
 import { CalendarEventList } from './CalendarEventList';
-import { type CalendarEvent } from '@dashboard/integrations';
 import { useDisclosure } from '@mantine/hooks';
+import { type CalendarEvent } from '@dashboard/contracts';
 
 interface CalendarDayProps {
   date: string;
@@ -87,7 +87,7 @@ function NotificationIndicator({ events }: NotificationIndicatorProps) {
       direction={'row'}
       justify={'center'}
     >
-      {notificationEvents.map((notificationEvent) => {
+      {notificationEvents.map((notificationEvent: string) => {
         return (
           <Box
             key={notificationEvent}

@@ -1,7 +1,7 @@
 import { Calendar } from '@mantine/dates';
 import { useMemo, useState } from 'react';
 import { CalenderDay } from './CalendarDay';
-import type { CalendarEvent } from '@dashboard/integrations';
+import { type CalendarEvent } from '@dashboard/contracts';
 
 export interface CalendarBaseProps {
   events: CalendarEvent[];
@@ -73,7 +73,7 @@ export const splitEvents = (events: CalendarEvent[]): CalendarEvent[] => {
       continue;
     }
     //eventos multiples dias
-    let currentStart = new Date(start);
+    const currentStart = new Date(start);
 
     while (currentStart.getTime() < end.getTime()) {
       //Final del dia
