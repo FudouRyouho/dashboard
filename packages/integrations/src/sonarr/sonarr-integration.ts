@@ -6,7 +6,8 @@ import { ICalendarIntegration } from '../base/calendar';
 
 export class SonarrIntegration
   extends Integration
-  implements ICalendarIntegration {
+  implements ICalendarIntegration
+{
   async getCalendarEventsAsync(
     start: Date,
     end: Date,
@@ -43,13 +44,13 @@ export class SonarrIntegration
         endDate: null,
         image: bestImage?.remoteUrl
           ? {
-            src: bestImage.remoteUrl,
-            aspectRatio: aspectRatioByCoverType[bestImage.coverType],
-            badge: {
-              content: `S${event.seasonNumber}/E${event.episodeNumber}`,
-              color: 'red',
-            },
-          }
+              src: bestImage.remoteUrl,
+              aspectRatio: aspectRatioByCoverType[bestImage.coverType],
+              badge: {
+                content: `S${event.seasonNumber}/E${event.episodeNumber}`,
+                color: 'red',
+              },
+            }
           : null,
         location: null,
         metadata: {

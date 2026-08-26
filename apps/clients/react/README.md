@@ -25,7 +25,7 @@ presentacional ya está escrita contra la forma definitiva de los datos.
   excluye `apps/clients/**`; este paquete corre el suyo. El `"exclude": []`
   no es cosmético: sin él hereda el exclude de la raíz y se excluye a sí mismo.
 - **`import type` vs import normal.** Un `import type` se borra al compilar y
-  Vite nunca lo ve. Si importás un *valor* de un paquete del workspace, tiene
+  Vite nunca lo ve. Si importás un _valor_ de un paquete del workspace, tiene
   que estar en `dependencies` o Vite no lo resuelve en runtime.
 - **Fechas.** `renderDay` de `@mantine/dates` entrega `"YYYY-MM-DD"` (string,
   no `Date`), y `new Date("YYYY-MM-DD")` parsea como **UTC**, no local. Es el

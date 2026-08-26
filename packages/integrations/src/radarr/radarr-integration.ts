@@ -1,12 +1,16 @@
 import { type CalendarEvent } from '@dashboard/contracts';
 import { Integration } from '../base/integration';
 import { aspectRatioByCoverType, chooseBestImage } from '../image';
-import { radarrCalendarResponseSchema, radarrReleaseTypes } from './schemas/radarr-calendar';
+import {
+  radarrCalendarResponseSchema,
+  radarrReleaseTypes,
+} from './schemas/radarr-calendar';
 import { ICalendarIntegration } from '../base/calendar';
 
 export class RadarrIntegration
   extends Integration
-  implements ICalendarIntegration {
+  implements ICalendarIntegration
+{
   async getCalendarEventsAsync(
     start: Date,
     end: Date,
@@ -33,40 +37,41 @@ export class RadarrIntegration
         const date = event[releaseType];
         if (!date) return [];
 
-        return [{
-          id: `${this.integration.id}:movie:${event.id}:${releaseType}`,
-          title: event.title,
-          subtitle: event.originalTitle,
-          description: event.overview ?? null,
-          startDate: date.toISOString(),
-          endDate: null,
-          image: bestImage?.remoteUrl
-            ? {
-              src: bestImage.remoteUrl,
-              aspectRatio: aspectRatioByCoverType[bestImage.coverType],
-              badge: {
-                content: `${event.id}`,
-                color: 'violet',
-              },
-            }
-            : null,
-          location: null,
-          metadata: {
-            type: 'movie',
-            movieId: event.id,
-            releaseType,
-          },
-          indicatorColor: 'yellow',
-          links: [
-            {
-              name: 'Radarr',
-              href: this.externalUrl(`/movie/${event.titleSlug}`),
-              isDark: false,
+        return [
+          {
+            id: `${this.integration.id}:movie:${event.id}:${releaseType}`,
+            title: event.title,
+            subtitle: event.originalTitle,
+            description: event.overview ?? null,
+            startDate: date.toISOString(),
+            endDate: null,
+            image: bestImage?.remoteUrl
+              ? {
+                  src: bestImage.remoteUrl,
+                  aspectRatio: aspectRatioByCoverType[bestImage.coverType],
+                  badge: {
+                    content: `${event.id}`,
+                    color: 'violet',
+                  },
+                }
+              : null,
+            location: null,
+            metadata: {
+              type: 'movie',
+              movieId: event.id,
+              releaseType,
             },
-          ],
-        }];
-
-      })
+            indicatorColor: 'yellow',
+            links: [
+              {
+                name: 'Radarr',
+                href: this.externalUrl(`/movie/${event.titleSlug}`),
+                isDark: false,
+              },
+            ],
+          },
+        ];
+      });
     });
   }
 }

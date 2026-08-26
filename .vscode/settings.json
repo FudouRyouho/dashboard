@@ -16,5 +16,8 @@
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features"
   },
-  "cSpell.words": ["reimplementación"]
+  "cSpell.words": ["reimplementación"],
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  }
 }

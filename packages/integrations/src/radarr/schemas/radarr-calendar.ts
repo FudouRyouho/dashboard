@@ -1,7 +1,11 @@
 import { z } from 'zod';
 import { ImageSchema } from '../../image';
 
-export const radarrReleaseTypes = ['inCinemas', 'physicalRelease', 'digitalRelease'] as const;
+export const radarrReleaseTypes = [
+  'inCinemas',
+  'physicalRelease',
+  'digitalRelease',
+] as const;
 
 export const radarrCalendarEventSchema = z
   .object({
