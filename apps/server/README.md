@@ -24,7 +24,7 @@ Necesita `apps/server/.env` (copiar de `.env.example`):
 
 ## Pegarle sin cliente
 
-    curl -sG http://127.0.0.1:3000/trpc/calendar.getEvents \
+    curl -sG http://127.0.0.1:3050/trpc/calendar.getEvents \
       --data-urlencode 'input={"json":{"start":"2026-08-01T00:00:00.000Z","end":"2026-08-31T00:00:00.000Z"}}' \
       | jq '.result.data.json'
 

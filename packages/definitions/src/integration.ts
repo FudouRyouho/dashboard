@@ -16,9 +16,3 @@ export const integrationDefs = {
     iconUrl: iconDataUris.radarr,
   },
 } as const satisfies Record<IntegrationKind, IntegrationDef>;
-
-export const getIconUrl = (kind: IntegrationKind): string =>
-  integrationDefs[kind].iconUrl;
-
-export const getIntegrationName = (kind: IntegrationKind): string =>
-  integrationDefs[kind].name;

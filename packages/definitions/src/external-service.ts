@@ -29,6 +29,3 @@ export const externalServiceDefs = {
 } as const satisfies Record<string, ExternalServiceDef>;
 
 export type ExternalServiceKind = keyof typeof externalServiceDefs;
-
-export const getExternalServiceIconUrl = (kind: ExternalServiceKind): string =>
-  externalServiceDefs[kind].iconUrl;

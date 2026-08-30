@@ -1,9 +1,3 @@
-/**
- * Genera `src/icons.generated.ts` embebiendo cada SVG de `icons/` como data URI.
- *
- * Correr después de agregar o modificar un SVG:
- *   pnpm --filter @dashboard/definitions build:icons
- */
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -24,9 +18,7 @@ const entries = readdirSync(iconsDir)
     return `  '${slug}': '${uri}',`;
   });
 
-const output = `// Fuente: packages/definitions/icons/*.svg
-
-export const iconDataUris = {
+const output = `export const iconDataUris = {
 ${entries.join('\n')}
 } as const satisfies Record<string, string>;
 
