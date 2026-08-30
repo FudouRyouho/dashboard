@@ -6,6 +6,7 @@ export interface ICalendarIntegration {
     start: Date,
     end: Date,
     includeUnmonitored: boolean,
+    options?: { signal?: AbortSignal },
   ): Promise<CalendarEvent[]>;
 }
 

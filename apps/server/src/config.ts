@@ -1,11 +1,29 @@
 import { z } from 'zod';
 
-const baseIntegrationSchema = z.object({
+const failurePolicySchema = z
+  .object({
+    maxAttempts: z.number().int().positive(),
+    cooldownMs: z.number().int().positive(),
+  })
+  .partial();
+
+const taskPolicySchema = z.object({
+  everyMs: z.number().int().positive().optional(),
+  runOnStart: z.boolean().optional(),
+  expectedDurationMs: z.number().int().positive().optional(),
+  failurePolicy: failurePolicySchema.optional(),
+});
+
+const connectionSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   url: z.string().url(),
   externalUrl: z.string().url().optional(),
   timeoutMs: z.number().int().positive().default(10_000),
+});
+
+const baseIntegrationSchema = connectionSchema.extend({
+  tasks: z.record(taskPolicySchema).default({}),
 });
 
 const sonarrConfigSchema = baseIntegrationSchema.extend({
@@ -27,7 +45,23 @@ const integrationConfigSchema = z.discriminatedUnion('kind', [
 
 const configSchema = z.object({
   server: z.object({ host: z.string(), port: z.number() }),
-  integrations: z.array(integrationConfigSchema),
+  integrations: z.array(integrationConfigSchema).superRefine((list, ctx) => {
+    const seen = new Set<string>();
+    list.forEach((integration, index) => {
+      if (!seen.has(integration.id)) {
+        seen.add(integration.id);
+        return;
+      }
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [index, 'id'],
+        message:
+          `El id "${integration.id}" está repetido. El id es la clave de ` +
+          `los timers, del contador de fallos y del almacén: dos ` +
+          `integraciones con el mismo id se pisan en silencio.`,
+      });
+    });
+  }),
 });
 
 export const config = configSchema.parse({

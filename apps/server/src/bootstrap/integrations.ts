@@ -1,23 +1,40 @@
-import type { Integration } from '@dashboard/integrations';
-import { RadarrIntegration, SonarrIntegration } from '@dashboard/integrations';
-import type { Config } from '../config';
+import {
+  Integration,
+  IntegrationInput,
+  RadarrIntegration,
+  SonarrIntegration,
+} from '@dashboard/integrations';
+import { Config } from '../config';
 
-export const createIntegrationRegistry = (appConfig: Config): Integration[] =>
-  appConfig.integrations.map((integration) => {
-    switch (integration.kind) {
-      case 'sonarr': {
-        const { apiKey, ...rest } = integration;
-        return new SonarrIntegration({
-          ...rest,
-          secrets: [{ kind: 'apiKey', value: apiKey }],
-        });
-      }
-      case 'radarr': {
-        const { apiKey, ...rest } = integration;
-        return new RadarrIntegration({
-          ...rest,
-          secrets: [{ kind: 'apiKey', value: apiKey }],
-        });
-      }
-    }
-  });
+type IntegrationConfig = Config['integrations'][number];
+
+export interface RegistryEntry {
+  integration: Integration;
+  config: IntegrationConfig;
+}
+
+const toInput = (config: IntegrationConfig): IntegrationInput => ({
+  kind: config.kind,
+  id: config.id,
+  name: config.name,
+  url: config.url,
+  port: config.port,
+  externalUrl: config.externalUrl,
+  timeoutMs: config.timeoutMs,
+  secrets: [{ kind: 'apiKey', value: config.apiKey }],
+});
+
+const instantiate = (config: IntegrationConfig): Integration => {
+  switch (config.kind) {
+    case 'sonarr':
+      return new SonarrIntegration(toInput(config));
+    case 'radarr':
+      return new RadarrIntegration(toInput(config));
+  }
+};
+
+export const createIntegrationRegistry = (appConfig: Config): RegistryEntry[] =>
+  appConfig.integrations.map((config) => ({
+    integration: instantiate(config),
+    config,
+  }));

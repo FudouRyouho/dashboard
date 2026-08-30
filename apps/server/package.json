@@ -14,6 +14,7 @@
     "@dashboard/common": "workspace:*",
     "@dashboard/integrations": "workspace:*",
     "@dashboard/contracts": "workspace:*",
+    "@dashboard/tasks": "workspace:*",
     "@trpc/server": "catalog:",
     "fastify": "catalog:",
     "superjson": "catalog:",

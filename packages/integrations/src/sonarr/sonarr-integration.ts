@@ -12,6 +12,7 @@ export class SonarrIntegration
     start: Date,
     end: Date,
     includeUnmonitored: boolean,
+    options?: { signal?: AbortSignal },
   ): Promise<CalendarEvent[]> {
     const url = this.url('/api/v3/calendar', {
       start,
@@ -23,9 +24,8 @@ export class SonarrIntegration
     });
 
     const rawData = await this.fetchJson<unknown>(url, {
-      headers: {
-        'X-Api-Key': this.getSecretValue('apiKey'),
-      },
+      headers: { 'X-Api-Key': this.getSecretValue('apiKey') },
+      signal: options?.signal,
     });
 
     const data = sonarrCalendarResponseSchema.parse(rawData);

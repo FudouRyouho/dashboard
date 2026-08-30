@@ -1,12 +1,14 @@
 import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import type { Integration } from '@dashboard/integrations';
-import { CacheStore } from '@dashboard/common';
+import { RunLog, SnapshotStore } from '@dashboard/tasks';
+import { IntegrationErrorReason } from '@dashboard/contracts';
 
 export interface TRPCContext {
-  integrations: IntegrationRegistry;
+  integrations: Integration[];
   logger: AppLogger;
-  cache: CacheStore;
+  store: SnapshotStore;
+  runLog: RunLog<IntegrationErrorReason>;
 }
 
 const t = initTRPC.context<TRPCContext>().create({
@@ -15,10 +17,7 @@ const t = initTRPC.context<TRPCContext>().create({
 
 export const publicProcedure = t.procedure;
 export const createTRPCRouter = t.router;
-export const createCallerFactory = t.createCallerFactory;
 
 export interface AppLogger {
   warn(bindings: Record<string, unknown>, message: string): void;
 }
-
-export type IntegrationRegistry = Integration[];

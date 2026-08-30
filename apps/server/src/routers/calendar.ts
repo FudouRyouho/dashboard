@@ -1,14 +1,14 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import { calendarResultSchema } from '@dashboard/contracts';
-import { getCalendarCached } from '../cache/cached-integration-call';
+import { calendarResultSchema, inRange } from '@dashboard/contracts';
 import { supportsCalendar } from '@dashboard/integrations';
+import { toStatus } from '../tasks/to-status';
+import { calendarSnapshot } from '../tasks/task-ids';
 
 const calendarRangeInput = z
   .object({
     start: z.coerce.date(),
     end: z.coerce.date(),
-    includeUnmonitored: z.boolean().default(false),
   })
   .refine(({ start, end }) => start < end, {
     path: ['end'],
@@ -19,29 +19,19 @@ export const calendarRouter = createTRPCRouter({
   getEvents: publicProcedure
     .input(calendarRangeInput)
     .output(calendarResultSchema)
-    .query(async ({ ctx, input }) => {
-      const integrations = ctx.integrations.filter(supportsCalendar);
+    .query(({ ctx, input }) => {
+      return ctx.integrations.filter(supportsCalendar).map((integration) => {
+        const key = calendarSnapshot(integration.publicIntegration.id);
+        const snapshot = ctx.store.get(key);
+        const lastRun = ctx.runLog.last(key.taskId);
 
-      return await Promise.all(
-        integrations.map(async (integration) => {
-          const result = await getCalendarCached(
-            ctx.cache,
-            integration,
-            input.start,
-            input.end,
-            input.includeUnmonitored,
-            ctx.logger,
-          );
-
-          return {
-            integration: integration.publicIntegration,
-            status: {
-              ...result.status,
-              updatedAt: result.status.updatedAt?.toISOString() ?? null,
-            },
-            events: result.events,
-          };
-        }),
-      );
+        return {
+          integration: integration.publicIntegration,
+          status: toStatus(snapshot, lastRun),
+          events: (snapshot?.data ?? []).filter(
+            inRange(input.start, input.end),
+          ),
+        };
+      });
     }),
 });
