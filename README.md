@@ -6,6 +6,7 @@ Este repositorio es un proyecto de estudio y aprendizaje para construir una API 
 - Integraciones externas normalizadas en TypeScript
 - Validación de respuestas con Zod
 - API real con `tRPC` y Fastify
+- Tareas programadas en segundo plano, desacopladas de las request
 - Agrupación de datos por integración y manejo de fallos parciales
 
 ## Enfoque
@@ -17,55 +18,75 @@ El proyecto no está pensado como un producto final, sino como una reimplementac
 - Inyecciones de dependencias estáticas al arranque
 - Routers organizados por capacidad (`calendar`, etc.)
 - Validación temprana y contratos claros
+- Tareas programadas con ultimo dato conocido, separando el concepto del **estado de la tarea** y el **estado del dato**
 
 ## Estado actual
 
-- Workspace `pnpm` configurado con `apps/server`, `packages/common`, `packages/integrations`, `packages/definitions` y `apps/clients/*`
+- Workspace `pnpm` con `apps/server`, `apps/clients/*` y cinco paquetes: `common`, `contracts`, `definitions`, `integrations` y `tasks`
+- `@dashboard/contracts` es la base: schemas de Zod y tipos que cruzan el límite servidor ↔ cliente. No depende de ningún otro paquete del workspace
 - `@dashboard/server` expone un router tRPC con:
   - `health`
-  - `calendar.getEvents`
+  - `calendar.getEvents` — devuelve el último snapshot en memoria más el estado de la última corrida; ya no llama a la integración dentro del request
+- `@dashboard/tasks` es el motor de tareas programadas: timers, techo de concurrencia, cancelación y cooldown tras fallos seguidos
 - `@dashboard/integrations` contiene:
-  - Sonarr integration
-  - Zod schemas para el calendario de Sonarr
+  - Sonarr y Radarr integration
+  - Zod schemas del calendario de cada una
+  - clasificación de errores a un motivo estable (`unauthorized`, `unreachable`, `timeout`, `invalid-response`, `unknown`)
 - `@dashboard/definitions` contiene:
   - definiciones de servicios externos
   - iconos generados para la UI (kind -> icon)
 - `apps/clients/react` contiene:
-  - el scaffold del dashboard
-  - el scaffold de sections para mostrar las integraciones (calender -> sonarr)
-  - mock data para la visualización y validación de la UI y el Schema tipado.
+  - el scaffold del dashboard y de las sections
+  - mock data para la visualización y validación de la UI y el Schema tipado
+  - un piloto desechable que ya consume `/trpc` real y muestra el estado del dato
 - Se usa `superjson` en tRPC para transporte de datos
-- Se valida la respuesta de Sonarr antes de mapearla al contrato de calendario
+- Se valida la respuesta de la integración antes de mapearla al contrato de calendario
+- Hay tests con `node:test` en `packages/contracts`, `packages/tasks` y `apps/server`
 
 ## Estructura
 
 - [`apps/server/`](apps/server/README.md)
-  - `src/config.ts`
-  - `src/bootstrap/integrations.ts`
+  - `src/config.ts` — configuración validada con Zod al arranque
+  - `src/bootstrap/integrations.ts` — instancia una integración por entrada de config
+  - `src/tasks/` — qué tarea se arma para cada integración y cómo se lee su resultado
   - `src/trpc.ts`
   - `src/routers/calendar.ts`
   - `src/index.ts`
 - [`apps/clients/*`](apps/clients/README.md)
   - [`apps/clients/react/`](apps/clients/react/README.md)
     - `mantine` como base de componentes, temas y paletas.
-- `packages/common/`
-  - helpers sin dominio utilizados por el `apps/server/` o `packages/integrations/`
-- `packages/integrations/`
-  - base de integraciones y contratos
-  - Sonarr integration
-- `packages/definitions/`
+- [`packages/contracts/`](packages/contracts/README.md)
+  - la forma de los datos: calendario, `ResultStatus`, kinds
+  - lectura derivada del estado (`dataViewOf`, `inRange`)
+- [`packages/tasks/`](packages/tasks/README.md)
+  - motor de tareas programadas, sin dominio: no sabe qué es una integración
+  - almacén de snapshots y bitácora de corridas
+- [`packages/integrations/`](packages/integrations/README.md)
+  - base de integraciones y capacidades
+  - Sonarr y Radarr integration
+- [`packages/definitions/`](packages/definitions/README.md)
   - catálogos del dominio (kind → nombre, ícono). Lo consumen `integrations` y los clientes
   - generación de assets a partir de `.svg` como data `URIs` embed en un `.ts` local sin dependencia del bundler o de una CDN
+- `packages/common/`
+  - helpers sin dominio utilizados por el `apps/server/` o `packages/integrations/`
 
 ## Próximos pasos
 
-- Extender el catálogo multimedia y enlaces externos
-- Evaluar episodios faltantes, cola, estado y búsqueda.
-- Probar múltiples instancias de una misma integración.
-- Añadir pruebas automatizadas de contratos y errores.
-- Evaluar caché y jobs en una etapa posterior.
-- Prototipar el contrato de la integration de Radarr.
-- Actualizar y extender `.env.example` en `apps/server/`
+- [x] Extender el catálogo multimedia y enlaces externos
+- [ ] Evaluar episodios faltantes, cola, estado y búsqueda.
+- [ ] Probar múltiples instancias de una misma integración.
+- [ ] Añadir pruebas automatizadas de contratos y errores.
+- [ ] Evaluar caché y jobs en una etapa posterior.
+- [x] Prototipar el contrato de la integration de Radarr.
+- [x] Actualizar y extender `.env.example` en `apps/server/`
+- [ ] Extender los tests de contrato y de errores.
+
+## Cruce de dependencias
+
+    contracts   ←  definitions, integrations, tasks(*), server, client-react
+    common      ←  integrations, server
+    tasks       ←  server
+    definitions ←  client-react
 
 ## Desarrollo
 
@@ -109,9 +130,16 @@ pnpm --filter @dashboard/definitions build:icons
 ```bash
 pnpm install
 pnpm typecheck
+pnpm test          # node:test sobre packages/*/src/**/*.test.ts y apps/server/src/**/*.test.ts
 pnpm lint
 pnpm format
+pnpm format:check
 ```
+
+> [!WARNING]
+> `pnpm test` barre también `apps/server/src/trpc-client.test.ts` y
+> `apps/server/src/scripts/trpc-error-smoke.test.ts`, que se llaman `.test.ts`
+> pero necesitan el server levantado. Sin `dev` corriendo, esos dos fallan.
 
 ## Notas
 
