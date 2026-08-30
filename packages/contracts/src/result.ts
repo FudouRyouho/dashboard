@@ -10,18 +10,24 @@ export const integrationErrorReasons = [
 
 export type IntegrationErrorReason = (typeof integrationErrorReasons)[number];
 
-export const resultCodeSchema = z.enum(['ok', 'stale', 'failed']);
+const isoDate = z.string().datetime({ offset: true });
 
-export type ResultCode = z.infer<typeof resultCodeSchema>;
+const dataFactsSchema = z.object({ obtainedAt: isoDate }).nullable();
+
+const attemptFactsSchema = z
+  .discriminatedUnion('outcome', [
+    z.object({ outcome: z.literal('success'), at: isoDate }),
+    z.object({
+      outcome: z.literal('failure'),
+      at: isoDate,
+      reason: z.enum(integrationErrorReasons),
+    }),
+  ])
+  .nullable();
 
 export const resultStatusSchema = z.object({
-  code: resultCodeSchema,
-
-  updatedAt: z.string().datetime({ offset: true }).nullable(),
-
-  reason: z.enum(integrationErrorReasons).optional(),
-
-  httpStatus: z.number().int().optional(),
+  data: dataFactsSchema,
+  attempt: attemptFactsSchema,
 });
 
 export type ResultStatus = z.infer<typeof resultStatusSchema>;
