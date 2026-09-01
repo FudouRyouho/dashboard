@@ -1,0 +1,4278 @@
+[
+  {
+    "Name": "Daemons of the Shadow Realm",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "3c439490c8eccafcea6a492ecef6c2b8",
+    "DateCreated": "2026-04-26T03:12:14.0000000Z",
+    "PremiereDate": "2026-04-04T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "In a remote mountain village under the watchful eyes of two stone guardians, the young Yuru contentedly lives off the land while staying close to the only family he has left—Asa, his precious twin sister. Asa, meanwhile, carries out a mysterious “duty” on behalf of the village while locked in a cage. Why is Asa a prisoner? And what other secrets does Yuru’s otherwise idyllic home hide?\n<br><br>(Source: Square Enix)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Adventure",
+      "Anime",
+      "Comedy",
+      "Fantasy"
+    ],
+    "CommunityRating": 7.8,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2026,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "bones film",
+        "Id": "50b480d570eecfe9a7d2d2f2ffec84b6"
+      },
+      {
+        "Name": "bones",
+        "Id": "4e4eb83739ab7c6a9fb46a0325ef7665"
+      },
+      {
+        "Name": "Aniplex",
+        "Id": "75c89475e1e4438ec256180ed6601b36"
+      },
+      {
+        "Name": "Square Enix",
+        "Id": "9b00804801045086336ed2045c5f725a"
+      },
+      {
+        "Name": "Gunma TV",
+        "Id": "8f4555e27f731297044af84e9053df75"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      },
+      {
+        "Name": "BS11",
+        "Id": "b4f4f707ccae7ade259e3fd914bdca03"
+      },
+      {
+        "Name": "Tochigi TV",
+        "Id": "b37cf754caa07a50ddcee84d5976fb85"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Adventure",
+        "Id": "51cec9645b896084d12b259acd05ccb1"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Comedy",
+        "Id": "08d31605d366d63a7a924f944b4417f1"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 4,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "452711",
+      "ItemId": "3c439490c8eccafcea6a492ecef6c2b8"
+    },
+    "ChildCount": 4,
+    "Status": "Continuing",
+    "AirTime": "23:30",
+    "AirDays": [
+      "Saturday"
+    ],
+    "ImageTags": {
+      "Banner": "7c2fedbebf0c05602a40f411a3451ab4",
+      "Primary": "f2013cab19cc1a1acebb45736c224b39",
+      "Logo": "cb3f4f16d0e943029f8e7dfbb60c84e3"
+    },
+    "BackdropImageTags": [
+      "4a16080999467959d97cad5fb6c6887d"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "4a16080999467959d97cad5fb6c6887d": "HtJ6[^bwVri^xW?F%M%1W-~BS5nzxXt5%0t7%0od"
+      },
+      "Banner": {
+        "7c2fedbebf0c05602a40f411a3451ab4": "HOBpbEo{M^%44:9Ds=W@RN.9acM_oiMxITxv%Mov"
+      },
+      "Primary": {
+        "f2013cab19cc1a1acebb45736c224b39": "dJE2O@M_JCkBPXaJxFoIMdoznfxak7V?NGXTjER4kEoz"
+      },
+      "Logo": {
+        "cb3f4f16d0e943029f8e7dfbb60c84e3": "OGR{#?t7_3xuRjt7-;~qofIUWBRjj[fQxuj[Rjayt7ofRj"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2026-07-25T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Episode 9",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "4cefb67964e2fd087c03051593994ee6",
+    "DateCreated": "2026-08-29T13:20:58.0754787Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2026-08-29T03:00:00.0000000Z",
+    "ChannelId": null,
+    "Overview": "La Primera División Especial captura a Jiro bajo las órdenes de Kusumi, pero no será un prisionero fácil.",
+    "Taglines": [],
+    "Genres": [],
+    "RunTimeTicks": 14250660000,
+    "ProductionYear": 2026,
+    "IndexNumber": 9,
+    "ParentIndexNumber": 1,
+    "IsFolder": false,
+    "Type": "Episode",
+    "Studios": [],
+    "GenreItems": [],
+    "ParentLogoItemId": "84add7ab9e3ea84e43b913225f89a495",
+    "ParentBackdropItemId": "84add7ab9e3ea84e43b913225f89a495",
+    "ParentBackdropImageTags": [
+      "610b27857b7aede0b898860362597107"
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "461194001009",
+      "ItemId": "4cefb67964e2fd087c03051593994ee6"
+    },
+    "ChildCount": 0,
+    "SeriesName": "BLACK TORCH",
+    "SeriesId": "84add7ab9e3ea84e43b913225f89a495",
+    "SeasonId": "4944341782fe918913dc34aa39882d35",
+    "SeriesPrimaryImageTag": "21b56c8865f1e932f0bec55d31c3484d",
+    "SeasonName": "Temporada 1",
+    "VideoType": "VideoFile",
+    "ImageTags": {
+      "Primary": "10ca85967363bdf49bf83a17143333b5"
+    },
+    "BackdropImageTags": [],
+    "ParentLogoImageTag": "80f4826577af8635279218281333ad18",
+    "ImageBlurHashes": {
+      "Primary": {
+        "10ca85967363bdf49bf83a17143333b5": "WC9tARayOtxuMyof02j@D*Rk--WBxtfQ-oj?bct6%Mj@WEofD*R+",
+        "21b56c8865f1e932f0bec55d31c3484d": "dtE_FbxatAbcz,nhNGNZ%3s:R}SfaKkCSjS2ogV@WBWU"
+      },
+      "Logo": {
+        "80f4826577af8635279218281333ad18": "O$G8_;WVofn%Rjt7n%Rjayayj[j[f6fQ00oLaeW;s;V@W;"
+      },
+      "Backdrop": {
+        "610b27857b7aede0b898860362597107": "HMBye1%7D$v}D~R.-N%W%2xyRpI[o#e,I-NWbWj:"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video"
+  },
+  {
+    "Name": "Re:ZERO -Starting Life in Another World-",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "e1ca8d0de2d8405fad6f02504d99ad96",
+    "DateCreated": "2025-11-23T06:23:29.0000000Z",
+    "PremiereDate": "2016-04-04T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "In the story, Subaru Natsuki is an ordinary high school student who is lost in an alternate world, where he is rescued by a beautiful, silver-haired girl. He stays near her to return the favor, but the destiny she is burdened with is more than Subaru can imagine. Enemies attack one by one, and both of them are killed. He then finds out he has the power to rewind death, back to the time he first came to this world. But only he remembers what has happened since.<br>\n<br>\n(Source: Anime News Network)\n<br><br>\n<i>Notes:<br>\n- The first episode aired with a runtime of ~50 minutes as opposed to the standard 25 minute long episode.<br>\n- In the Winter 2020 season, Re:ZERO was rebroadcast and re-edited to fit into an hour time-slot. This edit included the first OVA and added slight modifications to certain scenes throughout. It also added an additional scene at the end of the final episode.</i>",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Adventure",
+      "Anime",
+      "Drama",
+      "Fantasy"
+    ],
+    "CommunityRating": 8.1,
+    "RunTimeTicks": 15000000000,
+    "ProductionYear": 2016,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "WHITE FOX",
+        "Id": "93e2545fc6152c2e4904b407668d68c8"
+      },
+      {
+        "Name": "Funimation",
+        "Id": "f4c1a12acff5428a7b06dfc0a9a34f99"
+      },
+      {
+        "Name": "Kadokawa Shoten",
+        "Id": "ea5285539f770dddbf621d6a5b71c845"
+      },
+      {
+        "Name": "Media Factory",
+        "Id": "32ceae38afed8fee2b02e489806f8993"
+      },
+      {
+        "Name": "AT-X",
+        "Id": "8846d500e2ea8fab0f33f774bbd3dae8"
+      },
+      {
+        "Name": "TV Tokyo",
+        "Id": "b3430760e9da200059d3c4bfdb816587"
+      },
+      {
+        "Name": "Magic Capsule",
+        "Id": "9a4f1ee182b1d8d42d81afb7782e3f81"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Adventure",
+        "Id": "51cec9645b896084d12b259acd05ccb1"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 14,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "305089",
+      "ItemId": "e1ca8d0de2d8405fad6f02504d99ad96"
+    },
+    "ChildCount": 3,
+    "Status": "Ended",
+    "AirTime": "22:30",
+    "AirDays": [
+      "Wednesday"
+    ],
+    "ImageTags": {
+      "Banner": "85fb136bc219f539d0bd338c232baa1b",
+      "Logo": "4651e56b575bfa7b4952cc3b3866dc80",
+      "Primary": "e71715683cba4854c7f49ae9d26fb882"
+    },
+    "BackdropImageTags": [
+      "873341fac4903e29af7e65485b5127cf"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "873341fac4903e29af7e65485b5127cf": "H~PPi;t8N2xvIpV{WWxbRm~qWERkWERlbIRkogRk"
+      },
+      "Banner": {
+        "85fb136bc219f539d0bd338c232baa1b": "H~PZfOt9%N-pxtxvad%MR*~qogogt6t7xuRjj[j?"
+      },
+      "Logo": {
+        "4651e56b575bfa7b4952cc3b3866dc80": "OQGbxKohD*t7IUofRiM|%Mt8xvt7ayRj00Rit6WBxvofog"
+      },
+      "Primary": {
+        "e71715683cba4854c7f49ae9d26fb882": "dOK+~O~X,]wO?dx^f+NIrVJ6Z}NFspf$slNFM_k9S~oy"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2016-09-19T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Saga of Tanya the Evil Season 2",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "442a9d5530a56d3cab55ec87b952ce0b",
+    "DateCreated": "2025-11-23T06:23:29.0000000Z",
+    "PremiereDate": "2026-07-08T03:00:00.0000000Z",
+    "OfficialRating": "TV-MA",
+    "ChannelId": null,
+    "Overview": "The second season of <i>Youjo Senki</i>.",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Fantasy"
+    ],
+    "CommunityRating": 8.1,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2026,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "NUT",
+        "Id": "c126486ea2fab2ac3cf4d7c26de928f4"
+      },
+      {
+        "Name": "KADOKAWA",
+        "Id": "123e9fbe57efd6da6aa74eb5462644ad"
+      },
+      {
+        "Name": "Sammy",
+        "Id": "b8b0666b34b031ba774d81dcbcff2d64"
+      },
+      {
+        "Name": "AT-X",
+        "Id": "8846d500e2ea8fab0f33f774bbd3dae8"
+      },
+      {
+        "Name": "Sony Music Solutions",
+        "Id": "062d686ecae82021e0be04b43d273e57"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 10,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "315500",
+      "ItemId": "442a9d5530a56d3cab55ec87b952ce0b"
+    },
+    "ChildCount": 10,
+    "Status": "Continuing",
+    "AirTime": "21:30",
+    "AirDays": [
+      "Wednesday"
+    ],
+    "ImageTags": {
+      "Primary": "ef154655bddf769996296952e798c5a1",
+      "Logo": "0083c584b31ff02870eddec9b8d9159c",
+      "Banner": "2d747f5d8cb2da212613c208c14d910d"
+    },
+    "BackdropImageTags": [
+      "3408e65d131b06fcb97e6612caaca5ef"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "3408e65d131b06fcb97e6612caaca5ef": "HhL2nR5Y9]n#0i-mt7-9EN}qofWVNHENxXR-oeoK"
+      },
+      "Primary": {
+        "ef154655bddf769996296952e798c5a1": "dJFY7DM{RnkD0KWBE2t6IVW=kCs,IUtRn$WAx]jZxuoL"
+      },
+      "Logo": {
+        "0083c584b31ff02870eddec9b8d9159c": "OHBzC4j[j[M{Rjj[fQofayofofofofof00fQj[t7t7ofof"
+      },
+      "Banner": {
+        "2d747f5d8cb2da212613c208c14d910d": "H~Psq.%gs,?boyxax]n$t7~qxuRjogj[aeoft6t7"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2026-07-22T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Clevatess Season 2",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "0ed2e6aef9e2ebcfabdb9b84a23ec94b",
+    "DateCreated": "2026-07-23T22:46:31.5463176Z",
+    "PremiereDate": "2026-07-08T03:00:00.0000000Z",
+    "OfficialRating": "16",
+    "ChannelId": null,
+    "Overview": "The second season of <i>Clevatess: Majuu no Ou to Akago to Kabane no Yuusha</i>.",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Drama",
+      "Fantasy"
+    ],
+    "CommunityRating": 7.5,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2026,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "KADOKAWA",
+        "Id": "123e9fbe57efd6da6aa74eb5462644ad"
+      },
+      {
+        "Name": "Lay-duce",
+        "Id": "c933b349d1b777893a2a6cf20ea153db"
+      },
+      {
+        "Name": "Sammy",
+        "Id": "b8b0666b34b031ba774d81dcbcff2d64"
+      },
+      {
+        "Name": "Crunchyroll",
+        "Id": "a339ec496e1b33b9d8a6154259d67ab9"
+      },
+      {
+        "Name": "BS Nittele",
+        "Id": "57440f6709a92e9d9ee9865bda69169b"
+      },
+      {
+        "Name": "LINE Digital Frontier",
+        "Id": "36de2f52009f1344398645ac0626ade8"
+      },
+      {
+        "Name": "AT-X",
+        "Id": "8846d500e2ea8fab0f33f774bbd3dae8"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 19,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "451793",
+      "ItemId": "0ed2e6aef9e2ebcfabdb9b84a23ec94b"
+    },
+    "ChildCount": 7,
+    "Status": "Continuing",
+    "AirTime": "21:00",
+    "AirDays": [
+      "Wednesday"
+    ],
+    "ImageTags": {
+      "Banner": "f42a4b69525c322a4c380a0681dd50d8",
+      "Logo": "bc3c5163a63ec3a1b0b07923e64b18ef",
+      "Primary": "b4223c6a625ae7108e852703b08bef93"
+    },
+    "BackdropImageTags": [
+      "91166d3044982bc300da248effc0673d"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "91166d3044982bc300da248effc0673d": "W35X=QnxRO%g-,?H~mt5Rkxu-;-p?GtSIoW9xu%L-;s*R-aiW9x["
+      },
+      "Banner": {
+        "f42a4b69525c322a4c380a0681dd50d8": "HOEe}c$ytjoxa1~p8{%LbI~p%KxY%1tQ%MD%bHfS"
+      },
+      "Logo": {
+        "bc3c5163a63ec3a1b0b07923e64b18ef": "OdODLRofoyoLj[ayxuyXj[s:a|WBaeof~qj[bHf6fPkBay"
+      },
+      "Primary": {
+        "b4223c6a625ae7108e852703b08bef93": "dMIqZ2VaspxvIAox=Zni}jtP-oIp={WX$$xZRP$xw{s:"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2026-07-22T03:00:00.0000000Z"
+  },
+  {
+    "Name": "THE GHOST IN THE SHELL",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "44ca5326a3f170e670fa9d39f682b52f",
+    "DateCreated": "2026-07-17T12:50:53.9083642Z",
+    "PremiereDate": "2026-07-07T03:00:00.0000000Z",
+    "OfficialRating": "TV-MA",
+    "ChannelId": null,
+    "Overview": "The year is 2029. In near-future Japan, where the world has become highly information-intensive, with a vast corporate network covering the planet, electrons and light pulsing through it. But the nation-state and ethnic groups still survive.  <br><br> Motoko Kusanagi, a full-body cyborg, leads an elite combat unit, including Batou. While commanding her team, Kusanagi envisions the creation of a specialized task force to preemptively strike against emerging threats. Meanwhile, Daisuke Aramaki of the Ministry of Internal Affairs, who had been planning to establish a similar unit, recruited Kusanagi and her team. Together, they begin operations as Public Security Section 9—an offensive tactical unit known as “Shell Squad.” As they confront complex cybercrimes and international conspiracies, the existence of a mysterious, unidentified hacker known as The “Puppet Master” emerges on the horizon of their investigation. <br><br> What fate awaits Kusanagi? And what is the Puppet Master’s true objective? A new era of cyberpunk action begins.  <br><br>\n(Source:攻殻機動隊 THE GHOST IN THE SHELL Site)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Psychological",
+      "Sci-Fi"
+    ],
+    "CommunityRating": 7.8,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2026,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Science SARU",
+        "Id": "bdfe98456f75b96156b9026ba49864ef"
+      },
+      {
+        "Name": "Bandai Namco Filmworks",
+        "Id": "a549b5fc956df82cdf12d94cb317bfbb"
+      },
+      {
+        "Name": "Kodansha",
+        "Id": "bf006328ccbc1bebd47947820d50c279"
+      },
+      {
+        "Name": "Production I.G",
+        "Id": "a4c5f8e888abcf96ea68d2e86d9ba1ff"
+      },
+      {
+        "Name": "flying DOG",
+        "Id": "b35fa71bc7f2f6dd459111e3bad2251a"
+      },
+      {
+        "Name": "Dentsu",
+        "Id": "38f50701b39a112bea478b41efaa04ce"
+      },
+      {
+        "Name": "Kansai TV",
+        "Id": "74b115c3403ee0d988df5685b3bf777b"
+      },
+      {
+        "Name": "Fuji TV",
+        "Id": "69a36f3d4c0d7e6fb7c66000aa034a0c"
+      },
+      {
+        "Name": "Tokai Television Broadcasting",
+        "Id": "9e916c192177d1cc4e6189eb535c2508"
+      },
+      {
+        "Name": "Fukui TV",
+        "Id": "a5cb409c2944747e733bb7b782204e27"
+      },
+      {
+        "Name": "Hokkaido Cultural Broadcasting",
+        "Id": "da561f586a4edf3bfce6095ea5e29d7e"
+      },
+      {
+        "Name": "Iwate Menkoi Television",
+        "Id": "4021ae15ff36ba74efb03aa6360b885d"
+      },
+      {
+        "Name": "Sendai Television",
+        "Id": "ed80945f4ea291bdb53d4f31d53f0d46"
+      },
+      {
+        "Name": "SAGA TV",
+        "Id": "56c756e5d90c7f212beb5e6b514ed69c"
+      },
+      {
+        "Name": "Ishikawa TV",
+        "Id": "a330cf0f13cd6f2c6c6a5f659029803f"
+      },
+      {
+        "Name": "TNC",
+        "Id": "8baaf617c21033db7f95dcf3aaf38493"
+      },
+      {
+        "Name": "OHK",
+        "Id": "8f1a8c86d233873dcd174bda3342c677"
+      },
+      {
+        "Name": "Kochi Sun Sun Broadcasting",
+        "Id": "c9f2bf6ff51f5d0a51ceb381f141ba50"
+      },
+      {
+        "Name": "Television Shin Hiroshima System",
+        "Id": "76b60b157e96355806577d7c9bea6e34"
+      },
+      {
+        "Name": "TV Shizuoka",
+        "Id": "627f6012e6b549fbdbced3d68fc69bde"
+      },
+      {
+        "Name": "NST",
+        "Id": "7e2d33653db1d57a923c48533d0dff21"
+      },
+      {
+        "Name": "NBS",
+        "Id": "0a8410008d339feb006f75eb5879b49d"
+      },
+      {
+        "Name": "Sakuranbo TV",
+        "Id": "bf25fa11db6a82382e709043d4c79a27"
+      },
+      {
+        "Name": "TSK",
+        "Id": "add60b144445efc486b77770d2ede365"
+      },
+      {
+        "Name": "Ehime Broadcasting",
+        "Id": "6f9d749482cb7083642196bfc7def828"
+      },
+      {
+        "Name": "KTS",
+        "Id": "e474a2f61551075a964d9df0d3e67db0"
+      },
+      {
+        "Name": "Fukushima TV",
+        "Id": "17aaa46dc5c3a8780d97729ae128db69"
+      },
+      {
+        "Name": "AKT",
+        "Id": "763080c3052b880a69eca7a80392a2f4"
+      },
+      {
+        "Name": "Toyama Television",
+        "Id": "5cc801b3e3332466e12a9107132f8d68"
+      },
+      {
+        "Name": "TV Kumamoto",
+        "Id": "12f320eab9f8d8758551fa6528880b9f"
+      },
+      {
+        "Name": "Okinawa Television Broadcasting",
+        "Id": "880361741f51d09f65072eb1fd2bf8bf"
+      },
+      {
+        "Name": "KTN",
+        "Id": "2954f90ddcbb34ba3b52e7f624583d57"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Psychological",
+        "Id": "13fcb116f8048f20769597c91946932f"
+      },
+      {
+        "Name": "Sci-Fi",
+        "Id": "d3bf560475125eed829c435f3d8329e3"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 8,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "450475",
+      "ItemId": "44ca5326a3f170e670fa9d39f682b52f"
+    },
+    "ChildCount": 6,
+    "Status": "Continuing",
+    "AirTime": "23:00",
+    "AirDays": [
+      "Tuesday"
+    ],
+    "ImageTags": {
+      "Banner": "43bd3972723d8d97b9fc39461692fbdc",
+      "Primary": "22d622c3c01b138cabff2aa496a34178",
+      "Logo": "6720bbbc6db5eb6039d363cf0088a5cc"
+    },
+    "BackdropImageTags": [
+      "508d64fb41867c509928a3174516139b"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "508d64fb41867c509928a3174516139b": "H8268EbbMti_tCkqRza0n-tCbIRee,okkYWRaIn-"
+      },
+      "Banner": {
+        "43bd3972723d8d97b9fc39461692fbdc": "HeFsiP%hS#x^E1T1kXyEyE?waybbx]Rko~o#t8R."
+      },
+      "Primary": {
+        "22d622c3c01b138cabff2aa496a34178": "dsLg|nj[.8a{9Zayozaz_Nj[RPofNekCs:j[%MoeWXfR"
+      },
+      "Logo": {
+        "6720bbbc6db5eb6039d363cf0088a5cc": "ORS6Plj[WBj[ayt7ofxufQj[ayfQfQj[~qofofofj[fQWB"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2026-07-14T03:00:00.0000000Z"
+  },
+  {
+    "Name": "LIAR GAME",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "0e0fbd78c55bee2056c9cdec2c74c3b1",
+    "DateCreated": "2026-04-27T03:07:41.0000000Z",
+    "PremiereDate": "2026-04-07T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "Wishing she would live up to the ideal, Kanzaki Nao's father named her thusly for “honesty”. Nao has more than lived up to her father's wishes--even exceeding them and earning the label of \"a foolishly honest girl\". This makes Nao the least qualified candidate for the high stakes 'Liar Game', where winning requires deceiving the opponent out of their money and losing means receiving massive debt. However, that doesn't stop a box containing a hundred million yen in cash and a card informing her of her participation in the game from arriving at her doorstep, nor does it stop her from being promptly tricked out of the entire sum of money. Upon hearing that a genius swindler, responsible for the bankruptcy of a major corporation, is being released from jail, Nao goes to the swindler, Shinichi Akiyama, to enlist his help. With that, the two are drawn into the dark, greed-filled, and deceptive world of the Liar Game.",
+    "Taglines": [],
+    "Genres": [
+      "Anime",
+      "Drama",
+      "Psychological"
+    ],
+    "CommunityRating": 6.1,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2026,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "MADHOUSE",
+        "Id": "6eb6369308ae6757aad2b4e5aa2059cc"
+      },
+      {
+        "Name": "Bit grooove promotion",
+        "Id": "123f2cd14fd95a2562475ba06dbb0573"
+      },
+      {
+        "Name": "TV Tokyo",
+        "Id": "b3430760e9da200059d3c4bfdb816587"
+      },
+      {
+        "Name": "TV Aichi",
+        "Id": "3044c6f64f8731d5909979fb27702810"
+      },
+      {
+        "Name": "TVQ",
+        "Id": "78a514552b76720392a6e42f399469cc"
+      },
+      {
+        "Name": "TV Osaka",
+        "Id": "b765164f81b0d22a688fdd6be20ee8be"
+      },
+      {
+        "Name": "TVh",
+        "Id": "3e62126f9a7c50c1c4c64e0f6352d818"
+      },
+      {
+        "Name": "TSC",
+        "Id": "d4a416956a6ffbc5a76ef631273c352c"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Psychological",
+        "Id": "13fcb116f8048f20769597c91946932f"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 19,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "467209",
+      "ItemId": "0e0fbd78c55bee2056c9cdec2c74c3b1"
+    },
+    "ChildCount": 5,
+    "Status": "Continuing",
+    "AirTime": "00:00",
+    "AirDays": [
+      "Tuesday"
+    ],
+    "ImageTags": {
+      "Banner": "adf5f53a46b41065159f69da70d5369f",
+      "Logo": "a17dfa6f9b3be6a4838f3ac3f090b081",
+      "Primary": "d9e3e7722fdd401001d2068d7e823550"
+    },
+    "BackdropImageTags": [
+      "5e81f0508c0de2bd18edb29b721bb826"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "5e81f0508c0de2bd18edb29b721bb826": "HMC?S~M{V=^+D%IT~W%1M~_2D%Ri?aM_sm?HMwIU"
+      },
+      "Banner": {
+        "adf5f53a46b41065159f69da70d5369f": "HLB:548_Nv?v00^+Sx9s%g=xniS2ozRQ$*X7I:xu"
+      },
+      "Logo": {
+        "a17dfa6f9b3be6a4838f3ac3f090b081": "OvQJDxt7aykCozjFoft7j[ayj[ayaxj[_NWBf6jaV@ofWB"
+      },
+      "Primary": {
+        "d9e3e7722fdd401001d2068d7e823550": "dHCF*Oix0KS~.9R*IAxFJ7t7RPV@nmxGRPI;xtS4IUoL"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2026-07-21T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Love Unseen Beneath the Clear Night Sky",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "8abf794c00d79080147a578975e591d6",
+    "DateCreated": "2026-06-29T14:47:42.5725848Z",
+    "PremiereDate": "2026-07-06T03:00:00.0000000Z",
+    "OfficialRating": "16",
+    "ChannelId": null,
+    "Overview": "Kakeru Sorano, a quiet university freshman who avoids others, meets Koharu Fuyutsuki, a blind girl who faces the world with quiet brightness. When she says, “I want to see fireworks someday,” something in Kakeru shifts. As they grow closer through small moments and shared loneliness, he searches for a way to make her wish come true.<br>\n<br>\n(Source: Crunchyroll)",
+    "Taglines": [],
+    "Genres": [
+      "Anime",
+      "Drama",
+      "Romance"
+    ],
+    "CommunityRating": 7.8,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2026,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Shouchiku",
+        "Id": "cf04c04a35830b1187b84adbabcbf616"
+      },
+      {
+        "Name": "Makaria",
+        "Id": "e18e74cf71ce2fe4a69e1a4f91616df4"
+      },
+      {
+        "Name": "SB Creative",
+        "Id": "3a6b0084ddde52fd865c1dcba8cccfaf"
+      },
+      {
+        "Name": "viviON",
+        "Id": "18a3f48e7ad261878a0b6fa3ed3715a0"
+      },
+      {
+        "Name": "AT-X",
+        "Id": "8846d500e2ea8fab0f33f774bbd3dae8"
+      },
+      {
+        "Name": "Clare Voice",
+        "Id": "fc9721ffb61c92a6622367bc677ef477"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Romance",
+        "Id": "1ffc72e19987e5fa4047c6a6870646cf"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 8,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "470520",
+      "ItemId": "8abf794c00d79080147a578975e591d6"
+    },
+    "ChildCount": 5,
+    "Status": "Continuing",
+    "AirTime": "21:00",
+    "AirDays": [
+      "Monday"
+    ],
+    "ImageTags": {
+      "Logo": "eb9bd2b9876d0c0c835c45d0c8fabb95",
+      "Banner": "96e9432dce6b3640e46e34c220ea1ba7",
+      "Primary": "e8ff278d7efa39b5daf66b5199fef279"
+    },
+    "BackdropImageTags": [
+      "dcba5b34ebf6fb637e66c677f63f6490"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "dcba5b34ebf6fb637e66c677f63f6490": "HgD]Pixu9Ea_RiM{M_IT-q_4t8E0WCWBRjNFIn%3"
+      },
+      "Logo": {
+        "eb9bd2b9876d0c0c835c45d0c8fabb95": "O8Ss88%M~q%Mxt%ME1%NoL%MR*n$t7R*-pRkIot7j[s:ay"
+      },
+      "Banner": {
+        "96e9432dce6b3640e46e34c220ea1ba7": "H~M[T}oNo#tSR.%N%1x[Rj_Ns:tQozRkoft6t7WB"
+      },
+      "Primary": {
+        "e8ff278d7efa39b5daf66b5199fef279": "dOL#nd?bDjoh-;_MRks9S+o#kXWZyDDixBNGI=kqI;Ip"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2026-07-20T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Overcome Your Limits!",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "9a21eab03d021f03e5b0b934b3ac20b1",
+    "DateCreated": "2026-08-23T12:03:26.9510738Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2005-08-16T03:00:00.0000000Z",
+    "ChannelId": null,
+    "Overview": "Ishida is down, but Ichigo and Zangetsu are fighting for Ichigo to unleash his Bankai!\n",
+    "Taglines": [],
+    "Genres": [],
+    "RunTimeTicks": 16410239999,
+    "ProductionYear": 2026,
+    "IndexNumber": 45,
+    "ParentIndexNumber": 17,
+    "IsFolder": false,
+    "Type": "Episode",
+    "Studios": [],
+    "GenreItems": [],
+    "ParentLogoItemId": "48f7491f664bbc708323c659a33a724b",
+    "ParentBackdropItemId": "48f7491f664bbc708323c659a33a724b",
+    "ParentBackdropImageTags": [
+      "e58873f929e56e6bae20661dfccccc87"
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "74796017045",
+      "ItemId": "9a21eab03d021f03e5b0b934b3ac20b1"
+    },
+    "ChildCount": 0,
+    "SeriesName": "Bleach",
+    "SeriesId": "48f7491f664bbc708323c659a33a724b",
+    "SeasonId": "ea8366dce22fe5cc8b38aa3469ec515d",
+    "SeriesPrimaryImageTag": "65a2376b8e44890de612030683ffd398",
+    "SeasonName": "Temporada 17",
+    "VideoType": "VideoFile",
+    "ImageTags": {
+      "Primary": "bfc8e557a34b7d73cd9a82931317cbdf"
+    },
+    "BackdropImageTags": [],
+    "ParentLogoImageTag": "e9214cc01b69f7738e0ba88cc7c20dc9",
+    "ImageBlurHashes": {
+      "Primary": {
+        "bfc8e557a34b7d73cd9a82931317cbdf": "VMJ;0gmo$jxEaf1hK0ShWES21NxWsCsoWVocWXayoej@",
+        "65a2376b8e44890de612030683ffd398": "dECg=T5Q}Z$NRP=eV@-A].5+=esARPS~aKNbo0S3W=jZ"
+      },
+      "Logo": {
+        "e9214cc01b69f7738e0ba88cc7c20dc9": "OlExYYfjS}oLOXW;V@WUa{R*jtaeaykC0dfQr?WVr@jZoz"
+      },
+      "Backdrop": {
+        "e58873f929e56e6bae20661dfccccc87": "H=OMgAT0D%Sibw%M-o$|t7~qf,WEWCo#xuxFt6t6"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video"
+  },
+  {
+    "Name": "Gachiakuta",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "1107a72997b926ab6fa961d9e7c5ef24",
+    "DateCreated": "2025-11-23T06:23:29.0000000Z",
+    "PremiereDate": "2025-07-06T03:00:00.0000000Z",
+    "OfficialRating": "NC16",
+    "ChannelId": null,
+    "Overview": "A boy lives in a floating town, where the poor scrape by and the rich live a sumptuous life, simply casting their garbage off the side, into the abyss. When he’s falsely accused of murder, though, his wrongful conviction leads to an unimaginable punishment—exile off the edge, with the rest of the trash. Down on the surface, the cast-off waste of humanity has bred vicious monsters, and to travel the path to vengeance against those who cast him into Hell, a boy will have to become a warrior…\n<br><br>\n(Source: Kodansha USA)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Drama",
+      "Fantasy"
+    ],
+    "CommunityRating": 8.2,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2025,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "bones",
+        "Id": "4e4eb83739ab7c6a9fb46a0325ef7665"
+      },
+      {
+        "Name": "Avex Pictures",
+        "Id": "a005ae66eede8a441f9fa28a30c6bf6a"
+      },
+      {
+        "Name": "bones film",
+        "Id": "50b480d570eecfe9a7d2d2f2ffec84b6"
+      },
+      {
+        "Name": "Kodansha",
+        "Id": "bf006328ccbc1bebd47947820d50c279"
+      },
+      {
+        "Name": "DMM.com",
+        "Id": "a08879abb3c1031ed8ac3dba53ca3cd7"
+      },
+      {
+        "Name": "CBC TV",
+        "Id": "5b759f48866bdd05d76b6739d22fe2ab"
+      },
+      {
+        "Name": "Dentsu",
+        "Id": "38f50701b39a112bea478b41efaa04ce"
+      },
+      {
+        "Name": "Com2uS",
+        "Id": "ce0639b2cae4be81532d34796e1f8e37"
+      },
+      {
+        "Name": "MBS",
+        "Id": "095ac05fbaf099003c36e2331ab2811f"
+      },
+      {
+        "Name": "TBS",
+        "Id": "9bfd9e81864df89d6a9c829a99174e59"
+      },
+      {
+        "Name": "CBC",
+        "Id": "2e2d5b4c57b9699f9456a569f0fdb8d8"
+      },
+      {
+        "Name": "YouTube",
+        "Id": "82e6700e01feaf67cdec5bbfe56181a5"
+      },
+      {
+        "Name": "Tulip Television",
+        "Id": "8471b775baee1404b7be76d28c72ce70"
+      },
+      {
+        "Name": "SBC",
+        "Id": "b8bd975a8b1f6b731fda4472553ac9ef"
+      },
+      {
+        "Name": "BSN",
+        "Id": "24fd637ce92186edd88fabce14361ac9"
+      },
+      {
+        "Name": "tys",
+        "Id": "690ac68365bbe556378cad16a9468c5c"
+      },
+      {
+        "Name": "NBC",
+        "Id": "786503487dee61267bfc1bedc8991ee3"
+      },
+      {
+        "Name": "HBC",
+        "Id": "4177c7f1c6d1b9e3d17466726a062a5f"
+      },
+      {
+        "Name": "RKK",
+        "Id": "6d17216e35a60bf26f3bb43272da992c"
+      },
+      {
+        "Name": "i-Television",
+        "Id": "9bac0b5642aa08f25e8fd2a8670dba92"
+      },
+      {
+        "Name": "SBS",
+        "Id": "a6b20528a0a34e4a49138cceed40fced"
+      },
+      {
+        "Name": "IBC",
+        "Id": "b055fb0a8b0d154dd64789b940875152"
+      },
+      {
+        "Name": "BSS",
+        "Id": "e9e32f2eaa29838e586c9471544ab0a5"
+      },
+      {
+        "Name": "MRO",
+        "Id": "64462c686bbf61a7c3c7f512291689d0"
+      },
+      {
+        "Name": "OBS",
+        "Id": "14b96000c4b9812f2f80bc4b79e25000"
+      },
+      {
+        "Name": "TUF",
+        "Id": "dd84e5be76ab580c7ae02d1f0c7dff6b"
+      },
+      {
+        "Name": "RSK",
+        "Id": "d73c3995657e69f19ccf0b57a81c5432"
+      },
+      {
+        "Name": "TUY",
+        "Id": "a64ecd38c1924b7a91b1080248069174"
+      },
+      {
+        "Name": "tbc",
+        "Id": "5d114f3b12bc3065e4da642cfade19fa"
+      },
+      {
+        "Name": "RKB",
+        "Id": "4bf6154f9cb27128e08285d80aa3ea99"
+      },
+      {
+        "Name": "KUTV",
+        "Id": "cc41612667729af8e9becdd881cf378d"
+      },
+      {
+        "Name": "RBC",
+        "Id": "c63b37dd98e71d45cd13ac25675a5835"
+      },
+      {
+        "Name": "UTY",
+        "Id": "29338325cc08628b93f0ce534e765d9b"
+      },
+      {
+        "Name": "RCC",
+        "Id": "a8852eed0c64c43b01aa6cf675bc6eb3"
+      },
+      {
+        "Name": "MRT",
+        "Id": "40493ee7a8782e85618d5db5b32918f6"
+      },
+      {
+        "Name": "ATV",
+        "Id": "379d9926d3a450fda18e787418876e97"
+      },
+      {
+        "Name": "MBC",
+        "Id": "c97b4632696da97baeb609e21282be1d"
+      },
+      {
+        "Name": "TBS (JP)",
+        "Id": "58c706c578351f072481a80ce6127809"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 3,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "450537",
+      "ItemId": "1107a72997b926ab6fa961d9e7c5ef24"
+    },
+    "ChildCount": 3,
+    "Status": "Ended",
+    "AirTime": "23:30",
+    "AirDays": [
+      "Sunday"
+    ],
+    "ImageTags": {
+      "Banner": "c789ea4a76464c90c16ee10a3c912fe9",
+      "Logo": "895997567c84ab2e79fc040c0c052243",
+      "Primary": "69127c361322ec39df2dc9a618144d1d"
+    },
+    "BackdropImageTags": [
+      "8310fc9c50ad0d98518b365497d963d8"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "8310fc9c50ad0d98518b365497d963d8": "H~M6-VxaoLnkj^soxWxZnh~Vs;afn%V@xas,n*s+"
+      },
+      "Banner": {
+        "c789ea4a76464c90c16ee10a3c912fe9": "HE9Q:PtR8_ofIVIAtRx]%M_NozIUWBMxV@tRWVx]"
+      },
+      "Logo": {
+        "895997567c84ab2e79fc040c0c052243": "O~L|y9j[ofj[ofj[ofoLfQfQa|jtfQfQ~qj[WBj[WBfkWB"
+      },
+      "Primary": {
+        "69127c361322ec39df2dc9a618144d1d": "dAIU#4NxL%,oR5wc=f$*+1WVTGW;-mi|oexY]-t6EgNb"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2025-12-21T03:00:00.0000000Z"
+  },
+  {
+    "Name": "THE RIBBON HERO",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "d5f77ddc920df732bce95d4ffd345754",
+    "DateCreated": "2026-08-08T22:56:46.0000000Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2026-08-08T00:00:00.0000000Z",
+    "OfficialRating": "AR-+13",
+    "ChannelId": null,
+    "Overview": "Princess Sapphire of the lost kingdom. Stripped of everything in her homeland, Silverland, by the calamity known as \"Nergal,\" she arrived in Goldland at the very depths of despair. While carrying the weight of her past, she began to find a glimmer of hope through the kindness of the people. Yet, as if mocking her peaceful daily life, the calamity \"Nergal\" appears once more. The same despair that reduced her homeland to ashes is now threatening to steal the light from this land as well.\n\"No more loss for me. No more loss for anyone.” Wiping way her fears of sorrow, the young girl takes up her sword. This is the story of a hero who ties her ribbon and resolves to defy fate. \n\n(Source: THE RIBBON HERO Official Site)\n\n\n Note: This anime is inspired by Osamu Tezuka's manga \"Princess Knight”.",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Fantasy",
+      "Mahou Shoujo"
+    ],
+    "RunTimeTicks": 66677120000,
+    "ProductionYear": 2026,
+    "IndexNumber": 1,
+    "IsFolder": false,
+    "Type": "Movie",
+    "Studios": [
+      {
+        "Name": "Netflix",
+        "Id": "411cb7d6c12c8bf0d3c1caed22120c6f"
+      },
+      {
+        "Name": "OUTLINE",
+        "Id": "aa8daa833d1d21844e7e34e5da678a16"
+      },
+      {
+        "Name": "Twin Engine",
+        "Id": "37bcfccf7dfd7139bc91229575769f72"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      },
+      {
+        "Name": "Mahou Shoujo",
+        "Id": "f36fb684438bbf8c5b80c7ecea1b932f"
+      }
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 1,
+      "IsFavorite": false,
+      "LastPlayedDate": "2026-08-09T01:34:55.4867148Z",
+      "Played": false,
+      "Key": "1679730",
+      "ItemId": "d5f77ddc920df732bce95d4ffd345754"
+    },
+    "ChildCount": 0,
+    "VideoType": "VideoFile",
+    "ImageTags": {
+      "Logo": "f4719957871a28ee9b02f07d510d6976",
+      "Primary": "02299005b24ef4182111a2aa0871c15a",
+      "Thumb": "2343deb74a6019c129e1714506df18d8"
+    },
+    "BackdropImageTags": [
+      "f71f17a2d925436783aa750c7d6ba6e7"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "f71f17a2d925436783aa750c7d6ba6e7": "HvL2[RKju5{eO@xas.tRRj^mX8tm$QT0bbs9kWV?"
+      },
+      "Logo": {
+        "f4719957871a28ee9b02f07d510d6976": "HWM%.nn5$kH@a0xanit7WB4Tr?xGnPi_xaaKV@ay"
+      },
+      "Primary": {
+        "02299005b24ef4182111a2aa0871c15a": "dJEU.UVY0f%3#8xvOrMx9[W;WBkplSR%eTS#K3bbw0Rj"
+      },
+      "Thumb": {
+        "2343deb74a6019c129e1714506df18d8": "WZRCf3D5H??H%L_3_3WEt7%M%L%L-;%2xux]f6RQ~WiwRPS$OFM{"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video",
+    "EndDate": "2026-08-08T00:00:00.0000000Z"
+  },
+  {
+    "Name": "Tougen Anki: Nikko Kegon Falls Arc",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "6a6fc7cadf233115638acf919a9505ab",
+    "DateCreated": "2026-08-03T10:45:52.1185511Z",
+    "PremiereDate": "2025-07-11T03:00:00.0000000Z",
+    "OfficialRating": "TV-MA",
+    "ChannelId": null,
+    "Overview": "Sequel to <i>Tougen Anki</i>.",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Mystery",
+      "Supernatural"
+    ],
+    "RunTimeTicks": 0,
+    "ProductionYear": 2026,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Nippon TV",
+        "Id": "edffd117ec7436534d432391f719626b"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Mystery",
+        "Id": "d3a0ead52489743e5a68704142092c71"
+      },
+      {
+        "Name": "Supernatural",
+        "Id": "68c458f4829f530c664a01e748e010ae"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 23,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "449843",
+      "ItemId": "6a6fc7cadf233115638acf919a9505ab"
+    },
+    "ChildCount": 23,
+    "Status": "Unreleased",
+    "AirTime": "23:00",
+    "AirDays": [
+      "Friday"
+    ],
+    "ImageTags": {
+      "Primary": "004008ef20ce7476c9a1c19314a844b2",
+      "Banner": "05173e6068f2d9e00cfbc55a39285576",
+      "Logo": "f9f2aed18da2b5753d6a4eb9ae56cbfc"
+    },
+    "BackdropImageTags": [
+      "9ee9ebfa8e17a3a4affb80d094d1b67b"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "9ee9ebfa8e17a3a4affb80d094d1b67b": "WPICTenj]*-UNHxF2ts.oys:SLWCI;S~ofWBxZn%JTw^NaR+sTS4"
+      },
+      "Primary": {
+        "004008ef20ce7476c9a1c19314a844b2": "dGCj%:WX9Zx]kWj]RPkCOUozRPM_o}t7WVjZ00W.?boJ"
+      },
+      "Banner": {
+        "05173e6068f2d9e00cfbc55a39285576": "HmJuJ%V@01bbt8t7%gs;xv_4V@M{kCt7oyt7e.og"
+      },
+      "Logo": {
+        "f9f2aed18da2b5753d6a4eb9ae56cbfc": "OfCsjjRjWBt7M{ofj[t7ayayofayfQj[00t7ofRjt7WBay"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2025-12-26T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Dark Gathering",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "8dffcd8261b479d6f2aa10dcc21c8201",
+    "DateCreated": "2026-08-02T11:47:27.3293124Z",
+    "PremiereDate": "2023-07-10T03:00:00.0000000Z",
+    "OfficialRating": "TV-MA",
+    "ChannelId": null,
+    "Overview": "The second season of <i>Dark Gathering</i>.",
+    "Taglines": [],
+    "Genres": [
+      "Adventure",
+      "Anime",
+      "Horror",
+      "Supernatural"
+    ],
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2023,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "OLM",
+        "Id": "69c654fa1a829f2a75646c65e2a6464c"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Adventure",
+        "Id": "51cec9645b896084d12b259acd05ccb1"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Horror",
+        "Id": "8b9bd9a3eddad02f2b759b4938fdd0b8"
+      },
+      {
+        "Name": "Supernatural",
+        "Id": "68c458f4829f530c664a01e748e010ae"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 25,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "422090",
+      "ItemId": "8dffcd8261b479d6f2aa10dcc21c8201"
+    },
+    "ChildCount": 25,
+    "Status": "Unreleased",
+    "AirTime": "01:00",
+    "AirDays": [
+      "Monday"
+    ],
+    "ImageTags": {
+      "Logo": "24b858ffb274ff111381941bb7f34551",
+      "Banner": "62df7be28afe4f62aaa0abb2e3507f8f",
+      "Primary": "1e453695a7dff85f80792ec74aef4d78"
+    },
+    "BackdropImageTags": [
+      "f0c9f00f9009e095c44e5863c8fa663b"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "f0c9f00f9009e095c44e5863c8fa663b": "WBE0Ww,@v##mK3-B}Aw|NbRjS#s:1]S1BUNws,Sg,@J7j@ozbFR*"
+      },
+      "Logo": {
+        "24b858ffb274ff111381941bb7f34551": "OG83;fs;jcWAWBWBRjj]ayazayfQayay0dWAbEofofoft7"
+      },
+      "Banner": {
+        "62df7be28afe4f62aaa0abb2e3507f8f": "H44d}vEJIn-X0v$,=~EJ=$}_NYNFxI5Nxb-XNF$,"
+      },
+      "Primary": {
+        "1e453695a7dff85f80792ec74aef4d78": "dEC4-N,[ELs;:g#ls:NaF#,@$QJ9bDwvn+soInS5xGso"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2023-12-25T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Sabikui Bisco",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "a24a0f46a11c9d7534a904e952b51591",
+    "DateCreated": "2025-11-23T06:23:29.0000000Z",
+    "PremiereDate": "2022-01-11T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "Japan’s post-apocalyptic wasteland replete with dust can only be saved by one thing—fungus. Bisco Akaboshi, a wanted criminal and skilled archer, searches for a legendary mushroom, known as Sabikui, said to devour any and all rust. Joining him on this epic saga to save the country is a giant crab and a young doctor. Can this unlikely trio find the fabled fungi and save the land?<br>\n<br>\n(Source: Funimation)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Adventure",
+      "Anime",
+      "Fantasy"
+    ],
+    "CommunityRating": 7,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2022,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "OZ",
+        "Id": "82b036622d76e95016ad8c75de245653"
+      },
+      {
+        "Name": "Hakuhodo DY Music & Pictures",
+        "Id": "2f7d9ebb95138fa2f8de3a6ab3be6d03"
+      },
+      {
+        "Name": "KADOKAWA",
+        "Id": "123e9fbe57efd6da6aa74eb5462644ad"
+      },
+      {
+        "Name": "flying DOG",
+        "Id": "b35fa71bc7f2f6dd459111e3bad2251a"
+      },
+      {
+        "Name": "Yomiuri TV",
+        "Id": "8e8521b9632e6add212e183a2c348f14"
+      },
+      {
+        "Name": "Frontier Works",
+        "Id": "6d714bfc9654dd49a567c0eef71e61fb"
+      },
+      {
+        "Name": "BS11",
+        "Id": "b4f4f707ccae7ade259e3fd914bdca03"
+      },
+      {
+        "Name": "KLOCKWORX",
+        "Id": "4c1650b8b1b735c5d9ee9d506109c7cc"
+      },
+      {
+        "Name": "Bit grooove promotion",
+        "Id": "123f2cd14fd95a2562475ba06dbb0573"
+      },
+      {
+        "Name": "NAZ",
+        "Id": "0c106ae87919022dea1aee4c200bf3a8"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Adventure",
+        "Id": "51cec9645b896084d12b259acd05ccb1"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 12,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "398387",
+      "ItemId": "a24a0f46a11c9d7534a904e952b51591"
+    },
+    "ChildCount": 12,
+    "Status": "Ended",
+    "AirTime": "00:30",
+    "AirDays": [
+      "Tuesday"
+    ],
+    "ImageTags": {
+      "Primary": "1d6f77dc5ebaf49ed133bed87b0ed3f9",
+      "Logo": "dd74d743870900525e7d396aee88ed43",
+      "Banner": "0cd7fa2cd79ea94060200f0b86c8692d"
+    },
+    "BackdropImageTags": [
+      "7cc576bbf51f3c8c9c6c4af551c58088"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "7cc576bbf51f3c8c9c6c4af551c58088": "HxJRz6PDM{VtWDs:WEa$xu?wg4n3smX8RkNGt6t6"
+      },
+      "Primary": {
+        "1d6f77dc5ebaf49ed133bed87b0ed3f9": "dHLU?Gvz00-p_MMxMd%24U+xtlkBDkXS-:xCvj$L$%$*"
+      },
+      "Logo": {
+        "dd74d743870900525e7d396aee88ed43": "OUCPz$t69bRmW9obocRijsa$ayj[ayj?03R+%0ocj^a~of"
+      },
+      "Banner": {
+        "0cd7fa2cd79ea94060200f0b86c8692d": "H~Of#[_N%Nx]nOnhbv%Nxa~WtRt7tRn%nhR+t7s:"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2022-03-29T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Blood Blockade Battlefront",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "aa02205b1cac6ab8a843044a2c10b7a8",
+    "DateCreated": "2025-11-23T06:23:30.0000000Z",
+    "PremiereDate": "2015-04-05T03:00:00.0000000Z",
+    "OfficialRating": "TV-MA",
+    "ChannelId": null,
+    "Overview": "A breach between Earth and the netherworlds has opened up over the city of New York, trapping New Yorkers and creatures from other dimensions in an impenetrable bubble. They've lived together for years, in a world of crazy crime sci-fi sensibilities. Now someone is threatening to sever the bubble, and a group of stylish superhumans is working to keep it from happening.<br>\n<br>\n(Source: Anime News Network)\n<br><br>\n<i>Note: The last episode aired with a runtime of ~46 minutes as opposed to the standard 24 minute long episode.</i>",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Comedy",
+      "Supernatural"
+    ],
+    "CommunityRating": 7.4,
+    "RunTimeTicks": 15000000000,
+    "ProductionYear": 2015,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "bones",
+        "Id": "4e4eb83739ab7c6a9fb46a0325ef7665"
+      },
+      {
+        "Name": "MBS",
+        "Id": "095ac05fbaf099003c36e2331ab2811f"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      },
+      {
+        "Name": "BS11",
+        "Id": "b4f4f707ccae7ade259e3fd914bdca03"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Comedy",
+        "Id": "08d31605d366d63a7a924f944b4417f1"
+      },
+      {
+        "Name": "Supernatural",
+        "Id": "68c458f4829f530c664a01e748e010ae"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 24,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "289886",
+      "ItemId": "aa02205b1cac6ab8a843044a2c10b7a8"
+    },
+    "ChildCount": 24,
+    "Status": "Ended",
+    "AirDays": [
+      "Sunday"
+    ],
+    "ImageTags": {
+      "Banner": "3772a29f2db1f18f6dfd2dd275ebc82a",
+      "Logo": "6caa3135dee79deb7e9fd28b89b2bb95",
+      "Primary": "dc803ed6ef30640a6f233317161db573"
+    },
+    "BackdropImageTags": [
+      "320768532134afac17006e65c37b5340"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "320768532134afac17006e65c37b5340": "HfDvED-oNGo#bvt8%LofMy~X-nRkkXkVoz%Ln%My"
+      },
+      "Banner": {
+        "3772a29f2db1f18f6dfd2dd275ebc82a": "HfD]6%NG9Zs:x]xuM{RjoL~WRjE0oftRxuRjRjof"
+      },
+      "Logo": {
+        "6caa3135dee79deb7e9fd28b89b2bb95": "OSPhR$pHs:tlaKkWw0pcv$jFXRaybuay{hi_OqRjo}aebu"
+      },
+      "Primary": {
+        "dc803ed6ef30640a6f233317161db573": "daGl3M-:%gkC~Wt7t7t7-:s,M{Rk-;aeWFIVo#M{ofs:"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2015-10-04T03:00:00.0000000Z"
+  },
+  {
+    "Name": "My Hero Academia: Vigilantes",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "5b26c6b1ecf94f4b2fb6042c1e8d0f18",
+    "DateCreated": "2025-11-23T07:10:46.0000000Z",
+    "PremiereDate": "2025-04-07T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "Kouichi Haimawari is a dull college student who aspires to be a hero but has given up on his dream. Although 80% of the world’s population has superhuman powers called Quirks, few are chosen to become heroes and protect people. Everything changes for Kouichi when he and Pop☆Step are saved by the vigilante Knuckleduster and get recruited to become vigilantes themselves!\n<br><br>\n(Source: Crunchyroll)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Adventure",
+      "Anime",
+      "Drama",
+      "Fantasy"
+    ],
+    "CommunityRating": 7.6,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2025,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "bones film",
+        "Id": "50b480d570eecfe9a7d2d2f2ffec84b6"
+      },
+      {
+        "Name": "Toho",
+        "Id": "9716763284c3acaf2701d3030ebfd3bf"
+      },
+      {
+        "Name": "Yomiuri TV",
+        "Id": "8e8521b9632e6add212e183a2c348f14"
+      },
+      {
+        "Name": "bones",
+        "Id": "4e4eb83739ab7c6a9fb46a0325ef7665"
+      },
+      {
+        "Name": "Shueisha",
+        "Id": "b4294f9b96720b8974ff2aea00177791"
+      },
+      {
+        "Name": "Dentsu",
+        "Id": "38f50701b39a112bea478b41efaa04ce"
+      },
+      {
+        "Name": "Sony Music Entertainment",
+        "Id": "486255f3719fac5c817239fd7d2d253d"
+      },
+      {
+        "Name": "Movic",
+        "Id": "4ec27308792f6fe1ca72eb02e5cc3fc1"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      },
+      {
+        "Name": "BS Nippon TV",
+        "Id": "1fcf66a43e926d34e8f76a9ac49447a9"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Adventure",
+        "Id": "51cec9645b896084d12b259acd05ccb1"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 26,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "458058",
+      "ItemId": "5b26c6b1ecf94f4b2fb6042c1e8d0f18"
+    },
+    "ChildCount": 7,
+    "Status": "Ended",
+    "AirTime": "22:00",
+    "AirDays": [
+      "Monday"
+    ],
+    "ImageTags": {
+      "Banner": "a1fb7934297bdac8ad656412431d00d5",
+      "Logo": "2f994fef20f5f27c9073a50b666442d8",
+      "Primary": "8371b819dae5146d7135382a0d0eb7fb"
+    },
+    "BackdropImageTags": [
+      "b73a20f7b1e61eaf568cf92fbf1eae02"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "b73a20f7b1e61eaf568cf92fbf1eae02": "HAAT[.H?l8IY?bTLr:9GD-lCX5Na~pM}Iu-m?IN|"
+      },
+      "Banner": {
+        "a1fb7934297bdac8ad656412431d00d5": "HBAm*o+[yVD*Oq.SI9JW4U?dM_-:-:I=Osr:.7%1"
+      },
+      "Logo": {
+        "2f994fef20f5f27c9073a50b666442d8": "OOCPP2WU0KoMS1WDt7%fj]IBj[xuR%t75jjaw|kC$+ayay"
+      },
+      "Primary": {
+        "8371b819dae5146d7135382a0d0eb7fb": "dBA0,zM_9GxI=NXTT0xb10eU$hSvDit7R*I:nNkBIoi|"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2025-06-30T03:00:00.0000000Z"
+  },
+  {
+    "Name": "El ego de una joven",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "2bbc18ba9f0686325d745b4950454d32",
+    "DateCreated": "2026-07-30T03:56:36.1180472Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2024-10-05T03:00:00.0000000Z",
+    "ChannelId": null,
+    "Overview": "Pese a los esfuerzos de los Héroes, la Sad Man's Death Parade de Himiko Toga va ganando terreno. ¿Será capaz Ochaco de llegar hasta la joven y detenerla?",
+    "Taglines": [],
+    "Genres": [],
+    "RunTimeTicks": 14300300000,
+    "ProductionYear": 2024,
+    "IndexNumber": 20,
+    "ParentIndexNumber": 7,
+    "IsFolder": false,
+    "Type": "Episode",
+    "Studios": [],
+    "GenreItems": [],
+    "ParentLogoItemId": "0f5e034a50f46cc007b4de54a38d3d82",
+    "ParentBackdropItemId": "0f5e034a50f46cc007b4de54a38d3d82",
+    "ParentBackdropImageTags": [
+      "3c6fea5faf5680359b67ff50f329b365"
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "305074007020",
+      "ItemId": "2bbc18ba9f0686325d745b4950454d32"
+    },
+    "ChildCount": 0,
+    "SeriesName": "My Hero Academia",
+    "SeriesId": "0f5e034a50f46cc007b4de54a38d3d82",
+    "SeasonId": "f57b821f1b400e5a6a6d1cf83aa4d459",
+    "PrimaryImageAspectRatio": 0.7067137809187279,
+    "SeriesPrimaryImageTag": "d86362f6c4569d81272e7f48c6fdbeda",
+    "SeasonName": "Temporada 7",
+    "VideoType": "VideoFile",
+    "ImageTags": {},
+    "BackdropImageTags": [],
+    "ParentLogoImageTag": "669350a7f878f323deb30bf57c695984",
+    "ImageBlurHashes": {
+      "Logo": {
+        "669350a7f878f323deb30bf57c695984": "OXHARvWWE+smNxbIj[$ga{EMjZNGW=jE1Oj[V?WXjEa{s-"
+      },
+      "Backdrop": {
+        "3c6fea5faf5680359b67ff50f329b365": "H;LUj5X7wIxZrXrrN2w1OE}rW=r@oJM|aLkCxGkW"
+      },
+      "Primary": {
+        "d86362f6c4569d81272e7f48c6fdbeda": "dZIN]Es,~Nxq^$s*Shoc=;oc%Lt3?9s.%Ks+xtofN1Rk"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video"
+  },
+  {
+    "Name": "Re:CREATORS",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "fdb3df2de1be4dd06bf02d0dce52dfb8",
+    "DateCreated": "2025-11-23T06:23:29.0000000Z",
+    "PremiereDate": "2017-04-08T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "People have created many stories. Joy, sadness, anger, deep emotion. Stories stir up emotion and captivate. However, those emotions are nothing more than the feelings of a spectator. What if the characters in the stories had their own \"will\"? In their eyes, are we, the creators of the stories, like gods? Revolution for our world. Punishment for the land of the gods. <br><br>Re:CREATORS. Everyone becomes a Creator.<br><br>(Source: Amazon)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Drama",
+      "Fantasy",
+      "Mecha"
+    ],
+    "CommunityRating": 7.3,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2017,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "TROYCA",
+        "Id": "ed590af3fdb526307a1d90a23b98b72a"
+      },
+      {
+        "Name": "Magic Capsule",
+        "Id": "9a4f1ee182b1d8d42d81afb7782e3f81"
+      },
+      {
+        "Name": "ABC Animation",
+        "Id": "5bc0f5114ae35ea1b6138f984170cf82"
+      },
+      {
+        "Name": "Aniplex",
+        "Id": "75c89475e1e4438ec256180ed6601b36"
+      },
+      {
+        "Name": "Shogakukan",
+        "Id": "bb22f4c302eaf7cb687e7e0b974a67b5"
+      },
+      {
+        "Name": "BS11",
+        "Id": "b4f4f707ccae7ade259e3fd914bdca03"
+      },
+      {
+        "Name": "Tochigi TV",
+        "Id": "b37cf754caa07a50ddcee84d5976fb85"
+      },
+      {
+        "Name": "Gunma TV",
+        "Id": "8f4555e27f731297044af84e9053df75"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      },
+      {
+        "Name": "Mecha",
+        "Id": "75e99b5f4751652538507c6cd6c3ec00"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 22,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "321869",
+      "ItemId": "fdb3df2de1be4dd06bf02d0dce52dfb8"
+    },
+    "ChildCount": 22,
+    "Status": "Ended",
+    "AirTime": "23:30",
+    "AirDays": [
+      "Saturday"
+    ],
+    "ImageTags": {
+      "Logo": "2db0d2747eb9b3ad8f65c9c25cf4ff1a",
+      "Primary": "8353a052a17f40c6bb1350556af5d994",
+      "Banner": "8b8d8117eb04cbfe1571a42b5e39fd15"
+    },
+    "BackdropImageTags": [
+      "1005e491f30ee56bbd17e598335f5c6f"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "1005e491f30ee56bbd17e598335f5c6f": "HNDvZyxH4mog4mV=yDgjx[byx]M_IU%MjEWY%MMw"
+      },
+      "Logo": {
+        "2db0d2747eb9b3ad8f65c9c25cf4ff1a": "OBRMb$9F?b_3_3?b-;~qM{j[%Mt7xuIU00ayofWB%Mj[xu"
+      },
+      "Primary": {
+        "8353a052a17f40c6bb1350556af5d994": "djLzp#og~qxu?HkCR+s:t4oLWEaytQo#WraxoykWkDj@"
+      },
+      "Banner": {
+        "8b8d8117eb04cbfe1571a42b5e39fd15": "HQCY%cNG0exa-ot8NGV@X9~WWW9Zoy-pafRjkVR+"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2017-09-16T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Teasing Master Takagi-san",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "eea7beed899d2b997df24da16de40795",
+    "DateCreated": "2025-11-23T06:23:29.0000000Z",
+    "PremiereDate": "2018-01-08T03:00:00.0000000Z",
+    "OfficialRating": "TV-PG",
+    "ChannelId": null,
+    "Overview": "Having a friend that knows you inside out should be a good thing, but in Nishikata's case, the opposite is true.<br>\n<br>\nHis classmate Takagi loves to tease him on a daily basis, and she uses her extensive knowledge of his behavior to predict exactly how he will react to her teasing, making it nearly impossible for Nishikata to ever make a successful comeback. Despite this, Nishikata vows to someday give Takagi a taste of her own medicine by making her blush out of embarrassment from his teasing.\n",
+    "Taglines": [],
+    "Genres": [
+      "Anime",
+      "Comedy",
+      "Romance",
+      "Slice of Life"
+    ],
+    "CommunityRating": 7.4,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2018,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Shin-Ei Animation",
+        "Id": "8fe4e7aa16c83409b2e0418eb4f5ecdb"
+      },
+      {
+        "Name": "Toho",
+        "Id": "9716763284c3acaf2701d3030ebfd3bf"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      },
+      {
+        "Name": "MBS",
+        "Id": "095ac05fbaf099003c36e2331ab2811f"
+      },
+      {
+        "Name": "TBS",
+        "Id": "9bfd9e81864df89d6a9c829a99174e59"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Comedy",
+        "Id": "08d31605d366d63a7a924f944b4417f1"
+      },
+      {
+        "Name": "Romance",
+        "Id": "1ffc72e19987e5fa4047c6a6870646cf"
+      },
+      {
+        "Name": "Slice of Life",
+        "Id": "345780dc39f3b1fa11e4776c97a79ad5"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 12,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "337936",
+      "ItemId": "eea7beed899d2b997df24da16de40795"
+    },
+    "ChildCount": 4,
+    "Status": "Ended",
+    "AirTime": "01:30",
+    "AirDays": [
+      "Saturday"
+    ],
+    "ImageTags": {
+      "Logo": "95e6ebcb54b410acbad2123bf84dd6eb",
+      "Primary": "b6681eea10c37b26e34d07504ef465af",
+      "Banner": "60f3bacf8850cf0a4de995a07ed87d45"
+    },
+    "BackdropImageTags": [
+      "e05fca0c47eab90a090a505fefe9af47"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "e05fca0c47eab90a090a505fefe9af47": "HoKT_E?btS%N?H?atSbIxa~VxukWkCog%2aeM{WV"
+      },
+      "Logo": {
+        "95e6ebcb54b410acbad2123bf84dd6eb": "OcGb|]ofMxWBM{oeM{xus:t7ozaxWBt74Tofofofxufkt7"
+      },
+      "Primary": {
+        "b6681eea10c37b26e34d07504ef465af": "dtGmlUo~o|jsT}a~axaxOHs9xYofoioIxZt7xvR%RjWB"
+      },
+      "Banner": {
+        "60f3bacf8850cf0a4de995a07ed87d45": "HcFtl]GwE4={cEIp%MxuRk.mtSS%t7ban$X9t7ad"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2018-03-26T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Dead Mount Death Play",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "ca42323bc1247a3c00d5d4f8a349d613",
+    "DateCreated": "2025-11-23T06:23:29.0000000Z",
+    "PremiereDate": "2023-04-11T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "As a legendary hero nears victory against a necromancer known as The Corpse God, things take an unexpected turn with the dark sorcerer’s final gambit—reincarnation magic. This last-ditch effort catches the brave fighter off guard, and now he’s a boy named Polka Shinoyama in a whole new world! The showdown between good and evil just got epic.<br>\n<br>\n(Source: Crunchyroll)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Fantasy",
+      "Supernatural",
+      "Thriller"
+    ],
+    "CommunityRating": 7.2,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2023,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "GEEKTOYS",
+        "Id": "ec16fa3d3d288f7bcf0cd16a45992ef5"
+      },
+      {
+        "Name": "King Records",
+        "Id": "b15a9ad7ef562d0f6782bb45f12bb817"
+      },
+      {
+        "Name": "Crunchyroll",
+        "Id": "a339ec496e1b33b9d8a6154259d67ab9"
+      },
+      {
+        "Name": "GEEK PICTURES",
+        "Id": "2a5dcaf91f8cf0628185c29b49900161"
+      },
+      {
+        "Name": "Movic",
+        "Id": "4ec27308792f6fe1ca72eb02e5cc3fc1"
+      },
+      {
+        "Name": "Square Enix",
+        "Id": "9b00804801045086336ed2045c5f725a"
+      },
+      {
+        "Name": "Kadokawa Media House",
+        "Id": "c12f4dbf7f95c4a6218447d448e15a86"
+      },
+      {
+        "Name": "Geek Toys",
+        "Id": "dbc2be3d70f095bae3cf7dc0fa456a8a"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      },
+      {
+        "Name": "Supernatural",
+        "Id": "68c458f4829f530c664a01e748e010ae"
+      },
+      {
+        "Name": "Thriller",
+        "Id": "4936f5b1a6f84f0b0aa2657368a5b364"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 24,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "427239",
+      "ItemId": "ca42323bc1247a3c00d5d4f8a349d613"
+    },
+    "ChildCount": 7,
+    "Status": "Ended",
+    "AirTime": "00:00",
+    "AirDays": [
+      "Tuesday"
+    ],
+    "ImageTags": {
+      "Primary": "d28a9f0001d5d5328ab47174b25b6dce",
+      "Banner": "c08c98b5ba1c359015d365f27b680a0b"
+    },
+    "BackdropImageTags": [
+      "5e9c0f986ec15ff89aceb5ad2c409477"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "5e9c0f986ec15ff89aceb5ad2c409477": "HZCPF-xa0dIo-q%2oLNGIo-WofIoR%s;t7ofR*R*"
+      },
+      "Primary": {
+        "d28a9f0001d5d5328ab47174b25b6dce": "dgHB*$tRIUs,~ptRofoK-;ofxuof?aWCRjj]xuRjofbI"
+      },
+      "Banner": {
+        "c08c98b5ba1c359015d365f27b680a0b": "HOGPO4Gt7x[qf5w{Or$QEf}FOqI:RP9],@-VXmS~"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2023-06-27T03:00:00.0000000Z"
+  },
+  {
+    "Name": "The Eminence in Shadow",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "db44a907b94060085813b793013bfa95",
+    "DateCreated": "2025-11-23T06:23:29.0000000Z",
+    "PremiereDate": "2022-10-05T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "Some people just aren’t suited to playing the part of the flashy, in-your-face hero or the dastardly, mustache-twirling villain with larger-than-life panache. Instead, they operate in the shadows and pull the strings of society through wit and cleverness. That’s the role Cid wants to play when he’s transported to another world. Cid spins a yarn or three and becomes the unlikely leader of the underground Shadow Garden organization that fights against a menacing cult (which he totally made up). However, there’s a catch even his wild imagination didn’t see coming: the cult he concocted actually exists, and they’re beyond displeased that his power fantasy just got in the way of their evil plans!<br>\n<br>\n(Source: HIDIVE)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Comedy",
+      "Fantasy"
+    ],
+    "CommunityRating": 8.1,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2022,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Nexus",
+        "Id": "aeeb4947a858d319f9f11867c32917b6"
+      },
+      {
+        "Name": "KADOKAWA",
+        "Id": "123e9fbe57efd6da6aa74eb5462644ad"
+      },
+      {
+        "Name": "Aiming",
+        "Id": "3d3bd6d999a8017f82ee5f4c38f0394f"
+      },
+      {
+        "Name": "newgin",
+        "Id": "79791c6ed6eb7824c7c2e4003a783f7e"
+      },
+      {
+        "Name": "AT-X",
+        "Id": "8846d500e2ea8fab0f33f774bbd3dae8"
+      },
+      {
+        "Name": "BS Nippon",
+        "Id": "e6dfe3820e751cced46b2cc5b497151f"
+      },
+      {
+        "Name": "Sentai Filmworks",
+        "Id": "ff30d88e310c2f8a9be52a3e7b6ffadb"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Comedy",
+        "Id": "08d31605d366d63a7a924f944b4417f1"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 32,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "407520",
+      "ItemId": "db44a907b94060085813b793013bfa95"
+    },
+    "ChildCount": 4,
+    "Status": "Ended",
+    "AirTime": "22:30",
+    "AirDays": [
+      "Wednesday"
+    ],
+    "ImageTags": {
+      "Banner": "10064cd42dce83abc01845cfc8f3b287",
+      "Logo": "a811d8b6cc58074f83f9928b71487ca5",
+      "Primary": "8cc49b32fef96c9597949f6035d3cd40"
+    },
+    "BackdropImageTags": [
+      "d636fbf93b642b0d095b611b2ebf9292"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "d636fbf93b642b0d095b611b2ebf9292": "HuIhH+8^xvM|9Z%gnyxuWE-?ITxukDRitQR*WBWB"
+      },
+      "Banner": {
+        "10064cd42dce83abc01845cfc8f3b287": "H96HltE2E1~V9GIU^*4:NFt8t6a_e?ofV@V]ogRi"
+      },
+      "Logo": {
+        "a811d8b6cc58074f83f9928b71487ca5": "OIQ]ygRP-;s:%2xatR~qNGS#RjMxRjS2?HxaWVofMxRjkC"
+      },
+      "Primary": {
+        "8cc49b32fef96c9597949f6035d3cd40": "dB9Z$g-TK7nh3sXjxcX5*~rpT0xu0|ITr?R-z=nNR%RP"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2023-02-15T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Ice Wall",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "5f9312bc3753d752d36ac67b54da376e",
+    "DateCreated": "2026-07-29T07:59:26.5365547Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2024-06-28T03:00:00.0000000Z",
+    "ChannelId": null,
+    "Overview": "Rozé and Ash take on a mission to rescue Kensei Kuroto, the leader of the Seven Shining Stars.\n\n(Source: Hulu)",
+    "Taglines": [],
+    "Genres": [],
+    "RunTimeTicks": 14416210000,
+    "ProductionYear": 2024,
+    "IndexNumber": 2,
+    "ParentIndexNumber": 1,
+    "IsFolder": false,
+    "Type": "Episode",
+    "Studios": [],
+    "GenreItems": [],
+    "ParentLogoItemId": "490c7c89bb4f0a6bcd42aba1fe73825a",
+    "ParentBackdropItemId": "490c7c89bb4f0a6bcd42aba1fe73825a",
+    "ParentBackdropImageTags": [
+      "c6961864b9af34c1888474d9941fdd4c"
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "443905001002",
+      "ItemId": "5f9312bc3753d752d36ac67b54da376e"
+    },
+    "ChildCount": 0,
+    "SeriesName": "Code Geass: Rozé of the Recapture",
+    "SeriesId": "490c7c89bb4f0a6bcd42aba1fe73825a",
+    "SeasonId": "b6c957728c6fb5c9d52293527a38cc19",
+    "SeriesPrimaryImageTag": "469c2c5f1ef85f263f926889c25aaec2",
+    "SeasonName": "Temporada 1",
+    "VideoType": "VideoFile",
+    "ImageTags": {
+      "Primary": "7120d24bdbc33e4513e5ca0f8d7df8fe"
+    },
+    "BackdropImageTags": [],
+    "ParentLogoImageTag": "62572fb25fe2f89b251d23e5a5929e7e",
+    "ImageBlurHashes": {
+      "Primary": {
+        "7120d24bdbc33e4513e5ca0f8d7df8fe": "WoLzmv?^NxxbRPxu?c?bbExbs;NFjZaKRPRjxuWU-;t7Rjs:afof",
+        "469c2c5f1ef85f263f926889c25aaec2": "dQGkb2#.02OGEfW-t8s:A0NER~t8-DWGR:t6NGoaXTRj"
+      },
+      "Logo": {
+        "62572fb25fe2f89b251d23e5a5929e7e": "OIG-cO%10kIv9xR:9x0;NJRm$$$~oexY0kNIazoK=]az$~"
+      },
+      "Backdrop": {
+        "c6961864b9af34c1888474d9941fdd4c": "HZCj6Qxv0MI_-M${smMwE4-=WAI;xvr:M{oHsjR-"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video"
+  },
+  {
+    "Name": "JUJUTSU KAISEN 0",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "76004ed0fd481a20d537d45fcb6f3b97",
+    "DateCreated": "2026-03-28T08:22:37.0000000Z",
+    "PremiereDate": "2021-12-24T00:00:00.0000000Z",
+    "OfficialRating": "AR-SAM 16",
+    "ChannelId": null,
+    "Overview": "Yuta Okkotsu is a nervous high school student who is suffering from a serious problem—his childhood friend Rika has turned into a curse and won't leave him alone. Since Rika is no ordinary curse, his plight is noticed by Satoru Gojo, a teacher at Jujutsu High, a school where fledgling exorcists learn how to combat curses. Gojo convinces Yuta to enroll, but can he learn enough in time to confront the curse that haunts him?\n\n(Source: VIZ Media)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Supernatural"
+    ],
+    "CommunityRating": 8.3,
+    "RunTimeTicks": 63000000000,
+    "ProductionYear": 2021,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "ATV",
+        "Id": "379d9926d3a450fda18e787418876e97"
+      },
+      {
+        "Name": "BSN",
+        "Id": "24fd637ce92186edd88fabce14361ac9"
+      },
+      {
+        "Name": "BSS",
+        "Id": "e9e32f2eaa29838e586c9471544ab0a5"
+      },
+      {
+        "Name": "CBC",
+        "Id": "2e2d5b4c57b9699f9456a569f0fdb8d8"
+      },
+      {
+        "Name": "HBC",
+        "Id": "4177c7f1c6d1b9e3d17466726a062a5f"
+      },
+      {
+        "Name": "i-Television",
+        "Id": "9bac0b5642aa08f25e8fd2a8670dba92"
+      },
+      {
+        "Name": "IBC",
+        "Id": "b055fb0a8b0d154dd64789b940875152"
+      },
+      {
+        "Name": "KUTV",
+        "Id": "cc41612667729af8e9becdd881cf378d"
+      },
+      {
+        "Name": "Mainichi Broadcasting System",
+        "Id": "c9a738b17445174729913ae338aba687"
+      },
+      {
+        "Name": "MAPPA",
+        "Id": "f30f9a4d8f40b9cc07ccddbcf813cb04"
+      },
+      {
+        "Name": "MBC",
+        "Id": "c97b4632696da97baeb609e21282be1d"
+      },
+      {
+        "Name": "MBS",
+        "Id": "095ac05fbaf099003c36e2331ab2811f"
+      },
+      {
+        "Name": "MRO",
+        "Id": "64462c686bbf61a7c3c7f512291689d0"
+      },
+      {
+        "Name": "MRT",
+        "Id": "40493ee7a8782e85618d5db5b32918f6"
+      },
+      {
+        "Name": "NBC",
+        "Id": "786503487dee61267bfc1bedc8991ee3"
+      },
+      {
+        "Name": "OBS",
+        "Id": "14b96000c4b9812f2f80bc4b79e25000"
+      },
+      {
+        "Name": "RBC",
+        "Id": "c63b37dd98e71d45cd13ac25675a5835"
+      },
+      {
+        "Name": "RCC",
+        "Id": "a8852eed0c64c43b01aa6cf675bc6eb3"
+      },
+      {
+        "Name": "RKB",
+        "Id": "4bf6154f9cb27128e08285d80aa3ea99"
+      },
+      {
+        "Name": "RKK",
+        "Id": "6d17216e35a60bf26f3bb43272da992c"
+      },
+      {
+        "Name": "RSK",
+        "Id": "d73c3995657e69f19ccf0b57a81c5432"
+      },
+      {
+        "Name": "SBC",
+        "Id": "b8bd975a8b1f6b731fda4472553ac9ef"
+      },
+      {
+        "Name": "SBS",
+        "Id": "a6b20528a0a34e4a49138cceed40fced"
+      },
+      {
+        "Name": "Shueisha",
+        "Id": "b4294f9b96720b8974ff2aea00177791"
+      },
+      {
+        "Name": "Sumzap",
+        "Id": "59b4f80ea8c1d65c5be610580a8a3889"
+      },
+      {
+        "Name": "tbc",
+        "Id": "5d114f3b12bc3065e4da642cfade19fa"
+      },
+      {
+        "Name": "TBS",
+        "Id": "9bfd9e81864df89d6a9c829a99174e59"
+      },
+      {
+        "Name": "Toho",
+        "Id": "9716763284c3acaf2701d3030ebfd3bf"
+      },
+      {
+        "Name": "TUF",
+        "Id": "dd84e5be76ab580c7ae02d1f0c7dff6b"
+      },
+      {
+        "Name": "Tulip Television",
+        "Id": "8471b775baee1404b7be76d28c72ce70"
+      },
+      {
+        "Name": "TUY",
+        "Id": "a64ecd38c1924b7a91b1080248069174"
+      },
+      {
+        "Name": "tys",
+        "Id": "690ac68365bbe556378cad16a9468c5c"
+      },
+      {
+        "Name": "UTY",
+        "Id": "29338325cc08628b93f0ce534e765d9b"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Supernatural",
+        "Id": "68c458f4829f530c664a01e748e010ae"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 35,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "377543",
+      "ItemId": "76004ed0fd481a20d537d45fcb6f3b97"
+    },
+    "ChildCount": 3,
+    "Status": "Ended",
+    "AirTime": "00:30",
+    "AirDays": [
+      "Friday"
+    ],
+    "ImageTags": {
+      "Banner": "b97e2a00affd41917f803e4500045648",
+      "Logo": "ad45c6a18d9b41884ebdc0da6ff4a00f",
+      "Primary": "d86109d6b5e712488b90a3d3827e0233"
+    },
+    "BackdropImageTags": [
+      "15dbf4ef0df16c65bc6d2b62e4d735e9"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "15dbf4ef0df16c65bc6d2b62e4d735e9": "HcGmGf-oD%JVrVI[4ot7Nb?wWAW=I;s,%MR+t7M{"
+      },
+      "Banner": {
+        "b97e2a00affd41917f803e4500045648": "HIASry-@1d0_Z}[ov|ELJV^8s=EfEesm-BofJ7N^"
+      },
+      "Logo": {
+        "ad45c6a18d9b41884ebdc0da6ff4a00f": "OMBWY+offQj[M{j[ofozj[j[ayayaej[00j[ofjtt7WBay"
+      },
+      "Primary": {
+        "d86109d6b5e712488b90a3d3827e0233": "dNEer-DNELx^;0tm9Zxu=}ITNwtRyEiwR%bcMdxuR%R+"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2021-12-24T00:00:00.0000000Z"
+  },
+  {
+    "Name": "The Secrets of Pyrokinesis",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "1c2de72b948433b208ba33c5e6d2e977",
+    "DateCreated": "2026-07-29T07:05:07.1356729Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2019-11-23T03:00:00.0000000Z",
+    "ChannelId": null,
+    "Overview": "Vulcan gets settled in at the 8th, while Captain Obi meets with Hibana, Konro, and Karim to exchange data on the White-Clad matter. Konro proposes that Shinra and Arthur be given combat training in Asakusa to improve their fighting skills.\n\n(Source: Crunchyroll)",
+    "Taglines": [],
+    "Genres": [],
+    "RunTimeTicks": 14685700000,
+    "ProductionYear": 2026,
+    "IndexNumber": 18,
+    "ParentIndexNumber": 3,
+    "IsFolder": false,
+    "Type": "Episode",
+    "Studios": [],
+    "GenreItems": [],
+    "ParentLogoItemId": "230c6c7342e2717a07d5e559dea02089",
+    "ParentBackdropItemId": "230c6c7342e2717a07d5e559dea02089",
+    "ParentBackdropImageTags": [
+      "61eb2bbd053f6df413e30e939b1bcd3e"
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "355480003018",
+      "ItemId": "1c2de72b948433b208ba33c5e6d2e977"
+    },
+    "ChildCount": 0,
+    "SeriesName": "Fire Force",
+    "SeriesId": "230c6c7342e2717a07d5e559dea02089",
+    "SeasonId": "32192dc0ef034c1cd6a58b7f3ad639bb",
+    "SeriesPrimaryImageTag": "b8ab1905b94b3fb0e2c5c870eb92c34c",
+    "SeasonName": "Temporada 3",
+    "VideoType": "VideoFile",
+    "ImageTags": {
+      "Primary": "b6a513308f196dc456c349dbf793cd9e"
+    },
+    "BackdropImageTags": [],
+    "ParentLogoImageTag": "6e7f98b6a2df187f28eaec4f7fc20f9a",
+    "ImageBlurHashes": {
+      "Primary": {
+        "b6a513308f196dc456c349dbf793cd9e": "WQF5~xvd15Vr~Vxv4Ub^VsWXIUM{57R.^*t6NIobxujYNHj]oJkC",
+        "b8ab1905b94b3fb0e2c5c870eb92c34c": "dKIhT--;~CkEmRE200IUxbIpad%MIARkozjERQM{-ot8"
+      },
+      "Logo": {
+        "6e7f98b6a2df187f28eaec4f7fc20f9a": "OdHetWxu00ayD%M{Rjxuj[M{ofayRjt7D%Rjxuoft7t7of"
+      },
+      "Backdrop": {
+        "61eb2bbd053f6df413e30e939b1bcd3e": "HuIyzh1NIB-OE7oyxYa2Tb]%E*S~$fMzobbvsqXO"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video"
+  },
+  {
+    "Name": "Great Pretender",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "c2facce1cb2fd3ca398dc8853f0b3613",
+    "DateCreated": "2025-11-23T06:23:30.0000000Z",
+    "PremiereDate": "2020-06-02T03:00:00.0000000Z",
+    "OfficialRating": "TV-MA",
+    "ChannelId": null,
+    "Overview": "Self-styled “Japan's greatest swindler” Makoto Edamura is mainly targeting elder people and occasional foreign travelers. But when he tries to scam an apparently clueless French tourist in Tokyo, he can't possibly imagine that what looked like just another ordinary job is going to take him all the way to Los Angeles, tied upside-down on the famous Hollywood sign… And he is yet to find out what fate awaits him!<br>\n<br>\n(Source: Crunchyroll)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Comedy",
+      "Drama",
+      "Thriller"
+    ],
+    "CommunityRating": 8.1,
+    "RunTimeTicks": 13800000000,
+    "ProductionYear": 2020,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "WIT STUDIO",
+        "Id": "d977205ee21f63eb3b0ac3c7d73cfcab"
+      },
+      {
+        "Name": "Fuji TV",
+        "Id": "69a36f3d4c0d7e6fb7c66000aa034a0c"
+      },
+      {
+        "Name": "Production I.G",
+        "Id": "a4c5f8e888abcf96ea68d2e86d9ba1ff"
+      },
+      {
+        "Name": "Toho",
+        "Id": "9716763284c3acaf2701d3030ebfd3bf"
+      },
+      {
+        "Name": "BS Fuji",
+        "Id": "0680c17291e76201d43807fdc96419fe"
+      },
+      {
+        "Name": "Hakuhodo DY Music & Pictures",
+        "Id": "2f7d9ebb95138fa2f8de3a6ab3be6d03"
+      },
+      {
+        "Name": "DMM TV",
+        "Id": "f6f00fcc77efbe372b998dbb14718e1b"
+      },
+      {
+        "Name": "Netflix",
+        "Id": "411cb7d6c12c8bf0d3c1caed22120c6f"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Comedy",
+        "Id": "08d31605d366d63a7a924f944b4417f1"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Thriller",
+        "Id": "4936f5b1a6f84f0b0aa2657368a5b364"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 23,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "376144",
+      "ItemId": "c2facce1cb2fd3ca398dc8853f0b3613"
+    },
+    "ChildCount": 6,
+    "Status": "Ended",
+    "AirTime": "00:00",
+    "AirDays": [
+      "Friday"
+    ],
+    "ImageTags": {
+      "Primary": "6b20cf197119aeca4555245d8e48bf8b",
+      "Logo": "5c1d7f29e86afa3c538e2a756aff08dd",
+      "Banner": "da7ebfc158c853ed041e7e917c407009"
+    },
+    "BackdropImageTags": [
+      "27f19fd65430af5579093f3cb412cd57"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "27f19fd65430af5579093f3cb412cd57": "HlKF?0w{VtwJkWxaenrrbb|{oLaenikCs:e.nibH"
+      },
+      "Primary": {
+        "6b20cf197119aeca4555245d8e48bf8b": "dVOokanp%z^$.5R%s=og_NSjV{x]-l$*NyNHtTxstSR:"
+      },
+      "Logo": {
+        "5c1d7f29e86afa3c538e2a756aff08dd": "O43*rQj[0|ay^6jZAWXSj[nOaySgj[xGJ7a|$jj[JRaywx"
+      },
+      "Banner": {
+        "da7ebfc158c853ed041e7e917c407009": "H,N06mXnOsRl-o-:%M-qS$~VX8W?aLt6xtofxakX"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2020-09-21T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Solo Leveling",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "90078e00ad3695da540b64dcf988f632",
+    "DateCreated": "2025-11-23T06:23:30.0000000Z",
+    "PremiereDate": "2024-01-07T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "They say whatever doesn’t kill you makes you stronger, but that’s not the case for the world’s weakest hunter Seong Jin-U. After being brutally slaughtered by monsters in a high-ranking dungeon, Jin-U came back with the System, a program only he could see, that’s leveling him up in every way. Now, he’s inspired to discover the secrets behind his powers and the dungeon that spawned them.<br>\n<br>\n(Source: Crunchyroll) <br><br>",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Adventure",
+      "Anime",
+      "Fantasy"
+    ],
+    "CommunityRating": 8.1,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2024,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "A-1 Pictures",
+        "Id": "42115028903ac952c4d7cd8512f3a88b"
+      },
+      {
+        "Name": "Aniplex",
+        "Id": "75c89475e1e4438ec256180ed6601b36"
+      },
+      {
+        "Name": "Netmarble",
+        "Id": "fcb8f245fee48d71bd32c8edbe71312c"
+      },
+      {
+        "Name": "D&C MEDIA",
+        "Id": "fbc7bb0c3c416cfa0893e82ee7e21198"
+      },
+      {
+        "Name": "Kakao piccoma",
+        "Id": "f7e5e8a2f82fe64a8aabf8e0160d2761"
+      },
+      {
+        "Name": "Crunchyroll",
+        "Id": "a339ec496e1b33b9d8a6154259d67ab9"
+      },
+      {
+        "Name": "Gunma TV",
+        "Id": "8f4555e27f731297044af84e9053df75"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      },
+      {
+        "Name": "BS11",
+        "Id": "b4f4f707ccae7ade259e3fd914bdca03"
+      },
+      {
+        "Name": "Tochigi TV",
+        "Id": "b37cf754caa07a50ddcee84d5976fb85"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Adventure",
+        "Id": "51cec9645b896084d12b259acd05ccb1"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 13,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "389597",
+      "ItemId": "90078e00ad3695da540b64dcf988f632"
+    },
+    "ChildCount": 3,
+    "Status": "Ended",
+    "AirTime": "00:00",
+    "AirDays": [
+      "Sunday"
+    ],
+    "ImageTags": {
+      "Banner": "120652a548a06bd292dc1fd4aaa834d6",
+      "Primary": "5b123fdfb275dde0ee41240f2bda85fc",
+      "Logo": "37d4a3226397d5b623e4bf86b67cbb18"
+    },
+    "BackdropImageTags": [
+      "c71279e0999443c545ce04cde77609fd"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "c71279e0999443c545ce04cde77609fd": "HNFF4}~B9wEQx]tlD*D*tl~B%1R-RlRjbuozV[Na"
+      },
+      "Banner": {
+        "120652a548a06bd292dc1fd4aaa834d6": "HC8EZ4kGD~W6QkxK$kSjE|=*srORIStR-srsT0IT"
+      },
+      "Primary": {
+        "5b123fdfb275dde0ee41240f2bda85fc": "dSCG}n4nrWng.AIUs-RP.TE1waRj.8E3n3t7%MR*RPxZ"
+      },
+      "Logo": {
+        "37d4a3226397d5b623e4bf86b67cbb18": "OQ9HhNV@ozfkRPayRPtRtRayj]axayWB8^t7j[oLt8j@t7"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2024-03-31T03:00:00.0000000Z"
+  },
+  {
+    "Name": "To Be Hero X",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "bf566579a61ed8ed88d5d513f442ec3b",
+    "DateCreated": "2026-07-29T08:37:36.7311561Z",
+    "PremiereDate": "2025-04-06T03:00:00.0000000Z",
+    "OfficialRating": "AR-SAM 16",
+    "ChannelId": null,
+    "Overview": "This is a world where heroes are created by people's trust, and the hero who gains the most trust is known as X. In this world, people's trust can be quantified through data, and these values are reflected on everyone's wrist. As long as one gains enough trust points, an ordinary person can possess superpowers and become a superhero who saves the world. However, the constantly changing trust values make the path of a hero full of uncertainties...\n<br><br>\n(Source: Official To Be Hero X home page)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Drama",
+      "Mystery",
+      "Supernatural"
+    ],
+    "CommunityRating": 8.5,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2025,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "BeDream",
+        "Id": "c1ab0cc4ee889f5bb3bce559710e367a"
+      },
+      {
+        "Name": "bilibili",
+        "Id": "d81438213120cd8e0ced3fb4e43d49d0"
+      },
+      {
+        "Name": "Aniplex",
+        "Id": "75c89475e1e4438ec256180ed6601b36"
+      },
+      {
+        "Name": "Paper Plane Animation Studio",
+        "Id": "51184eb1d0c3b38b2361d19decc33a2e"
+      },
+      {
+        "Name": "B.Cool Studio",
+        "Id": "cda35678fd743f4b7ef7accc8f6db41d"
+      },
+      {
+        "Name": "Studio LAN",
+        "Id": "c9a4d0ea77b44336b77614c13a2d138e"
+      },
+      {
+        "Name": "Pb Animation",
+        "Id": "ed128fd68743d2e53792cb02dd730f40"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Mystery",
+        "Id": "d3a0ead52489743e5a68704142092c71"
+      },
+      {
+        "Name": "Supernatural",
+        "Id": "68c458f4829f530c664a01e748e010ae"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 24,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "459453",
+      "ItemId": "bf566579a61ed8ed88d5d513f442ec3b"
+    },
+    "ChildCount": 6,
+    "Status": "Ended",
+    "AirTime": "08:30",
+    "AirDays": [
+      "Sunday"
+    ],
+    "ImageTags": {
+      "Banner": "3a7465fdd6a7ca3d40bd9658f02b0e42",
+      "Primary": "f0338ffc83c883d30186fe42ddba11e5",
+      "Logo": "9d7d2245dbb4f88458f107e585e302e6"
+    },
+    "BackdropImageTags": [
+      "a55e4f82473b4aa6f7bc1ade6c2e8b65"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "a55e4f82473b4aa6f7bc1ade6c2e8b65": "HPHlf0njE1%22tGFR*ELOXxtODaKjF$*XmI:n4tR"
+      },
+      "Banner": {
+        "3a7465fdd6a7ca3d40bd9658f02b0e42": "H@NmpH-;W;%Ms:M{-;xtRk~qxuM|oft7RjbbxuWB"
+      },
+      "Primary": {
+        "f0338ffc83c883d30186fe42ddba11e5": "dKJ$8cPA5Po}@FF^yXJRxZK4I:Rj{zM{RPxarDRPxGOW"
+      },
+      "Logo": {
+        "9d7d2245dbb4f88458f107e585e302e6": "OgNJtU?^?bH?yXVY-;IURj%2ozRjj[t7ozoLt7W;enf+Rj"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2025-09-14T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Mirai Nikki",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "416ecd7574490d6a2259b7d0db8a0d55",
+    "DateCreated": "2026-07-29T08:37:33.9780302Z",
+    "PremiereDate": "2010-12-09T03:00:00.0000000Z",
+    "OfficialRating": "TV-MA",
+    "ChannelId": null,
+    "Overview": "Middle school 2nd year, Amano Yukiteru, is a boy who has problem making friends. He thinks of himself as a bystander and will always write down everything he sees in a cell phone diary.<br><br>\nTormented by solitude, Yukiteru began to imagine things like a friend called Deus Ex Machina who is apparently the Lord of Time &amp; Space. Seeing Yukiteru's miserable state, Deus gives him a new ability. His diary will now record events that will happen in the near future. Yukiteru is then forced to participate in a game which the winner will become Deus's successor.<br><br>\nA short OVA that was bundled with the limited edition of the eleventh volume of the manga.\n",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Supernatural"
+    ],
+    "CommunityRating": 6.6,
+    "RunTimeTicks": 4800000000,
+    "ProductionYear": 2010,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Asread",
+        "Id": "ea5521c9bd98524801542e129a61eecf"
+      },
+      {
+        "Name": "Chiba TV",
+        "Id": "cb739cec17140da7c6af4f50b7bc78ff"
+      },
+      {
+        "Name": "CTC (JA)",
+        "Id": "13f93e3ed4206fcb5ceafc050124cd50"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Supernatural",
+        "Id": "68c458f4829f530c664a01e748e010ae"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 26,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "249827",
+      "ItemId": "416ecd7574490d6a2259b7d0db8a0d55"
+    },
+    "ChildCount": 15,
+    "Status": "Ended",
+    "AirTime": "23:00",
+    "AirDays": [
+      "Sunday"
+    ],
+    "ImageTags": {
+      "Banner": "959b78395720d801652e69e321f4cc39",
+      "Logo": "a375ca79d932a1df0584345f3e801eb3",
+      "Primary": "7615090aeddcd3e0c6ca95ca4d1c8b06"
+    },
+    "BackdropImageTags": [
+      "063aeacc270ab121d4ebde6abd5aa403"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "063aeacc270ab121d4ebde6abd5aa403": "PlLo+-*Jo}#m.8?btlr@#TS#kCt7aKWBS1ofRQNGW;son%RjR*xG"
+      },
+      "Banner": {
+        "959b78395720d801652e69e321f4cc39": "HGB:HjtR0}^lv|9[D%m,EK_4tRo}-pVsR+D%MxM{"
+      },
+      "Logo": {
+        "a375ca79d932a1df0584345f3e801eb3": "OdC%8Jj[M{j[j[WBWBofayj[ayj[fQay00ayxuayayofof"
+      },
+      "Primary": {
+        "7615090aeddcd3e0c6ca95ca4d1c8b06": "dMKH^L{x#8C7Iq;#XmV?ELn,sAodS0xGr?WBE1NaofWU"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2010-12-09T03:00:00.0000000Z"
+  },
+  {
+    "Name": "The Idaten Deities Know Only Peace",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "ff79a73d363efd919c4077cd7edfa90f",
+    "DateCreated": "2026-04-27T05:34:10.0000000Z",
+    "PremiereDate": "2021-07-23T00:00:00.0000000Z",
+    "OfficialRating": "TV-MA",
+    "ChannelId": null,
+    "Overview": "It has been 800 years since the incredibly fast and powerful gods of battle known as the Idaten had sealed away the demons after an intense battle. Now, that battle is just considered a myth or a fairytale. While the current generation of Idaten who have never even had to fight are enjoying their peaceful lives, someone awakened the demons once again! Armed forces, ingenuity. politics, and intrigue. If you've got it, use everything you can! This three-way battle royale with no rules and no limits is about to begin!!\n\n(Source: Crunchyroll)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Adventure",
+      "Anime",
+      "Fantasy"
+    ],
+    "CommunityRating": 7.4,
+    "RunTimeTicks": 13800000000,
+    "ProductionYear": 2021,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Aniplex",
+        "Id": "75c89475e1e4438ec256180ed6601b36"
+      },
+      {
+        "Name": "Dentsu",
+        "Id": "38f50701b39a112bea478b41efaa04ce"
+      },
+      {
+        "Name": "Fuji TV",
+        "Id": "69a36f3d4c0d7e6fb7c66000aa034a0c"
+      },
+      {
+        "Name": "GREE",
+        "Id": "a6866d83648537ce3f8f2d017eab04ca"
+      },
+      {
+        "Name": "Hakusensha",
+        "Id": "7b80d8a186ec6ebd18c670cd47e10864"
+      },
+      {
+        "Name": "MAPPA",
+        "Id": "f30f9a4d8f40b9cc07ccddbcf813cb04"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Adventure",
+        "Id": "51cec9645b896084d12b259acd05ccb1"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 11,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "401856",
+      "ItemId": "ff79a73d363efd919c4077cd7edfa90f"
+    },
+    "ChildCount": 11,
+    "Status": "Ended",
+    "AirTime": "01:00",
+    "AirDays": [
+      "Friday"
+    ],
+    "ImageTags": {
+      "Banner": "ec2c13637018df71b48ef8bb921d10bc",
+      "Primary": "e3c70e3a5e40768a80504d3f9ebf7545"
+    },
+    "BackdropImageTags": [
+      "7e0c0a2d524eeabaef083dc908778f7c"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "7e0c0a2d524eeabaef083dc908778f7c": "H^MFUVEOI=xGMyn+OWS3WB}tWENdbYV@e.a}W.R*"
+      },
+      "Banner": {
+        "ec2c13637018df71b48ef8bb921d10bc": "H^P$Ez%ibcxrx]?c%M%2t5~Uo}R.slog%Mxts:ow"
+      },
+      "Primary": {
+        "e3c70e3a5e40768a80504d3f9ebf7545": "dPIqrjIFIv=@0N=^NERW?aIAwOXN?YVz%J$fa3W9OVi_"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2021-09-28T00:00:00.0000000Z"
+  },
+  {
+    "Name": "Fate/Grand Order Absolute Demonic Front: Babylonia - Initium Iter",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "1043b7eedbbda2a3087bfc18350e8cfa",
+    "DateCreated": "2025-11-23T06:23:30.0000000Z",
+    "PremiereDate": "2019-08-03T03:00:00.0000000Z",
+    "OfficialRating": "14",
+    "ChannelId": null,
+    "Overview": "The story focuses on the background of Mash Kyrielight and Romani Archaman, and the events leading up to the Seventh Singularity, Absolute Demonic Front Babylonia.\n<br>\n<br>\nThis episode aired on August 3, 2019 at Fate/Grand Order Fes. 2019: Chaldea Park. It was available for download on the Fate/Grand Order mobile app, from August 4, 2019 to August 11, 2019.",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Fantasy",
+      "Supernatural"
+    ],
+    "CommunityRating": 7,
+    "RunTimeTicks": 16200000000,
+    "ProductionYear": 2019,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "CloverWorks",
+        "Id": "70d5ff0b88545e065f7e97e1609d50cb"
+      },
+      {
+        "Name": "Aniplex",
+        "Id": "75c89475e1e4438ec256180ed6601b36"
+      },
+      {
+        "Name": "DELiGHTWORKS",
+        "Id": "c637e3ef9e94415f0004253a22d31dee"
+      },
+      {
+        "Name": "Notes",
+        "Id": "6424f43f2e1a2bf27bf2a58ce82b7e78"
+      },
+      {
+        "Name": "Gunma TV",
+        "Id": "8f4555e27f731297044af84e9053df75"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      },
+      {
+        "Name": "BS11",
+        "Id": "b4f4f707ccae7ade259e3fd914bdca03"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Fantasy",
+        "Id": "a30dcc65be22eb3c21c03f7c1c7a57d1"
+      },
+      {
+        "Name": "Supernatural",
+        "Id": "68c458f4829f530c664a01e748e010ae"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 21,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "353666",
+      "ItemId": "1043b7eedbbda2a3087bfc18350e8cfa"
+    },
+    "ChildCount": 20,
+    "Status": "Ended",
+    "AirTime": "23:30",
+    "AirDays": [
+      "Saturday"
+    ],
+    "ImageTags": {
+      "Primary": "e89b781a07fd819c045c70e51b249b8d",
+      "Logo": "929367c66ba6b1a5e7315778f180c021",
+      "Banner": "628950d655b3fef6e669628dc24e15dc"
+    },
+    "BackdropImageTags": [
+      "591d3c366465938b2c94ee9f9304ae00"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "591d3c366465938b2c94ee9f9304ae00": "HkKK{K56Mw-;Io%1R+xuRk~qIojFt7NGxaRjt7V@"
+      },
+      "Primary": {
+        "e89b781a07fd819c045c70e51b249b8d": "dgIXdmtRXUs=x|ofIsogW^tQIpRjxwRjRiogkFWCbaRj"
+      },
+      "Logo": {
+        "929367c66ba6b1a5e7315778f180c021": "OVG[{3%M00RkE1a_t6D$xat7Rkt7s:t64nRjt7Rjofxuxu"
+      },
+      "Banner": {
+        "628950d655b3fef6e669628dc24e15dc": "H~L},0%M-;V?ogtSS5-;og_Naft7t7V@t7bIt7WX"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2019-08-03T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Darwin's Game",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "dc220c3ea895c2455c1ec9175d4766e8",
+    "DateCreated": "2026-04-27T05:40:30.0000000Z",
+    "PremiereDate": "2020-01-04T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "Kaname Sudou, an ordinary high school student, receives an invitation email to try a mysterious app called \"Darwin's Game.\" Kaname, upon launching the app, is drawn into a game where players fight one another using superpowers called Sigils. Without knowing the reason for all this, can Kaname survive furious battles against the powerful players who attack him?<br>\n<br>\n(Source: Aniplex of America)\n<br><br>\n<i>Note: The first episode aired with a runtime of ~48 minutes as opposed to the standard 24 minute long episode.</i>",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Mystery",
+      "Sci-Fi",
+      "Thriller"
+    ],
+    "CommunityRating": 7,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2020,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Nexus",
+        "Id": "aeeb4947a858d319f9f11867c32917b6"
+      },
+      {
+        "Name": "Aniplex",
+        "Id": "75c89475e1e4438ec256180ed6601b36"
+      },
+      {
+        "Name": "Magic Capsule",
+        "Id": "9a4f1ee182b1d8d42d81afb7782e3f81"
+      },
+      {
+        "Name": "Madman Entertainment",
+        "Id": "b723f6320bd9c6c214c206a393ac666c"
+      },
+      {
+        "Name": "Aniplex of America",
+        "Id": "1a71dc7311c3f494e7b61417612e9e4c"
+      },
+      {
+        "Name": "AT-X",
+        "Id": "8846d500e2ea8fab0f33f774bbd3dae8"
+      },
+      {
+        "Name": "Gunma TV",
+        "Id": "8f4555e27f731297044af84e9053df75"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      },
+      {
+        "Name": "BS11",
+        "Id": "b4f4f707ccae7ade259e3fd914bdca03"
+      },
+      {
+        "Name": "ABEMA",
+        "Id": "4528564090e2d362c7460576697fe346"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Mystery",
+        "Id": "d3a0ead52489743e5a68704142092c71"
+      },
+      {
+        "Name": "Sci-Fi",
+        "Id": "d3bf560475125eed829c435f3d8329e3"
+      },
+      {
+        "Name": "Thriller",
+        "Id": "4936f5b1a6f84f0b0aa2657368a5b364"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 11,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "355220",
+      "ItemId": "dc220c3ea895c2455c1ec9175d4766e8"
+    },
+    "ChildCount": 9,
+    "Status": "Ended",
+    "AirTime": "00:00",
+    "AirDays": [
+      "Saturday"
+    ],
+    "ImageTags": {
+      "Primary": "f27a9f9f8ded83d1104e06f064b484eb",
+      "Banner": "4950949691eaf0e772353595d945eb3c",
+      "Logo": "157c6208c9ea112487c41714eae9f745"
+    },
+    "BackdropImageTags": [
+      "0d0c60390b1fe34a0a7cc25ce000c36f"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "0d0c60390b1fe34a0a7cc25ce000c36f": "WbJ7I9bcE4WCt8sm0fV@bcs,NGW=InkCocWYt4aytQofjsa}ofoL"
+      },
+      "Primary": {
+        "f27a9f9f8ded83d1104e06f064b484eb": "dfHTp:}[$*%LIpWCNGRkE1NHX9ae9uI:t7jZOqSzWAW;"
+      },
+      "Banner": {
+        "4950949691eaf0e772353595d945eb3c": "HdD[bE9tAB~BRjK4sp$%XS#=S}Szwgf+SxoLsCX7"
+      },
+      "Logo": {
+        "157c6208c9ea112487c41714eae9f745": "OP9GzQWBt7j[oMj]j[Rja{j[ayj[a{j[0JofRjayaxaxay"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2020-03-21T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Mob Psycho 100",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "5064590b256fd9e5f509584660a11565",
+    "DateCreated": "2025-11-23T06:23:29.0000000Z",
+    "PremiereDate": "2016-07-12T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "The story revolves around \"Mob,\" a boy who will explode if his emotional capacity reaches 100%. This boy with psychic powers earned his nickname \"Mob\" because he does not stand out among other people. He keeps his psychic powers bottled up so he can live normally, but if his emotional level reaches 100, something will overwhelm his entire body.<br>\n<br>\n(Source: Anime News Network)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Comedy",
+      "Drama",
+      "Psychological"
+    ],
+    "CommunityRating": 8.4,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2016,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "bones",
+        "Id": "4e4eb83739ab7c6a9fb46a0325ef7665"
+      },
+      {
+        "Name": "BS Fuji",
+        "Id": "0680c17291e76201d43807fdc96419fe"
+      },
+      {
+        "Name": "Shogakukan-Shueisha Productions",
+        "Id": "aeb9a7fa1ab33aff932cdfaa2fd0a139"
+      },
+      {
+        "Name": "Warner Bros. Japan",
+        "Id": "d92c0a2b97647c74810d035293203d7e"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Comedy",
+        "Id": "08d31605d366d63a7a924f944b4417f1"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Psychological",
+        "Id": "13fcb116f8048f20769597c91946932f"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 12,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "307375",
+      "ItemId": "5064590b256fd9e5f509584660a11565"
+    },
+    "ChildCount": 12,
+    "Status": "Ended",
+    "AirTime": "00:00",
+    "AirDays": [
+      "Thursday"
+    ],
+    "ImageTags": {
+      "Banner": "3a8f952be033761c1a596bb413844d24",
+      "Logo": "57a6f5581b3852fdc5828eddc189d7ad",
+      "Primary": "eb93af26997ebd674d7c57c9336c57cf"
+    },
+    "BackdropImageTags": [
+      "95a9a3c0e5d7e76195bacae89ffdee00"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "95a9a3c0e5d7e76195bacae89ffdee00": "HA9j4nx]3LMxzD-p54-;nB?I?cJ5D~#AvOk:FYw~"
+      },
+      "Banner": {
+        "3a8f952be033761c1a596bb413844d24": "HlEfpU~W%gITInog%M%Mn%x^spS#NGWUt7xuxvtR"
+      },
+      "Logo": {
+        "57a6f5581b3852fdc5828eddc189d7ad": "O~O2R7ay?^of%hozjZt7fQayfQaya|jtozjtaefQaya|jt"
+      },
+      "Primary": {
+        "eb93af26997ebd674d7c57c9336c57cf": "dEHU,]%h?v~B-No#Eksk-,XSEfSK$dJ-X7xtRgD%R;oe"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2016-09-27T03:00:00.0000000Z"
+  },
+  {
+    "Name": "86 EIGHTY-SIX",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "5c46bf420d48f7645579363d42663375",
+    "DateCreated": "2026-03-28T08:22:30.0000000Z",
+    "PremiereDate": "2021-04-11T03:00:00.0000000Z",
+    "OfficialRating": "TV-MA",
+    "ChannelId": null,
+    "Overview": "Called “Juggernaut,” these are the unmanned combat drones developed by the Republic of San Magnolia in answer to the attacks by the autonomous unmanned drones of the neighboring Empire of Giad, the “Legion”. But they’re only unmanned in name. In reality, they are piloted by the Eighty-sixers—those considered to be less than human and treated as mere tools.<br>\n<br>\nDetermined to achieve his own mysterious ends, Shin, the captain of Spearhead Squadron, which is comprised of Eighty-sixers, continues to fight a hopeless war on a battlefield where only death awaits him.<br>\n<br>\n(Source: Crunchyroll)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Drama",
+      "Mecha",
+      "Sci-Fi"
+    ],
+    "CommunityRating": 8.3,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2021,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "A-1 Pictures",
+        "Id": "42115028903ac952c4d7cd8512f3a88b"
+      },
+      {
+        "Name": "Aniplex",
+        "Id": "75c89475e1e4438ec256180ed6601b36"
+      },
+      {
+        "Name": "KADOKAWA",
+        "Id": "123e9fbe57efd6da6aa74eb5462644ad"
+      },
+      {
+        "Name": "BANDAI SPIRITS",
+        "Id": "95355d27cbc088d0f10fc36be0b1ab84"
+      },
+      {
+        "Name": "Gunma TV",
+        "Id": "8f4555e27f731297044af84e9053df75"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      },
+      {
+        "Name": "BS11",
+        "Id": "b4f4f707ccae7ade259e3fd914bdca03"
+      },
+      {
+        "Name": "Tochigi TV",
+        "Id": "b37cf754caa07a50ddcee84d5976fb85"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Mecha",
+        "Id": "75e99b5f4751652538507c6cd6c3ec00"
+      },
+      {
+        "Name": "Sci-Fi",
+        "Id": "d3bf560475125eed829c435f3d8329e3"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 23,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "378609",
+      "ItemId": "5c46bf420d48f7645579363d42663375"
+    },
+    "ChildCount": 7,
+    "Status": "Ended",
+    "AirTime": "00:00",
+    "AirDays": [
+      "Sunday"
+    ],
+    "ImageTags": {
+      "Logo": "8e0839684e88cc88b834bbf8074aa1b1",
+      "Primary": "488f996f2126e8cd98817e36c219e857",
+      "Banner": "8d3afc20afcf5c0825b58489d5767bfd"
+    },
+    "BackdropImageTags": [
+      "864dff3dda1d3320aa94e12906c508ea"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "864dff3dda1d3320aa94e12906c508ea": "H~N1iwyDIps;X9xuozbI%L_NxuM|WDkCt6kCoJt7"
+      },
+      "Logo": {
+        "8e0839684e88cc88b834bbf8074aa1b1": "OM8|^lof00Rj_3t7D%%Mj[IUWBxuofRjD%j[-;ayIUj[xu"
+      },
+      "Primary": {
+        "488f996f2126e8cd98817e36c219e857": "dtG]2axZx^tR?wjZozogkERkM_WBx^kCRjaxtRkCbIj["
+      },
+      "Banner": {
+        "8d3afc20afcf5c0825b58489d5767bfd": "H^NK;goex]%MRjtRax%Nx]*0j[WBbbayozofkWkW"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2021-06-20T03:00:00.0000000Z"
+  },
+  {
+    "Name": "The Angel Next Door Spoils Me Rotten2",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "24bc49981e1feb0918a39dc4bc3450e1",
+    "DateCreated": "2026-07-24T02:08:40.9083551Z",
+    "PremiereDate": "2026-04-03T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "The second season of <i>Otonari no Tenshi-sama ni Itsunomanika Dame Ningen ni Sareteita Ken</i>.\n<br><br>\nNow a couple, Amane and Mahiru navigate school life and overcome their pasts in this sweet love story.\n<br><br>\n(Source: Crunchyroll News)\n<br><br>\n<i>Note: Crunchyroll has labeled the English title under the name \"The Angel Next Door Spoils Me Rotten2\", so while it seems erroneous for the title not to have a space between the name and 2, it is what the series is officially labeled as.</i>",
+    "Taglines": [],
+    "Genres": [
+      "Anime",
+      "Romance",
+      "Slice of Life"
+    ],
+    "CommunityRating": 7.2,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2026,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Toho",
+        "Id": "9716763284c3acaf2701d3030ebfd3bf"
+      },
+      {
+        "Name": "project No.9",
+        "Id": "cfd1bda0511630bd847c6bc9a9b91343"
+      },
+      {
+        "Name": "SB Creative",
+        "Id": "3a6b0084ddde52fd865c1dcba8cccfaf"
+      },
+      {
+        "Name": "Pony Canyon",
+        "Id": "769f813c46b0f187f03d497d87a12ccf"
+      },
+      {
+        "Name": "Movic",
+        "Id": "4ec27308792f6fe1ca72eb02e5cc3fc1"
+      },
+      {
+        "Name": "Good Smile Company",
+        "Id": "58a1f1b309ecee32ba5c676a4b2689bf"
+      },
+      {
+        "Name": "Pia",
+        "Id": "dd4392e4e6a14f073a92c8e847c580e3"
+      },
+      {
+        "Name": "TOKYO MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Romance",
+        "Id": "1ffc72e19987e5fa4047c6a6870646cf"
+      },
+      {
+        "Name": "Slice of Life",
+        "Id": "345780dc39f3b1fa11e4776c97a79ad5"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 24,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "414221",
+      "ItemId": "24bc49981e1feb0918a39dc4bc3450e1"
+    },
+    "ChildCount": 12,
+    "Status": "Ended",
+    "AirTime": "22:30",
+    "AirDays": [
+      "Friday"
+    ],
+    "ImageTags": {
+      "Logo": "452415b7dc95bb23cf9b50e1744b58ac",
+      "Banner": "7705b5a1f5ec99d0b09f110532c1e95f",
+      "Primary": "dd6cc753fce1c5ee464bd9940ac9650f"
+    },
+    "BackdropImageTags": [
+      "b18398ccef2e0b32d82bf194a220d6ae"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "b18398ccef2e0b32d82bf194a220d6ae": "H+N,u2xts|juS9%Ji^xrou~oxs-OjFoN$~xpjIt2"
+      },
+      "Logo": {
+        "452415b7dc95bb23cf9b50e1744b58ac": "OLSY{ntR_4ofM{tRRO-;ofWBV@jYogogxvayV@j[Rjj]t7"
+      },
+      "Banner": {
+        "7705b5a1f5ec99d0b09f110532c1e95f": "HPQJyCMc~W_3IV9Yt6?bxw.8oejJspxGSyNaRkn+"
+      },
+      "Primary": {
+        "dd6cc753fce1c5ee464bd9940ac9650f": "ddJaM|xrads:.TWCRkNHEoIWRlofV}Rkn$W;Iof4R*Rl"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2026-06-19T03:00:00.0000000Z"
+  },
+  {
+    "Name": "ERASED",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "56eac5e4b1feaec0b59091b754408176",
+    "DateCreated": "2025-11-23T06:23:30.0000000Z",
+    "PremiereDate": "2016-01-08T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "Satoru Fujinuma is a 29 year old manga artist struggling to make a name for himself following his debut. But, that was not the only thing in his life that Satoru was feeling frustrated about… He has a unique supernatural ability of being forced to prevent deaths and catastrophes by being sent back in time before the incident occurred, repeating time until the accident is prevented. One day, he gets involved in an accident that has him framed as a murderer. Desperate to save the victim, he sends himself back in time only to find himself as a grade-schooler one month before fellow classmate Kayo Hinazuki went missing. Satoru now embarks on a new quest: to save Kayo and solve the mystery behind her disappearance.\n",
+    "Taglines": [],
+    "Genres": [
+      "Anime",
+      "Drama",
+      "Mystery",
+      "Psychological",
+      "Supernatural"
+    ],
+    "CommunityRating": 8.1,
+    "RunTimeTicks": 13800000000,
+    "ProductionYear": 2016,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "A-1 Pictures",
+        "Id": "42115028903ac952c4d7cd8512f3a88b"
+      },
+      {
+        "Name": "Kansai TV",
+        "Id": "74b115c3403ee0d988df5685b3bf777b"
+      },
+      {
+        "Name": "Aniplex of America",
+        "Id": "1a71dc7311c3f494e7b61417612e9e4c"
+      },
+      {
+        "Name": "Madman Entertainment",
+        "Id": "b723f6320bd9c6c214c206a393ac666c"
+      },
+      {
+        "Name": "Dentsu",
+        "Id": "38f50701b39a112bea478b41efaa04ce"
+      },
+      {
+        "Name": "Lawson",
+        "Id": "f0d649480e913294f398d258574921d4"
+      },
+      {
+        "Name": "Aniplex",
+        "Id": "75c89475e1e4438ec256180ed6601b36"
+      },
+      {
+        "Name": "Kadokawa Shoten",
+        "Id": "ea5285539f770dddbf621d6a5b71c845"
+      },
+      {
+        "Name": "Fuji TV",
+        "Id": "69a36f3d4c0d7e6fb7c66000aa034a0c"
+      },
+      {
+        "Name": "Iwate Menkoi Television",
+        "Id": "4021ae15ff36ba74efb03aa6360b885d"
+      },
+      {
+        "Name": "Sakuranbo TV",
+        "Id": "bf25fa11db6a82382e709043d4c79a27"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Drama",
+        "Id": "090eac6e9de4fe1fbc194e5b96691277"
+      },
+      {
+        "Name": "Mystery",
+        "Id": "d3a0ead52489743e5a68704142092c71"
+      },
+      {
+        "Name": "Psychological",
+        "Id": "13fcb116f8048f20769597c91946932f"
+      },
+      {
+        "Name": "Supernatural",
+        "Id": "68c458f4829f530c664a01e748e010ae"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 12,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "303071",
+      "ItemId": "56eac5e4b1feaec0b59091b754408176"
+    },
+    "ChildCount": 12,
+    "Status": "Ended",
+    "AirTime": "01:00",
+    "AirDays": [
+      "Friday"
+    ],
+    "ImageTags": {
+      "Primary": "7c75f96f5c4d3c113bb807b8c253fdd4",
+      "Banner": "a47148d77fabc9834474ef3da3b8616b",
+      "Logo": "9c6d446a966535dbeed0fb11643ce8cc"
+    },
+    "BackdropImageTags": [
+      "38c71a860ae745facd86421cae5ae678"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "38c71a860ae745facd86421cae5ae678": "OJAT4bJ:Si~BENxu?Gt7t7s:f+oMxabI4.RiRjIVt5M{Io"
+      },
+      "Primary": {
+        "7c75f96f5c4d3c113bb807b8c253fdd4": "dE9ZQ2-U0g5S9vNb$%$%E3Naxst6xZs.R*R+NaWCsVs."
+      },
+      "Banner": {
+        "a47148d77fabc9834474ef3da3b8616b": "H~Q]m6xux]%2%h-;Mwt7WC~qfkt8xatRxuRPWBa#"
+      },
+      "Logo": {
+        "9c6d446a966535dbeed0fb11643ce8cc": "O9S$ov-;IU%MIU%MM{_3ofayj[j[ofj[~qM{xuRjxuWBxu"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2016-03-25T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Sono Otoko, Touketsu-kei",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "334d342f0a21a0e00fe781653b8f05c3",
+    "DateCreated": "2026-07-28T18:50:39.158066Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2026-03-14T03:00:00.0000000Z",
+    "ChannelId": null,
+    "Overview": "Soji and Kasubata's battles resolve, but a fearsome enemy still awaits the weakened squad.<br>Source: Crunchyroll",
+    "Taglines": [],
+    "Genres": [],
+    "RunTimeTicks": 14172600000,
+    "ProductionYear": 2026,
+    "IndexNumber": 10,
+    "ParentIndexNumber": 1,
+    "IsFolder": false,
+    "Type": "Episode",
+    "Studios": [],
+    "GenreItems": [],
+    "ParentLogoItemId": "0ae2cfacf9831e5539bbf0867b54a064",
+    "ParentBackdropItemId": "0ae2cfacf9831e5539bbf0867b54a064",
+    "ParentBackdropImageTags": [
+      "1b7935a79c30daffcc12a1c371b1e14a"
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "461423001010",
+      "ItemId": "334d342f0a21a0e00fe781653b8f05c3"
+    },
+    "ChildCount": 0,
+    "SeriesName": "Dead Account",
+    "SeriesId": "0ae2cfacf9831e5539bbf0867b54a064",
+    "SeasonId": "68ca76c033033bf1dc13dad82a1cdd4a",
+    "SeriesPrimaryImageTag": "6da89d1ed14372ac60cbef6229633c86",
+    "SeasonName": "Temporada 1",
+    "VideoType": "VideoFile",
+    "ImageTags": {
+      "Primary": "79e28b6cfdf7582ee449a647d60721fa"
+    },
+    "BackdropImageTags": [],
+    "ParentLogoImageTag": "63b5545e2bee7eaf77bfa7b40bc85578",
+    "ImageBlurHashes": {
+      "Primary": {
+        "79e28b6cfdf7582ee449a647d60721fa": "WQI61px]HqnPo#%g=~s:-;%NIoWB01n$xtW;f9RjT0R*s9oLt7t7",
+        "6da89d1ed14372ac60cbef6229633c86": "dcG]Q}xB%K.8_NV?t5bcNEozt5IoxsS5oIj]x]Ioadoz"
+      },
+      "Logo": {
+        "63b5545e2bee7eaf77bfa7b40bc85578": "OjCsjjofWBj[WBofayoffQfQayj[fQfQ00WBofayofWBj["
+      },
+      "Backdrop": {
+        "1b7935a79c30daffcc12a1c371b1e14a": "H*EEff*0M^o#Z$MeJBM}VsyZtlt2t7RiVtX8NIWA"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video"
+  },
+  {
+    "Name": "Una pesadilla que se hunde en el negro abismo",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "30aae48b6160884f77b14520c7e9e5a4",
+    "DateCreated": "2026-07-28T18:07:16.9829531Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2026-06-01T03:00:00.0000000Z",
+    "ChannelId": null,
+    "Overview": "Qifrey investiga los frascos gemelos para seguirles la pista a los Sombrero de Ala. Y algo anda mal con Coco.",
+    "Taglines": [],
+    "Genres": [],
+    "RunTimeTicks": 14201389999,
+    "ProductionYear": 2026,
+    "IndexNumber": 9,
+    "ParentIndexNumber": 1,
+    "IsFolder": false,
+    "Type": "Episode",
+    "Studios": [],
+    "GenreItems": [],
+    "ParentLogoItemId": "941149fb4754a0d8e57cb01056b75555",
+    "ParentBackdropItemId": "941149fb4754a0d8e57cb01056b75555",
+    "ParentBackdropImageTags": [
+      "643bbac22e4ab5634db1791a4160f527"
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "418666001009",
+      "ItemId": "30aae48b6160884f77b14520c7e9e5a4"
+    },
+    "ChildCount": 0,
+    "SeriesName": "Atelier of Witch Hat",
+    "SeriesId": "941149fb4754a0d8e57cb01056b75555",
+    "SeasonId": "1ccf3cd08738a25e239316dfdefe411e",
+    "PrimaryImageAspectRatio": 0.7553366174055829,
+    "SeriesPrimaryImageTag": "7e574b6db61e9a1ad3708070d6c2a246",
+    "SeasonName": "Temporada 1",
+    "VideoType": "VideoFile",
+    "ImageTags": {},
+    "BackdropImageTags": [],
+    "ParentLogoImageTag": "2a6e7db96fead2e6c03b8d721299beaf",
+    "ImageBlurHashes": {
+      "Logo": {
+        "2a6e7db96fead2e6c03b8d721299beaf": "OPPGgOxu_Nt6jYx]xuxtofRkV@WAt8xvRia|xuRjoexuR*"
+      },
+      "Backdrop": {
+        "643bbac22e4ab5634db1791a4160f527": "H%JZ_BadD%f+R-i{xsxDn$~BoLM{s8R.Rl%0xZV["
+      },
+      "Primary": {
+        "7e574b6db61e9a1ad3708070d6c2a246": "dNGSlmtR02bIoNsVD%Rj0La$Z}Rj={WpafsoMwnhJCRk"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video"
+  },
+  {
+    "Name": "Toroa el Terrible y Mestelexil la Caja del Conocimiento Desesperado",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "78c5239ef50fc56ede3b621f47e346c4",
+    "DateCreated": "2026-07-28T17:50:10.0215198Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2025-01-22T03:00:00.0000000Z",
+    "ChannelId": null,
+    "Overview": "Elgite la Bruma Ocre se propone robar espadas encantadas mientras Mestelexil lucha contra otro gólem.",
+    "Taglines": [],
+    "Genres": [],
+    "RunTimeTicks": 14221440000,
+    "ProductionYear": 2025,
+    "IndexNumber": 3,
+    "ParentIndexNumber": 2,
+    "IsFolder": false,
+    "Type": "Episode",
+    "Studios": [],
+    "GenreItems": [],
+    "ParentBackdropItemId": "855ad2c231dac81a7e39fd91b5338a79",
+    "ParentBackdropImageTags": [
+      "ea43e7a96920f2bd269748015b74f673"
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "431014002003",
+      "ItemId": "78c5239ef50fc56ede3b621f47e346c4"
+    },
+    "ChildCount": 0,
+    "SeriesName": "ISHURA",
+    "SeriesId": "855ad2c231dac81a7e39fd91b5338a79",
+    "SeasonId": "8d021472487034678cc275e903ed21d9",
+    "SeriesPrimaryImageTag": "4cf19b2610fd032ba74367ab4afa14ed",
+    "SeasonName": "Temporada 2",
+    "VideoType": "VideoFile",
+    "ImageTags": {
+      "Primary": "b9b2397fceecf606453dae89f94a2037"
+    },
+    "BackdropImageTags": [],
+    "ImageBlurHashes": {
+      "Primary": {
+        "b9b2397fceecf606453dae89f94a2037": "WvKm5o9cM|VsOYxt0MS#xtxtRks8kqr?snoIV]flw]kCR+M~o{bF",
+        "4cf19b2610fd032ba74367ab4afa14ed": "dXI#Pq~o%K^*4:MyWqIpe-RQM|R+s.bYoLM|ocoyR*WB"
+      },
+      "Backdrop": {
+        "ea43e7a96920f2bd269748015b74f673": "HtFLp.w{WVw_oKsBWWW;j@|^w_S3w_oKazWWWpbG"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video"
+  },
+  {
+    "Name": "BLACK ROCK SHOOTER DAWN FALL",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "f1855e5d7454bd516c18ca138ffb6675",
+    "DateCreated": "2025-11-23T06:23:28.0000000Z",
+    "PremiereDate": "2022-04-03T03:00:00.0000000Z",
+    "OfficialRating": "TV-14",
+    "ChannelId": null,
+    "Overview": "The year is 2062. Earth has been left in ruin after the failure of a labor automation project when the AI called Artemis waged war against humanity. A girl, Empress, awakens in a research lab. As one of the three surviving guardians, she must destroy the Orbital Elevator before Artemis can complete its construction. Failure will result in a machine army overrunning Earth. However, Artemis' Unmanned Forces and a cult may have motives of their own.<br>\n<br>\n(Source: Disney+)",
+    "Taglines": [],
+    "Genres": [
+      "Action",
+      "Anime",
+      "Sci-Fi"
+    ],
+    "CommunityRating": 5.5,
+    "RunTimeTicks": 14400000000,
+    "ProductionYear": 2022,
+    "IsFolder": true,
+    "Type": "Series",
+    "Studios": [
+      {
+        "Name": "Bibury Animation CG",
+        "Id": "c2c2bc794ee98594eb54447b49be77fc"
+      },
+      {
+        "Name": "Bibury Animation Studios",
+        "Id": "ac87a5f9d7c73e9f0c21d49a07bf8adf"
+      },
+      {
+        "Name": "TMS Entertainment",
+        "Id": "eaece68cdddf04613e182a83b937d285"
+      },
+      {
+        "Name": "Bandai Namco Filmworks",
+        "Id": "a549b5fc956df82cdf12d94cb317bfbb"
+      },
+      {
+        "Name": "Bandai Namco Music Live",
+        "Id": "25562d4f0f1dff5bbf2dd3d4076e9acd"
+      },
+      {
+        "Name": "MAGNET",
+        "Id": "ad7b5005c27a08ff3fe5fe50854ba919"
+      },
+      {
+        "Name": "NetEase Games",
+        "Id": "73a479a105e22013f1d1f00b63a9e8d6"
+      },
+      {
+        "Name": "Good Smile Company",
+        "Id": "58a1f1b309ecee32ba5c676a4b2689bf"
+      },
+      {
+        "Name": "Movic",
+        "Id": "4ec27308792f6fe1ca72eb02e5cc3fc1"
+      },
+      {
+        "Name": "BS11",
+        "Id": "b4f4f707ccae7ade259e3fd914bdca03"
+      },
+      {
+        "Name": "Tokyo MX",
+        "Id": "00966a94da9f4db984f5725f16674f5d"
+      }
+    ],
+    "GenreItems": [
+      {
+        "Name": "Action",
+        "Id": "ce06903d834d2c3417e0889dd4049f3b"
+      },
+      {
+        "Name": "Anime",
+        "Id": "f89b4d4d7733020ed2721d8fec37f26c"
+      },
+      {
+        "Name": "Sci-Fi",
+        "Id": "d3bf560475125eed829c435f3d8329e3"
+      }
+    ],
+    "UserData": {
+      "UnplayedItemCount": 12,
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "410063",
+      "ItemId": "f1855e5d7454bd516c18ca138ffb6675"
+    },
+    "ChildCount": 12,
+    "Status": "Ended",
+    "AirTime": "23:00",
+    "AirDays": [
+      "Sunday"
+    ],
+    "ImageTags": {
+      "Logo": "25d81cadc89f5b0bd6f2f4dc9b38264b",
+      "Banner": "75e2f4ce1aef13c762def6bdac3ce0b2",
+      "Primary": "b366414031eed4dcac4c54792cd853ec"
+    },
+    "BackdropImageTags": [
+      "9472fba5d03f5fd4a9e2330756bb26a7"
+    ],
+    "ImageBlurHashes": {
+      "Backdrop": {
+        "9472fba5d03f5fd4a9e2330756bb26a7": "HKA]w80^=gS^bL%OI-xdbqo~s=R$axogo#s:NFxb"
+      },
+      "Logo": {
+        "25d81cadc89f5b0bd6f2f4dc9b38264b": "OJAmrFofD%M{Rjayayt7WBt7WBj[WBWB00WBxut7t7ayj["
+      },
+      "Banner": {
+        "75e2f4ce1aef13c762def6bdac3ce0b2": "HgCGJ[DzNF-?IlM~t8R$ah%OacM_x^RhRko#adWE"
+      },
+      "Primary": {
+        "b366414031eed4dcac4c54792cd853ec": "dlBWlojGIpog-@jFR;oztAjZkFogxuaeWsaxxtaebJWB"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Unknown",
+    "EndDate": "2022-06-19T03:00:00.0000000Z"
+  },
+  {
+    "Name": "Yofukashi no Uta",
+    "ServerId": "c357f5affa834940bf2a9df8e10c0d63",
+    "Id": "76be79e1ea6cd6c0cf8043d6d89f18f9",
+    "DateCreated": "2026-07-28T09:35:58.7856253Z",
+    "HasSubtitles": true,
+    "Container": "mkv",
+    "PremiereDate": "2022-09-30T03:00:00.0000000Z",
+    "ChannelId": null,
+    "Overview": "The night feels distant. Ko isn’t sure how to close that gap.<br>Source: HIDIVE",
+    "Taglines": [],
+    "Genres": [],
+    "RunTimeTicks": 14224980000,
+    "ProductionYear": 2022,
+    "IndexNumber": 13,
+    "ParentIndexNumber": 1,
+    "IsFolder": false,
+    "Type": "Episode",
+    "Studios": [],
+    "GenreItems": [],
+    "ParentLogoItemId": "7bd411d775ee277fe8b95fa626ef1a9d",
+    "ParentBackdropItemId": "7bd411d775ee277fe8b95fa626ef1a9d",
+    "ParentBackdropImageTags": [
+      "e460dee93282aafa67837ce7a1c2461d"
+    ],
+    "UserData": {
+      "PlaybackPositionTicks": 0,
+      "PlayCount": 0,
+      "IsFavorite": false,
+      "Played": false,
+      "Key": "412374001013",
+      "ItemId": "76be79e1ea6cd6c0cf8043d6d89f18f9"
+    },
+    "ChildCount": 0,
+    "SeriesName": "Yofukashi no Uta",
+    "SeriesId": "7bd411d775ee277fe8b95fa626ef1a9d",
+    "SeasonId": "1a912ed1e2fcd4e2818d29a7656c7cee",
+    "SeriesPrimaryImageTag": "75c5277016be9256a563762f5c250833",
+    "SeasonName": "Temporada 1",
+    "VideoType": "VideoFile",
+    "ImageTags": {
+      "Primary": "6edd29ea53350aaf5930c0a6f39e25f2"
+    },
+    "BackdropImageTags": [],
+    "ParentLogoImageTag": "fbd58fa1d513131693ea35e1ab5ee1bd",
+    "ImageBlurHashes": {
+      "Primary": {
+        "6edd29ea53350aaf5930c0a6f39e25f2": "WmIY5+?c~p_4ozbF?G4ojD%Noyxu%LE1jXozRjs:xtozt6bbRjj@",
+        "75c5277016be9256a563762f5c250833": "dYFXcTodRixc53npofoeRqI,bEjbk5%1axRjRis:s;WU"
+      },
+      "Logo": {
+        "fbd58fa1d513131693ea35e1ab5ee1bd": "O96t].t79FRjD%Rjt7WBRjofxuayofof00WB-;of%MofWB"
+      },
+      "Backdrop": {
+        "e460dee93282aafa67837ce7a1c2461d": "PHFrYr?O029FNEjYxv%e-;oM$$-nR~Nb%2-nWARVxns,s;xvt9j^"
+      }
+    },
+    "LocationType": "FileSystem",
+    "MediaType": "Video"
+  }
+]

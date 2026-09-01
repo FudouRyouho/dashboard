@@ -1,0 +1,219 @@
+[
+    {
+        "id": 0,
+        "title": "string",
+        "originalTitle": "string",
+        "originalLanguage": {
+            "id": 0,
+            "name": "string"
+        },
+        "alternateTitles": [
+            {
+                "id": 0,
+                "sourceType": "tmdb",
+                "movieMetadataId": 0,
+                "title": "string",
+                "cleanTitle": "string"
+            }
+        ],
+        "secondaryYear": 0,
+        "secondaryYearSourceId": 0,
+        "sortTitle": "string",
+        "sizeOnDisk": 0,
+        "status": "tba",
+        "overview": "string",
+        "inCinemas": "2026-08-23T13:47:22.350Z",
+        "physicalRelease": "2026-08-23T13:47:22.350Z",
+        "digitalRelease": "2026-08-23T13:47:22.350Z",
+        "releaseDate": "2026-08-23T13:47:22.350Z",
+        "physicalReleaseNote": "string",
+        "images": [
+            {
+                "coverType": "unknown",
+                "url": "string",
+                "remoteUrl": "string"
+            }
+        ],
+        "website": "string",
+        "remotePoster": "string",
+        "year": 0,
+        "youTubeTrailerId": "string",
+        "studio": "string",
+        "path": "string",
+        "qualityProfileId": 0,
+        "hasFile": true,
+        "movieFileId": 0,
+        "monitored": true,
+        "minimumAvailability": "tba",
+        "isAvailable": true,
+        "folderName": "string",
+        "runtime": 0,
+        "cleanTitle": "string",
+        "imdbId": "string",
+        "tmdbId": 0,
+        "titleSlug": "string",
+        "rootFolderPath": "string",
+        "folder": "string",
+        "certification": "string",
+        "genres": [
+            "string"
+        ],
+        "keywords": [
+            "string"
+        ],
+        "tags": [
+            0
+        ],
+        "added": "2026-08-23T13:47:22.350Z",
+        "addOptions": {
+            "ignoreEpisodesWithFiles": true,
+            "ignoreEpisodesWithoutFiles": true,
+            "monitor": "movieOnly",
+            "searchForMovie": true,
+            "addMethod": "manual"
+        },
+        "ratings": {
+            "imdb": {
+                "votes": 0,
+                "value": 0,
+                "type": "user"
+            },
+            "tmdb": {
+                "votes": 0,
+                "value": 0,
+                "type": "user"
+            },
+            "metacritic": {
+                "votes": 0,
+                "value": 0,
+                "type": "user"
+            },
+            "rottenTomatoes": {
+                "votes": 0,
+                "value": 0,
+                "type": "user"
+            },
+            "trakt": {
+                "votes": 0,
+                "value": 0,
+                "type": "user"
+            }
+        },
+        "movieFile": {
+            "id": 0,
+            "movieId": 0,
+            "relativePath": "string",
+            "path": "string",
+            "size": 0,
+            "dateAdded": "2026-08-23T13:47:22.350Z",
+            "sceneName": "string",
+            "releaseGroup": "string",
+            "edition": "string",
+            "languages": [
+                {
+                    "id": 0,
+                    "name": "string"
+                }
+            ],
+            "quality": {
+                "quality": {
+                    "id": 0,
+                    "name": "string",
+                    "source": "unknown",
+                    "resolution": 0,
+                    "modifier": "none"
+                },
+                "revision": {
+                    "version": 0,
+                    "real": 0,
+                    "isRepack": true
+                }
+            },
+            "customFormats": [
+                {
+                    "id": 0,
+                    "name": "string",
+                    "includeCustomFormatWhenRenaming": true,
+                    "specifications": [
+                        {
+                            "id": 0,
+                            "name": "string",
+                            "implementation": "string",
+                            "implementationName": "string",
+                            "infoLink": "string",
+                            "negate": true,
+                            "required": true,
+                            "fields": [
+                                {
+                                    "order": 0,
+                                    "name": "string",
+                                    "label": "string",
+                                    "unit": "string",
+                                    "helpText": "string",
+                                    "helpTextWarning": "string",
+                                    "helpLink": "string",
+                                    "value": "string",
+                                    "type": "string",
+                                    "advanced": true,
+                                    "selectOptions": [
+                                        {
+                                            "value": 0,
+                                            "name": "string",
+                                            "order": 0,
+                                            "hint": "string",
+                                            "dividerAfter": true
+                                        }
+                                    ],
+                                    "selectOptionsProviderAction": "string",
+                                    "section": "string",
+                                    "hidden": "string",
+                                    "privacy": "normal",
+                                    "placeholder": "string",
+                                    "isFloat": true
+                                }
+                            ],
+                            "presets": [
+                                "string"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "customFormatScore": 0,
+            "indexerFlags": 0,
+            "mediaInfo": {
+                "id": 0,
+                "audioBitrate": 0,
+                "audioChannels": 0,
+                "audioCodec": "string",
+                "audioLanguages": "string",
+                "audioStreamCount": 0,
+                "videoBitDepth": 0,
+                "videoBitrate": 0,
+                "videoCodec": "string",
+                "videoFps": 0,
+                "videoDynamicRange": "string",
+                "videoDynamicRangeType": "string",
+                "resolution": "string",
+                "runTime": "string",
+                "scanType": "string",
+                "subtitles": "string"
+            },
+            "originalFilePath": "string",
+            "qualityCutoffNotMet": true
+        },
+        "collection": {
+            "title": "string",
+            "tmdbId": 0
+        },
+        "popularity": 0,
+        "lastSearchTime": "2026-08-23T13:47:22.350Z",
+        "statistics": {
+            "movieFileCount": 0,
+            "sizeOnDisk": 0,
+            "releaseGroups": [
+                "string"
+            ]
+        }
+    }
+]
