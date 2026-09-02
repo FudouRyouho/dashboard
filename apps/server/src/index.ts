@@ -5,7 +5,7 @@ import { mediaReleasesRouter } from './routers/media-releases';
 export const appRouter = createTRPCRouter({
   health: publicProcedure.query(() => ({ status: 'ok' })),
   calendar: calendarRouter,
-  mediaReleases: mediaReleasesRouter
+  mediaReleases: mediaReleasesRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -1,10 +1,11 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 const nameIdPairSchema = z.object({ Name: z.string(), Id: z.string() });
 
 const studioSchema = nameIdPairSchema;
 
-const userDataSchema = z.object({
+const userDataSchema = z
+  .object({
     UnplayedItemCount: z.number().optional(),
     PlaybackPositionTicks: z.number(),
     PlayCount: z.number(),
@@ -13,9 +14,11 @@ const userDataSchema = z.object({
     LastPlayedDate: z.string().datetime({ offset: true }).optional(),
     Key: z.string(),
     ItemId: z.string(),
-}).passthrough();
+  })
+  .passthrough();
 
-const jellyfinItemBaseSchema = z.object({
+const jellyfinItemBaseSchema = z
+  .object({
     Name: z.string(),
     ServerId: z.string(),
     Id: z.string(),
@@ -39,8 +42,8 @@ const jellyfinItemBaseSchema = z.object({
     ImageTags: z.record(z.string(), z.string()).default({}),
     BackdropImageTags: z.array(z.string()).default([]),
     ImageBlurHashes: z
-        .record(z.string(), z.record(z.string(), z.string()))
-        .default({}),
+      .record(z.string(), z.record(z.string(), z.string()))
+      .default({}),
     Status: z.string().optional(),
     AirTime: z.string().optional(),
     AirDays: z.array(z.string()).optional(),
@@ -59,21 +62,22 @@ const jellyfinItemBaseSchema = z.object({
     ParentBackdropItemId: z.string().optional(),
     ParentBackdropImageTags: z.array(z.string()).optional(),
     ParentLogoImageTag: z.string().optional(),
-}).passthrough();
+  })
+  .passthrough();
 
 export const jellyfinItemSchema = z.discriminatedUnion('Type', [
-    jellyfinItemBaseSchema.extend({
-        Type: z.literal('Series'),
-        IsFolder: z.literal(true),
-    }),
-    jellyfinItemBaseSchema.extend({
-        Type: z.literal('Episode'),
-        IsFolder: z.literal(false),
-    }),
-    jellyfinItemBaseSchema.extend({
-        Type: z.literal('Movie'),
-        IsFolder: z.literal(false),
-    }),
+  jellyfinItemBaseSchema.extend({
+    Type: z.literal('Series'),
+    IsFolder: z.literal(true),
+  }),
+  jellyfinItemBaseSchema.extend({
+    Type: z.literal('Episode'),
+    IsFolder: z.literal(false),
+  }),
+  jellyfinItemBaseSchema.extend({
+    Type: z.literal('Movie'),
+    IsFolder: z.literal(false),
+  }),
 ]);
 
 export const jellyfinItemsResponseSchema = z.array(jellyfinItemSchema);

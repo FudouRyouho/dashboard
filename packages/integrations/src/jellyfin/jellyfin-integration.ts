@@ -8,7 +8,8 @@ import { IMediaReleasesIntegration } from '../base/media-releases';
 
 export class JellyfinIntegration
   extends Integration
-  implements IMediaReleasesIntegration {
+  implements IMediaReleasesIntegration
+{
   async getMediaReleasesAsync(options?: {
     signal?: AbortSignal;
   }): Promise<MediaReleaseEvent[]> {
@@ -62,11 +63,11 @@ export class JellyfinIntegration
     const posterTag = item.ImageTags?.['Primary'];
     const poster = posterTag
       ? this.externalUrl(`/Items/${item.Id}/Images/Primary`, {
-        maxHeight: 492,
-        maxWidth: 328,
-        quality: 90,
-        tag: posterTag,
-      })
+          maxHeight: 492,
+          maxWidth: 328,
+          quality: 90,
+          tag: posterTag,
+        })
       : null;
 
     const backdropTag =
@@ -77,10 +78,10 @@ export class JellyfinIntegration
     const backdrop =
       backdropTag && backdropId
         ? this.externalUrl(`/Items/${backdropId}/Images/Backdrop/0`, {
-          maxWidth: 960,
-          quality: 70,
-          tag: backdropTag,
-        })
+            maxWidth: 960,
+            quality: 70,
+            tag: backdropTag,
+          })
         : null;
 
     const href = this.externalUrl(`/web/index.html#!/details`, {

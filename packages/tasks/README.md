@@ -2,10 +2,10 @@
 
 Tareas programadas, ejecuta funciones cada x tiempo, guarda el ultimo "estado del dato" o de la tarea.
 
-| Librería         | Qué resuelve                                     |
-| ---------------- | ------------------------------------------------ |
-| `toad-scheduler` | los timers y el solapamiento (`preventOverrun`)  |
-| `p-queue`        | el techo de corridas simultáneas del proceso     |
+| Librería         | Qué resuelve                                    |
+| ---------------- | ----------------------------------------------- |
+| `toad-scheduler` | los timers y el solapamiento (`preventOverrun`) |
+| `p-queue`        | el techo de corridas simultáneas del proceso    |
 
 ## Estructura
 

@@ -7,4 +7,6 @@ export const calendarSnapshot = (
 
 export const mediaReleasesSnapshot = (
   integrationId: string,
-): SnapshotKey<MediaReleaseEvent[]> => ({ taskId: `${integrationId}:media-releases` });
+): SnapshotKey<MediaReleaseEvent[]> => ({
+  taskId: `${integrationId}:media-releases`,
+});

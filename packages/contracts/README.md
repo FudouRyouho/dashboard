@@ -20,9 +20,9 @@ cuándo es, por el otro cómo salió el último intento.
 
 `dataViewOf()` cruza los dos ejes y devuelve el veredicto. La tabla completa:
 
-| `attempt`           | `data`  | `dataViewOf`  |
-| ------------------- | ------- | ------------  |
-| `null`              | —       | never-queried |
-| `outcome: success`  | —       | fresh         |
-| `outcome: failure`  | hay     | outdated      |
-| `outcome: failure`  | `null`  | missing       |
+| `attempt`          | `data` | `dataViewOf`  |
+| ------------------ | ------ | ------------- |
+| `null`             | —      | never-queried |
+| `outcome: success` | —      | fresh         |
+| `outcome: failure` | hay    | outdated      |
+| `outcome: failure` | `null` | missing       |

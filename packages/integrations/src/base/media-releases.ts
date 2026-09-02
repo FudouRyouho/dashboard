@@ -14,5 +14,5 @@ export const supportsMediaReleases = (
   integration: Integration,
 ): integration is IMediaReleasesIntegration & Integration =>
   typeof (integration as Partial<IMediaReleasesIntegration>)[
-  mediaReleasesCapability
+    mediaReleasesCapability
   ] === 'function';
