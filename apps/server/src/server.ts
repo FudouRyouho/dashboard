@@ -47,6 +47,11 @@ export async function startServer(appConfig: Config) {
       };
     },
     now: () => new Date(),
+    onSuccess: (run) =>
+      server.log.info(
+        { taskId: run.taskId, durationMs: run.durationMs },
+        'Tarea completada',
+      ),
     onSlow: (run, expectedMs) =>
       server.log.warn(
         { taskId: run.taskId, durationMs: run.durationMs, expectedMs },

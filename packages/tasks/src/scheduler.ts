@@ -11,6 +11,7 @@ export interface SchedulerDeps<Cause extends string> {
   now: () => Date;
   concurrency: number;
   drainMs?: number;
+  onSuccess?: (run: TaskRun<Cause>) => void;
   onSlow?: (run: TaskRun<Cause>, expectedMs: number) => void;
 }
 
@@ -86,11 +87,11 @@ export function createScheduler<Cause extends string>(
           ...extra,
         };
         deps.runLog.record(run);
-        if (
-          run.outcome === 'success' &&
-          run.durationMs > def.expectedDurationMs
-        ) {
-          deps.onSlow?.(run, def.expectedDurationMs);
+        if (run.outcome === 'success') {
+          deps.onSuccess?.(run);
+          if (run.durationMs > def.expectedDurationMs) {
+            deps.onSlow?.(run, def.expectedDurationMs);
+          }
         }
       }
     });
