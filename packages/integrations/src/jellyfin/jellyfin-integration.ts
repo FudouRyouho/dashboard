@@ -1,4 +1,4 @@
-import { type MediaRelease } from '@dashboard/contracts';
+import { type MediaReleaseEvent } from '@dashboard/contracts';
 import { Integration } from '../base/integration';
 import {
   jellyfinItemsResponseSchema,
@@ -8,11 +8,10 @@ import { IMediaReleasesIntegration } from '../base/media-releases';
 
 export class JellyfinIntegration
   extends Integration
-  implements IMediaReleasesIntegration
-{
+  implements IMediaReleasesIntegration {
   async getMediaReleasesAsync(options?: {
     signal?: AbortSignal;
-  }): Promise<MediaRelease[]> {
+  }): Promise<MediaReleaseEvent[]> {
     const fields = [
       'CommunityRating',
       'Studios',
@@ -31,7 +30,20 @@ export class JellyfinIntegration
       'PremiereDate',
     ].join(',');
 
+    // Resolver userId dinámicamente (patrón Homarr: /Users → primer user)
+    const usersUrl = this.url('/Users');
+    const usersResponse = await this.fetchJson<{ Id: string }[]>(usersUrl, {
+      headers: { 'X-Emby-Token': this.getSecretValue('apiKey') },
+      signal: options?.signal,
+    });
+
+    const userId = usersResponse[0]?.Id;
+    if (!userId) {
+      throw new Error('No hay usuarios en Jellyfin para resolver userId');
+    }
+
     const url = this.url('/Items/Latest', {
+      userId,
       Limit: 40,
       Fields: fields,
     });
@@ -46,15 +58,15 @@ export class JellyfinIntegration
     return data.map((item) => this.toMediaRelease(item));
   }
 
-  private toMediaRelease(item: JellyfinItem): MediaRelease {
+  private toMediaRelease(item: JellyfinItem): MediaReleaseEvent {
     const posterTag = item.ImageTags?.['Primary'];
     const poster = posterTag
       ? this.externalUrl(`/Items/${item.Id}/Images/Primary`, {
-          maxHeight: 492,
-          maxWidth: 328,
-          quality: 90,
-          tag: posterTag,
-        })
+        maxHeight: 492,
+        maxWidth: 328,
+        quality: 90,
+        tag: posterTag,
+      })
       : null;
 
     const backdropTag =
@@ -65,10 +77,10 @@ export class JellyfinIntegration
     const backdrop =
       backdropTag && backdropId
         ? this.externalUrl(`/Items/${backdropId}/Images/Backdrop/0`, {
-            maxWidth: 960,
-            quality: 70,
-            tag: backdropTag,
-          })
+          maxWidth: 960,
+          quality: 70,
+          tag: backdropTag,
+        })
         : null;
 
     const href = this.externalUrl(`/web/index.html#!/details`, {
