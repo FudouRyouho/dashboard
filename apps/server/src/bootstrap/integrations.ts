@@ -3,6 +3,7 @@ import {
   IntegrationInput,
   RadarrIntegration,
   SonarrIntegration,
+  JellyfinIntegration,
 } from '@dashboard/integrations';
 import { Config } from '../config';
 
@@ -30,6 +31,8 @@ const instantiate = (config: IntegrationConfig): Integration => {
       return new SonarrIntegration(toInput(config));
     case 'radarr':
       return new RadarrIntegration(toInput(config));
+    case 'jellyfin':
+      return new JellyfinIntegration(toInput(config));
   }
 };
 

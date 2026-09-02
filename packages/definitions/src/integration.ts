@@ -15,4 +15,8 @@ export const integrationDefs = {
     name: 'Radarr',
     iconUrl: iconDataUris.radarr,
   },
+  jellyfin: {
+    name: 'Jellyfin',
+    iconUrl: iconDataUris.jellyfin,
+  },
 } as const satisfies Record<IntegrationKind, IntegrationDef>;

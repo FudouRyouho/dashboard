@@ -38,9 +38,16 @@ const radarrConfigSchema = baseIntegrationSchema.extend({
   apiKey: z.string().min(1, 'RADARR_APIKEY es obligatorio'),
 });
 
+const jellyfinConfigSchema = baseIntegrationSchema.extend({
+  kind: z.literal('jellyfin'),
+  port: z.number().int().positive().default(8096),
+  apiKey: z.string().min(1, 'JELLYFIN_APIKEY es obligatorio'),
+});
+
 const integrationConfigSchema = z.discriminatedUnion('kind', [
   sonarrConfigSchema,
   radarrConfigSchema,
+  jellyfinConfigSchema,
 ]);
 
 const configSchema = z.object({
@@ -85,6 +92,14 @@ export const config = configSchema.parse({
       url: process.env.SERVER_2_URL || 'http://192.168.10.197',
       port: 7878,
       apiKey: process.env.RADARR_APIKEY,
+    },
+    {
+      kind: 'jellyfin',
+      id: 'jellyfin',
+      name: 'Jellyfin',
+      url: process.env.SERVER_1_URL || 'http://192.168.10.125',
+      port: 8096,
+      apiKey: process.env.JELLYFIN_APIKEY || '',
     },
   ],
 });
