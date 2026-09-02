@@ -1,7 +1,8 @@
 import { TaskDefinition } from '@dashboard/tasks';
 import { RegistryEntry } from '../bootstrap/integrations';
-import { supportsCalendar } from '@dashboard/integrations';
+import { supportsCalendar, supportsMediaReleases } from '@dashboard/integrations';
 import { calendarTask } from './calendar-task';
+import { mediaReleasesTask } from './media-releases-task';
 
 export function createTaskDefinitions(
   entries: RegistryEntry[],
@@ -15,6 +16,8 @@ export function createTaskDefinitions(
       definitions.push(calendarTask(integration, config.tasks.calendar));
       built.push('calendar');
     }
+
+    if (supportsMediaReleases(integration)) { definitions.push(mediaReleasesTask(integration, config.tasks.mediaReleases)); built.push('media-releases'); }
 
     assertNoUnknownTasks(config, built);
   }
@@ -31,7 +34,7 @@ function assertNoUnknownTasks(
 
   throw new Error(
     `La integración "${config.id}" configura tareas que no existen: ` +
-      `${unknown.join(', ')}. Disponibles para esta integración: ` +
-      `${built.join(', ') || 'ninguna'}.`,
+    `${unknown.join(', ')}. Disponibles para esta integración: ` +
+    `${built.join(', ') || 'ninguna'}.`,
   );
 }
