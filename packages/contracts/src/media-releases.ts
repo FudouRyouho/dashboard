@@ -41,7 +41,7 @@ const mediaReleaseSeriesSchema = z.object({
   description: z.string().nullable(),
   releaseDate: z.string().datetime({ offset: true }).nullable(),
   firstAired: z.string().datetime({ offset: true }).nullable(),
-  childCount: z.number(),
+  childCount: z.number().nullable(),
   status: z.string().nullable(),
   imageUrls: z.object({
     poster: z.string().url().nullable(),
@@ -59,5 +59,5 @@ export const mediaReleaseSchema = z.discriminatedUnion('type', [
 
 export const mediaReleasesResponseSchema = z.array(mediaReleaseSchema);
 
-export type MediaRelease = z.infer<typeof mediaReleaseSchema>;
+export type MediaReleaseEvent = z.infer<typeof mediaReleaseSchema>;
 export type MediaReleasesResponse = z.infer<typeof mediaReleasesResponseSchema>;

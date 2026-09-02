@@ -1,10 +1,10 @@
-import { MediaRelease } from '@dashboard/contracts';
+import { MediaReleaseEvent } from '@dashboard/contracts';
 import { Integration } from './integration';
 
 export interface IMediaReleasesIntegration {
   getMediaReleasesAsync(options?: {
     signal?: AbortSignal;
-  }): Promise<MediaRelease[]>;
+  }): Promise<MediaReleaseEvent[]>;
 }
 
 const mediaReleasesCapability: keyof IMediaReleasesIntegration =
@@ -14,5 +14,5 @@ export const supportsMediaReleases = (
   integration: Integration,
 ): integration is IMediaReleasesIntegration & Integration =>
   typeof (integration as Partial<IMediaReleasesIntegration>)[
-    mediaReleasesCapability
+  mediaReleasesCapability
   ] === 'function';
