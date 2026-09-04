@@ -1,0 +1,17 @@
+{
+  "name": "@dashboard/db",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@types/better-sqlite3": "catalog:",
+    "better-sqlite3": "catalog:",
+    "drizzle-orm": "catalog:"
+  },
+  "devDependencies": {
+    "drizzle-kit": "catalog:",
+    "typescript": "catalog:"
+  }
+}
