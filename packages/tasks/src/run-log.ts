@@ -1,29 +1,39 @@
-import type { TaskRun } from './types';
+import type { DB, TaskRunRow } from '@dashboard/db';
+import { insertTaskRun, lastTaskRun, listTaskRuns } from '@dashboard/db';
+import type { RunLog, TaskRun } from './types';
 
-export interface RunLog<Cause extends string> {
-  record(run: TaskRun<Cause>): void;
-  last(taskId: string): TaskRun<Cause> | undefined;
-  forTask(taskId: string): TaskRun<Cause>[];
+function rowToTaskRun<Cause extends string>(row: TaskRunRow): TaskRun<Cause> {
+  return {
+    taskId: row.taskId,
+    startedAt: row.startedAt,
+    durationMs: row.durationMs,
+    outcome: row.outcome,
+    cause: (row.cause ?? undefined) as Cause | undefined,
+    detail: row.detail ?? undefined,
+  };
 }
 
-export function createRunLog<Cause extends string>(
-  capacityPerTask: number,
-): RunLog<Cause> {
-  const byTask = new Map<string, TaskRun<Cause>[]>();
-
+export function createRunLogDB<Cause extends string>(db: DB): RunLog<Cause> {
   return {
     record(run) {
-      const runs = byTask.get(run.taskId) ?? [];
-      runs.push(run);
-      if (runs.length > capacityPerTask) runs.shift();
-      byTask.set(run.taskId, runs);
+      insertTaskRun(db, {
+        taskId: run.taskId,
+        startedAt: run.startedAt,
+        durationMs: run.durationMs,
+        outcome: run.outcome,
+        cause: run.cause ?? null,
+        detail: run.detail,
+      });
     },
     last(taskId) {
-      const runs = byTask.get(taskId);
-      return runs?.[runs.length - 1];
+      const row = lastTaskRun(db, taskId);
+      return row ? rowToTaskRun<Cause>(row) : undefined;
     },
     forTask(taskId) {
-      return [...(byTask.get(taskId) ?? [])];
+      return listTaskRuns(db, taskId).map(rowToTaskRun<Cause>);
+    },
+    list(taskId, range) {
+      return listTaskRuns(db, taskId, range).map(rowToTaskRun<Cause>);
     },
   };
 }

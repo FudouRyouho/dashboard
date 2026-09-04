@@ -1,7 +1,6 @@
 import { ToadScheduler, SimpleIntervalJob, AsyncTask } from 'toad-scheduler';
 import PQueue from 'p-queue';
-import type { RunLog } from './run-log';
-import type { SnapshotStore } from './store';
+import type { SnapshotStore, RunLog } from './types';
 import type { TaskDefinition, TaskRun } from './types';
 
 export interface SchedulerDeps<Cause extends string> {
@@ -25,57 +24,57 @@ export function createScheduler<Cause extends string>(
 ): Scheduler {
   const scheduler = new ToadScheduler();
   const queue = new PQueue({ concurrency: deps.concurrency });
-  const enCurso = new Map<string, AbortController>();
-  let dentroDeRun = 0;
-  let parando = false;
-  const fallosSeguidos = new Map<string, number>();
-  const enEsperaHasta = new Map<string, number>();
+  const inProgress = new Map<string, AbortController>();
+  let withinRun = 0;
+  let stopping = false;
+  const consecutiveFailures = new Map<string, number>();
+  const waitingUtil = new Map<string, number>();
 
   for (const def of definitions) {
     const taskId = def.key.taskId;
 
     const task = new AsyncTask(taskId, async () => {
-      if (parando) return;
-      const espera = enEsperaHasta.get(taskId) ?? 0;
-      if (Date.now() < espera) return;
+      if (stopping) return;
+      const wait = waitingUtil.get(taskId) ?? 0;
+      if (deps.now().getTime() < wait) return;
       const ac = new AbortController();
-      enCurso.set(taskId, ac);
+      inProgress.set(taskId, ac);
       const startedAt = deps.now();
 
       try {
         const data = await queue.add(
           async () => {
-            dentroDeRun++;
+            withinRun++;
             try {
               return await def.run(ac.signal);
             } finally {
-              dentroDeRun--;
+              withinRun--;
             }
           },
           { signal: ac.signal },
         );
 
         deps.store.set(def.key, data);
-        fallosSeguidos.delete(taskId);
-        enEsperaHasta.delete(taskId);
+        consecutiveFailures.delete(taskId);
+        waitingUtil.delete(taskId);
         registrar({ outcome: 'success' });
       } catch (err) {
         if (ac.signal.aborted) {
           registrar({ outcome: 'aborted' });
         } else {
-          const seguidos = (fallosSeguidos.get(taskId) ?? 0) + 1;
-          fallosSeguidos.set(taskId, seguidos);
-          if (seguidos >= def.failurePolicy.maxAttempts) {
-            enEsperaHasta.set(
+          const followed = (consecutiveFailures.get(taskId) ?? 0) + 1;
+          consecutiveFailures.set(taskId, followed);
+          if (followed >= def.failurePolicy.maxAttempts) {
+            waitingUtil.set(
               taskId,
-              Date.now() + def.failurePolicy.cooldownMs,
+              deps.now().getTime() + def.failurePolicy.cooldownMs,
             );
           }
           const { cause, detail } = deps.classify(err);
           registrar({ outcome: 'failure', cause, detail });
         }
       } finally {
-        if (enCurso.get(taskId) === ac) enCurso.delete(taskId);
+        if (inProgress.get(taskId) === ac) inProgress.delete(taskId);
       }
 
       function registrar(extra: Partial<TaskRun<Cause>>) {
@@ -83,7 +82,7 @@ export function createScheduler<Cause extends string>(
           taskId,
           startedAt,
           durationMs: Math.max(0, deps.now().getTime() - startedAt.getTime()),
-          outcome: 'success',
+          outcome: extra.outcome ?? 'success',
           ...extra,
         };
         deps.runLog.record(run);
@@ -107,12 +106,12 @@ export function createScheduler<Cause extends string>(
 
   return {
     async stop() {
-      parando = true;
+      stopping = true;
       scheduler.stop();
-      for (const ac of enCurso.values()) ac.abort();
+      for (const ac of inProgress.values()) ac.abort();
       queue.clear();
-      const hasta = Date.now() + (deps.drainMs ?? 2000);
-      while (dentroDeRun > 0 && Date.now() < hasta) {
+      const hasta = deps.now().getTime() + (deps.drainMs ?? 2000);
+      while (withinRun > 0 && deps.now().getTime() < hasta) {
         await new Promise((r) => setTimeout(r, 5));
       }
     },

@@ -9,12 +9,14 @@ import type { TRPCContext } from './trpc';
 import { createIntegrationRegistry } from './bootstrap/integrations';
 import type { Config } from './config';
 import {
-  createMemoryStore,
-  createRunLog,
+  createRunLogDB,
+  createSnapshotStoreDB,
   createScheduler,
 } from '@dashboard/tasks';
+import { createDatabase } from './bootstrap/db';
 import { IntegrationErrorReason } from '@dashboard/contracts';
 import { createTaskDefinitions } from './tasks/create-task-definitions';
+import { createPurgeTask } from '@dashboard/tasks';
 import { classifyIntegrationError } from '@dashboard/integrations';
 
 export async function startServer(appConfig: Config) {
@@ -25,39 +27,44 @@ export async function startServer(appConfig: Config) {
     },
   });
 
-  const store = createMemoryStore();
-  const runLog = createRunLog<IntegrationErrorReason>(60);
+  const db = await createDatabase();
+  const store = createSnapshotStoreDB(db);
+  const runLog = createRunLogDB<IntegrationErrorReason>(db);
 
   const registry = createIntegrationRegistry(appConfig);
   const tasks = createTaskDefinitions(registry);
+  const purgeTask = createPurgeTask(db, 30);
 
   const integrations = registry.map((entry) => entry.integration);
-  const scheduler = createScheduler<IntegrationErrorReason>(tasks, {
-    store,
-    runLog,
-    concurrency: 4,
-    classify: (err: unknown) => {
-      const result = classifyIntegrationError(err);
-      return {
-        cause: result.reason,
-        detail:
-          result.httpStatus === undefined
-            ? undefined
-            : { httpStatus: result.httpStatus },
-      };
+  const scheduler = createScheduler<IntegrationErrorReason>(
+    [...tasks, purgeTask],
+    {
+      store,
+      runLog,
+      concurrency: 4,
+      classify: (err: unknown) => {
+        const result = classifyIntegrationError(err);
+        return {
+          cause: result.reason,
+          detail:
+            result.httpStatus === undefined
+              ? undefined
+              : { httpStatus: result.httpStatus },
+        };
+      },
+      now: () => new Date(),
+      onSuccess: (run) =>
+        server.log.info(
+          { taskId: run.taskId, durationMs: run.durationMs },
+          'Tarea completada',
+        ),
+      onSlow: (run, expectedMs) =>
+        server.log.warn(
+          { taskId: run.taskId, durationMs: run.durationMs, expectedMs },
+          'Tarea lenta',
+        ),
     },
-    now: () => new Date(),
-    onSuccess: (run) =>
-      server.log.info(
-        { taskId: run.taskId, durationMs: run.durationMs },
-        'Tarea completada',
-      ),
-    onSlow: (run, expectedMs) =>
-      server.log.warn(
-        { taskId: run.taskId, durationMs: run.durationMs, expectedMs },
-        'Tarea lenta',
-      ),
-  });
+  );
 
   const createContext = (_opts: CreateFastifyContextOptions): TRPCContext => ({
     integrations: integrations,
