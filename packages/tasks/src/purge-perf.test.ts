@@ -7,8 +7,9 @@ import {
   purgeTaskRunsOlderThan,
   insertTaskRun,
 } from '@dashboard/db';
-import { createPurgeTask, createSnapshotStoreDB, createRunLogDB } from '.';
-import type { TaskDefinition } from './types';
+import { createRunLogDB } from '.';
+
+
 
 const tempPath = () => `./data/test-purge-${randomUUID()}.sqlite`;
 const migrationsFolder = new URL(

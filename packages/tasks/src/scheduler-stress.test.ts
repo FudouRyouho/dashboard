@@ -7,12 +7,11 @@ import {
   createRunLogDB,
   createSnapshotStoreDB,
   createScheduler,
-  type SnapshotKey,
   type TaskDefinition,
 } from '.';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const key = (taskId: string): SnapshotKey<number> => ({ taskId });
+
 
 const assemble = <T>(
   taskId: string,

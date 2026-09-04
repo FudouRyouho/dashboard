@@ -4,8 +4,8 @@ import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import { initializeDatabase } from '@dashboard/db';
 import { purgeTaskRunsOlderThan, insertTaskRun } from '@dashboard/db';
-import { createPurgeTask, createSnapshotStoreDB, createRunLogDB } from '.';
-import type { TaskDefinition } from './types';
+import { createRunLogDB, createPurgeTask } from '.';
+
 
 const tempPath = () => `./data/test-purge-${randomUUID()}.sqlite`;
 const migrationsFolder = new URL(

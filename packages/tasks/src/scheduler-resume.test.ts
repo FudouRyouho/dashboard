@@ -7,7 +7,6 @@ import {
   createRunLogDB,
   createSnapshotStoreDB,
   createScheduler,
-  type SnapshotKey,
   type TaskDefinition,
 } from '.';
 // Minimal clock for deterministic timestamp control in resume tests
@@ -23,7 +22,7 @@ class FakeClock {
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const key = (taskId: string): SnapshotKey<number> => ({ taskId });
+
 
 const assemble = <T>(
   taskId: string,
@@ -39,27 +38,6 @@ const assemble = <T>(
   run,
 });
 
-const depsWithClock = async (clock: FakeClock) => {
-  const tempPath = `./data/test-scheduler-${randomUUID()}.sqlite`;
-  const migrationsFolder = new URL(
-    '../../../packages/db/migrations',
-    import.meta.url,
-  ).pathname;
-  const db = await initializeDatabase({ path: tempPath, migrationsFolder });
-  return {
-    store: createSnapshotStoreDB(db),
-    runLog: createRunLogDB<string>(db),
-    classify: () => ({ cause: 'unreachable' as const }),
-    now: clock.now,
-    concurrency: 4,
-    drainMs: 300,
-    cleanup: () => {
-      try {
-        unlinkSync(tempPath);
-      } catch {}
-    },
-  };
-};
 
 /**
  * Test 6: Scheduler resume after clean stop/start
