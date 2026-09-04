@@ -10,13 +10,13 @@ export function dataViewOf(status: ResultStatus): DataView {
 }
 
 export function inRange(start: Date, end: Date) {
-  const desde = start.getTime();
-  const hasta = end.getTime();
+  const from = start.getTime();
+  const until = end.getTime();
 
   return (event: CalendarEvent): boolean => {
-    const inicio = Date.parse(event.startDate);
-    const fin = event.endDate ? Date.parse(event.endDate) : inicio;
+    const start = Date.parse(event.startDate);
+    const end = event.endDate ? Date.parse(event.endDate) : start;
 
-    return inicio <= hasta && fin >= desde;
+    return start <= until && end >= from;
   };
 }
