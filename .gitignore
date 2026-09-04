@@ -6,13 +6,17 @@ node_modules
 
 *.ignore.*
 !**/scripts/*
+.working
 
 # environment
 .env
 .env.*
 !.env.example
+*.sqlite
+*.sqlite-journal
 
 # agents
-.claude/*
+.claude/
 CLAUDE.md
 docs/adr/
+AGENTS.md
