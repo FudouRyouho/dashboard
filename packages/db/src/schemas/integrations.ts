@@ -6,5 +6,8 @@ export const integrationInstances = sqliteTable('integration_instances', {
   name: text('name').notNull(),
   url: text('url').notNull(),
   externalUrl: text('external_url'),
+  apiKey: text('api_key').notNull(),
+  port: integer('port'),
   createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
 });

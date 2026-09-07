@@ -33,7 +33,7 @@ export async function startServer(appConfig: Config) {
 
   const registry = createIntegrationRegistry(appConfig);
   const tasks = createTaskDefinitions(registry);
-  const purgeTask = createPurgeTask(db, 30);
+  const purgeTask = createPurgeTask({ db, daysToKeep: 30, logger: server.log });
 
   const integrations = registry.map((entry) => entry.integration);
   const scheduler = createScheduler<IntegrationErrorReason>(

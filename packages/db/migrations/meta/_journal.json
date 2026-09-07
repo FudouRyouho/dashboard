@@ -8,6 +8,13 @@
       "when": 1788395274410,
       "tag": "0000_wise_daimon_hellstrom",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1788677577240,
+      "tag": "0001_useful_dragon_man",
+      "breakpoints": true
     }
   ]
 }

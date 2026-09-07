@@ -93,7 +93,7 @@ test('createPurgeTask: corre, registra snapshot, retorna count', async () => {
     }
 
     // Crear purge task con 3 días de retención
-    const purgeTask = createPurgeTask(db, 3);
+    const purgeTask = createPurgeTask({ db, daysToKeep: 3 });
 
     // Ejecutar run() directamente (simula scheduler)
     const deleted = await purgeTask.run(new AbortController().signal);
@@ -108,7 +108,7 @@ test('createPurgeTask: corre, registra snapshot, retorna count', async () => {
 
 test('purge con 0 runs retorna 0, no falla', async () => {
   await withTempDb(async (db) => {
-    const purgeTask = createPurgeTask(db, 3);
+    const purgeTask = createPurgeTask({ db, daysToKeep: 3 });
     const deleted = await purgeTask.run(new AbortController().signal);
 
     assert.equal(deleted, 0, 'con DB vacía debe retornar 0');
