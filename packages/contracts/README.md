@@ -7,7 +7,7 @@ contrato sin agregarle campos.
 ## Estructura
 
 - `kinds.ts` — `integrationKinds` y el tipo `IntegrationKind`
-- `calendar.ts` — evento, imagen, links, metadata y el grupo por integración
+- `calendar.ts` — `CalendarEvent`, `CalendarImage`, `CalendarLink` y el grupo por integración
 - `result.ts` — `ResultStatus`: los hechos del último intento
 - `data-view.ts` — `dataViewOf` y `inRange`: lectura derivada, no contrato
 

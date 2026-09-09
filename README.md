@@ -22,14 +22,15 @@ El proyecto no está pensado como un producto final, sino como una reimplementac
 
 ## Estado actual
 
-- Workspace `pnpm` con `apps/server`, `apps/clients/*` y cinco paquetes: `common`, `contracts`, `definitions`, `integrations` y `tasks`
+- Workspace `pnpm` con `apps/server`, `apps/clients/*` y seis paquetes: `common`, `contracts`, `db`, `definitions`, `integrations` y `tasks`
 - `@dashboard/contracts` es la base: schemas de Zod y tipos que cruzan el límite servidor ↔ cliente. No depende de ningún otro paquete del workspace
 - `@dashboard/server` expone un router tRPC con:
   - `health`
   - `calendar.getEvents` — devuelve el último snapshot en memoria más el estado de la última corrida; ya no llama a la integración dentro del request
+- `@dashboard/db` persiste snapshots y corridas de tareas en SQLite: tablas `task_runs`, `task_snapshots`, `server_log_entries`
 - `@dashboard/tasks` es el motor de tareas programadas: timers, techo de concurrencia, cancelación y cooldown tras fallos seguidos
 - `@dashboard/integrations` contiene:
-  - Sonarr y Radarr integration
+  - Sonarr, Radarr y Jellyfin integrations
   - Zod schemas del calendario de cada una
   - clasificación de errores a un motivo estable (`unauthorized`, `unreachable`, `timeout`, `invalid-response`, `unknown`)
 - `@dashboard/definitions` contiene:
@@ -63,7 +64,7 @@ El proyecto no está pensado como un producto final, sino como una reimplementac
   - almacén de snapshots y bitácora de corridas
 - [`packages/integrations/`](packages/integrations/README.md)
   - base de integraciones y capacidades
-  - Sonarr y Radarr integration
+  - Sonarr, Radarr y Jellyfin integration
 - [`packages/definitions/`](packages/definitions/README.md)
   - catálogos del dominio (kind → nombre, ícono). Lo consumen `integrations` y los clientes
   - generación de assets a partir de `.svg` como data `URIs` embed en un `.ts` local sin dependencia del bundler o de una CDN
@@ -85,6 +86,7 @@ El proyecto no está pensado como un producto final, sino como una reimplementac
 
     contracts   ←  definitions, integrations, tasks(*), server, client-react
     common      ←  integrations, server
+    db          ←  server, integrations, tasks
     tasks       ←  server
     definitions ←  client-react
 
