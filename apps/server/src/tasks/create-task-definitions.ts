@@ -14,9 +14,9 @@ export function createTaskDefinitions(
 ): TaskDefinition[] {
   const definitions: TaskDefinition[] = [];
 
-  for (const { integration, config } of entries) {
+  for (const { integration, row } of entries) {
     const built: string[] = [];
-    const configPolicies = policies.get(config.id) ?? {};
+    const configPolicies = policies.get(row.id) ?? {};
 
     if (supportsCalendar(integration)) {
       definitions.push(calendarTask(integration, configPolicies.calendar));
@@ -30,14 +30,14 @@ export function createTaskDefinitions(
       built.push('media-releases');
     }
 
-    assertNoUnknownTasks(config, built);
+    assertNoUnknownTasks(row, built);
   }
 
   return definitions;
 }
 
 function assertNoUnknownTasks(
-  _config: RegistryEntry['config'],
+  _row: RegistryEntry['row'],
   _built: string[],
 ): void {
   // Task validation happens at configuration time via DB policies

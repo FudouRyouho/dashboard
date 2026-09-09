@@ -9,18 +9,7 @@ import { getAllIntegrationFactories } from '@dashboard/integrations';
 
 export interface RegistryEntry {
   integration: Integration;
-  config: IntegrationRuntimeConfig;
-}
-
-export interface IntegrationRuntimeConfig {
-  kind: 'sonarr' | 'radarr' | 'jellyfin';
-  id: string;
-  name: string;
-  url: string;
-  port?: number;
-  externalUrl?: string;
-  timeoutMs?: number;
-  apiKey: string;
+  row: IntegrationInstanceRow;
 }
 
 export interface TaskPolicy {
@@ -44,19 +33,6 @@ const toInput = (row: IntegrationInstanceRow, apiKey: string): IntegrationInput 
   secrets: [{ kind: 'apiKey', value: apiKey }],
 });
 
-const toConfig = (row: IntegrationInstanceRow): IntegrationRuntimeConfig => {
-  return {
-    kind: row.kind as 'sonarr' | 'radarr' | 'jellyfin',
-    id: row.id,
-    name: row.name,
-    url: row.url,
-    port: row.port ?? undefined,
-    externalUrl: row.externalUrl ?? undefined,
-    timeoutMs: 10_000,
-    apiKey: row.apiKey,
-  };
-};
-
 export const createIntegrationRegistry = async (db: DB): Promise<RegistryEntry[]> => {
   const integrations = await getAllIntegrations(db);
   const entries: RegistryEntry[] = [];
@@ -64,19 +40,18 @@ export const createIntegrationRegistry = async (db: DB): Promise<RegistryEntry[]
   const factoryByKind = new Map(factories.map((f) => [f.metadata.kind, f]));
 
   for (const integration of integrations) {
-    const config = toConfig(integration);
-    const factory = factoryByKind.get(config.kind);
+    const factory = factoryByKind.get(integration.kind as 'sonarr' | 'radarr' | 'jellyfin');
 
     if (!factory) {
       continue;
     }
 
-    const input = toInput(integration, config.apiKey);
+    const input = toInput(integration, integration.apiKey);
     const instance = factory.create(input);
 
     entries.push({
       integration: instance,
-      config,
+      row: integration,
     });
   }
 
