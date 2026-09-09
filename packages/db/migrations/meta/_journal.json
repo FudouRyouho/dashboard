@@ -15,6 +15,13 @@
       "when": 1788677577240,
       "tag": "0001_useful_dragon_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1788894155993,
+      "tag": "0002_wonderful_stepford_cuckoos",
+      "breakpoints": true
     }
   ]
 }

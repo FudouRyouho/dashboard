@@ -3,12 +3,14 @@ import superjson from 'superjson';
 import type { Integration } from '@dashboard/integrations';
 import { RunLog, SnapshotStore } from '@dashboard/tasks';
 import { IntegrationErrorReason } from '@dashboard/contracts';
+import type { DB } from '@dashboard/db';
 
 export interface TRPCContext {
   integrations: Integration[];
   logger: AppLogger;
   store: SnapshotStore;
   runLog: RunLog<IntegrationErrorReason>;
+  db: DB;
 }
 
 const t = initTRPC.context<TRPCContext>().create({
