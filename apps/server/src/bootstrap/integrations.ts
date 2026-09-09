@@ -1,43 +1,84 @@
 import {
   Integration,
   IntegrationInput,
-  RadarrIntegration,
-  SonarrIntegration,
-  JellyfinIntegration,
 } from '@dashboard/integrations';
-import { Config } from '../config';
-
-type IntegrationConfig = Config['integrations'][number];
+import type { DB } from '@dashboard/db';
+import { getAllIntegrations } from '@dashboard/db';
+import type { IntegrationInstanceRow } from '@dashboard/db';
+import { getAllIntegrationFactories } from '@dashboard/integrations';
 
 export interface RegistryEntry {
   integration: Integration;
-  config: IntegrationConfig;
+  config: IntegrationRuntimeConfig;
 }
 
-const toInput = (config: IntegrationConfig): IntegrationInput => ({
-  kind: config.kind,
-  id: config.id,
-  name: config.name,
-  url: config.url,
-  port: config.port,
-  externalUrl: config.externalUrl,
-  timeoutMs: config.timeoutMs,
-  secrets: [{ kind: 'apiKey', value: config.apiKey }],
+export interface IntegrationRuntimeConfig {
+  kind: 'sonarr' | 'radarr' | 'jellyfin';
+  id: string;
+  name: string;
+  url: string;
+  port?: number;
+  externalUrl?: string;
+  timeoutMs?: number;
+  apiKey: string;
+}
+
+export interface TaskPolicy {
+  everyMs?: number;
+  runOnStart?: boolean;
+  expectedDurationMs?: number;
+  failurePolicy?: {
+    maxAttempts?: number;
+    cooldownMs?: number;
+  };
+}
+
+const toInput = (row: IntegrationInstanceRow, apiKey: string): IntegrationInput => ({
+  kind: row.kind as 'sonarr' | 'radarr' | 'jellyfin',
+  id: row.id,
+  name: row.name,
+  url: row.url,
+  port: row.port ?? undefined,
+  externalUrl: row.externalUrl ?? undefined,
+  timeoutMs: 10_000,
+  secrets: [{ kind: 'apiKey', value: apiKey }],
 });
 
-const instantiate = (config: IntegrationConfig): Integration => {
-  switch (config.kind) {
-    case 'sonarr':
-      return new SonarrIntegration(toInput(config));
-    case 'radarr':
-      return new RadarrIntegration(toInput(config));
-    case 'jellyfin':
-      return new JellyfinIntegration(toInput(config));
-  }
+const toConfig = (row: IntegrationInstanceRow): IntegrationRuntimeConfig => {
+  return {
+    kind: row.kind as 'sonarr' | 'radarr' | 'jellyfin',
+    id: row.id,
+    name: row.name,
+    url: row.url,
+    port: row.port ?? undefined,
+    externalUrl: row.externalUrl ?? undefined,
+    timeoutMs: 10_000,
+    apiKey: row.apiKey,
+  };
 };
 
-export const createIntegrationRegistry = (appConfig: Config): RegistryEntry[] =>
-  appConfig.integrations.map((config) => ({
-    integration: instantiate(config),
-    config,
-  }));
+export const createIntegrationRegistry = async (db: DB): Promise<RegistryEntry[]> => {
+  const integrations = await getAllIntegrations(db);
+  const entries: RegistryEntry[] = [];
+  const factories = getAllIntegrationFactories();
+  const factoryByKind = new Map(factories.map((f) => [f.metadata.kind, f]));
+
+  for (const integration of integrations) {
+    const config = toConfig(integration);
+    const factory = factoryByKind.get(config.kind);
+
+    if (!factory) {
+      continue;
+    }
+
+    const input = toInput(integration, config.apiKey);
+    const instance = factory.create(input);
+
+    entries.push({
+      integration: instance,
+      config,
+    });
+  }
+
+  return entries;
+};

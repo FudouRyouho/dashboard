@@ -7,17 +7,18 @@ import {
 import { appRouter, type AppRouter } from './index';
 import type { TRPCContext } from './trpc';
 import { createIntegrationRegistry } from './bootstrap/integrations';
+import { createDatabase } from './bootstrap/db';
 import type { Config } from './config';
 import {
   createRunLogDB,
   createSnapshotStoreDB,
   createScheduler,
 } from '@dashboard/tasks';
-import { createDatabase } from './bootstrap/db';
 import { IntegrationErrorReason } from '@dashboard/contracts';
 import { createTaskDefinitions } from './tasks/create-task-definitions';
 import { createPurgeTask } from '@dashboard/tasks';
 import { classifyIntegrationError } from '@dashboard/integrations';
+import { getAllPoliciesByIntegrationId } from '@dashboard/db';
 
 export async function startServer(appConfig: Config) {
   const server = Fastify({
@@ -31,8 +32,40 @@ export async function startServer(appConfig: Config) {
   const store = createSnapshotStoreDB(db);
   const runLog = createRunLogDB<IntegrationErrorReason>(db);
 
-  const registry = createIntegrationRegistry(appConfig);
-  const tasks = createTaskDefinitions(registry);
+  const registry = await createIntegrationRegistry(db);
+  
+  // Build policies map for task definitions
+  const policiesMap = new Map<string, { calendar?: any; mediaReleases?: any }>();
+  for (const entry of registry) {
+    const policies = await getAllPoliciesByIntegrationId(db, entry.config.id);
+    const taskPolicies: { calendar?: any; mediaReleases?: any } = {};
+    for (const policy of policies) {
+      if (policy.taskType === 'calendar') {
+        taskPolicies.calendar = {
+          everyMs: policy.everyMs,
+          runOnStart: policy.runOnStart,
+          expectedDurationMs: policy.expectedDurationMs,
+          failurePolicy: {
+            maxAttempts: policy.failureMaxAttempts,
+            cooldownMs: policy.failureCooldownMs,
+          },
+        };
+      } else if (policy.taskType === 'mediaReleases') {
+        taskPolicies.mediaReleases = {
+          everyMs: policy.everyMs,
+          runOnStart: policy.runOnStart,
+          expectedDurationMs: policy.expectedDurationMs,
+          failurePolicy: {
+            maxAttempts: policy.failureMaxAttempts,
+            cooldownMs: policy.failureCooldownMs,
+          },
+        };
+      }
+    }
+    policiesMap.set(entry.config.id, taskPolicies);
+  }
+  
+  const tasks = createTaskDefinitions(registry, policiesMap);
   const purgeTask = createPurgeTask({ db, daysToKeep: 30, logger: server.log });
 
   const integrations = registry.map((entry) => entry.integration);
@@ -71,6 +104,7 @@ export async function startServer(appConfig: Config) {
     logger: server.log,
     store,
     runLog,
+    db,
   });
 
   server.get('/health', () => ({
