@@ -36,6 +36,10 @@ Tareas programadas, ejecuta funciones cada x tiempo, guarda el ultimo "estado de
 - tras `maxAttempts` fallos seguidos, la tarea espera el cooldown
 - un éxito borra el contador de fallos
 
+## Persistencia
+
+Los tests en `scheduler.db.test.ts` verifican el comportamiento de las tareas cuando se persisten en SQLite a través de `@dashboard/db`.
+
 > [!NOTE]
 > **`SnapshotKey<T>` lleva el tipo del dato en la clave.** El campo `__data?: T` no existe en runtime: sólo hace que `store.set(key, data)` y `store.get(key)` hablen del mismo tipo sin castear en cada lectura.
 > **El anillo de corridas devuelve una copia** (`forTask`): mutar lo que sale no toca el historial.

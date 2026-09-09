@@ -37,7 +37,7 @@ export async function startServer(appConfig: Config) {
   // Build policies map for task definitions
   const policiesMap = new Map<string, { calendar?: any; mediaReleases?: any }>();
   for (const entry of registry) {
-    const policies = await getAllPoliciesByIntegrationId(db, entry.config.id);
+    const policies = await getAllPoliciesByIntegrationId(db, entry.row.id);
     const taskPolicies: { calendar?: any; mediaReleases?: any } = {};
     for (const policy of policies) {
       if (policy.taskType === 'calendar') {
@@ -62,7 +62,7 @@ export async function startServer(appConfig: Config) {
         };
       }
     }
-    policiesMap.set(entry.config.id, taskPolicies);
+    policiesMap.set(entry.row.id, taskPolicies);
   }
   
   const tasks = createTaskDefinitions(registry, policiesMap);

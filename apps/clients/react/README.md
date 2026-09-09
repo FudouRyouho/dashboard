@@ -8,9 +8,7 @@ Cliente web del dashboard. Vite 8 + React 19 + Mantine 9.
 
 ## Estado
 
-UI sobre **mock data** (`src/mock/`). Todavía no hay fetch contra
-`apps/server`: el mock tipa contra el contrato real, así que la capa
-presentacional ya está escrita contra la forma definitiva de los datos.
+UI sobre **mock data** (`src/mock/calendar.mock.ts`). El piloto desechable que consume `/trpc` real está implementado y muestra el estado del dato. El mock tipa contra el contrato real, así que la capa presentacional ya está escrita contra la forma definitiva de los datos.
 
 ## Estructura
 
