@@ -19,4 +19,8 @@ export const integrationDefs = {
     name: 'Jellyfin',
     iconUrl: iconDataUris.jellyfin,
   },
+  portainer: {
+    name: 'Portainer',
+    iconUrl: iconDataUris.portainer,
+  },
 } as const satisfies Record<IntegrationKind, IntegrationDef>;

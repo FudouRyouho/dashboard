@@ -2,6 +2,7 @@ import {
   Integration,
   IntegrationInput,
 } from '@dashboard/integrations';
+import { IntegrationKind } from '@dashboard/contracts';
 import type { DB } from '@dashboard/db';
 import { getAllIntegrations } from '@dashboard/db';
 import type { IntegrationInstanceRow } from '@dashboard/db';
@@ -13,7 +14,7 @@ export interface RegistryEntry {
 }
 
 export interface IntegrationRuntimeConfig {
-  kind: 'sonarr' | 'radarr' | 'jellyfin';
+  kind: 'sonarr' | 'radarr' | 'jellyfin' | 'portainer';
   id: string;
   name: string;
   url: string;
@@ -34,7 +35,7 @@ export interface TaskPolicy {
 }
 
 const toInput = (row: IntegrationInstanceRow, apiKey: string): IntegrationInput => ({
-  kind: row.kind as 'sonarr' | 'radarr' | 'jellyfin',
+  kind: row.kind as IntegrationKind,
   id: row.id,
   name: row.name,
   url: row.url,
@@ -46,7 +47,7 @@ const toInput = (row: IntegrationInstanceRow, apiKey: string): IntegrationInput 
 
 const toConfig = (row: IntegrationInstanceRow): IntegrationRuntimeConfig => {
   return {
-    kind: row.kind as 'sonarr' | 'radarr' | 'jellyfin',
+    kind: row.kind as IntegrationKind,
     id: row.id,
     name: row.name,
     url: row.url,

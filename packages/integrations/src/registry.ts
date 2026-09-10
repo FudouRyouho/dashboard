@@ -11,7 +11,7 @@ export interface IntegrationMetadata {
   capabilities: IntegrationCapability[];
 }
 
-export type IntegrationCapability = 'calendar' | 'mediaReleases';
+export type IntegrationCapability = 'calendar' | 'mediaReleases' | 'docker';
 
 export interface IntegrationFactory {
   create(input: IntegrationInput): Integration;
