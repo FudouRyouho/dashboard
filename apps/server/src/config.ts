@@ -47,7 +47,6 @@ const jellyfinConfigSchema = baseIntegrationSchema.extend({
 const dockerConfigSchema = baseIntegrationSchema.extend({
   kind: z.literal('docker'),
   port: z.number().int().positive().default(2375),
-  apiKey: z.string().optional(),
 });
 
 const integrationConfigSchema = z.discriminatedUnion('kind', [

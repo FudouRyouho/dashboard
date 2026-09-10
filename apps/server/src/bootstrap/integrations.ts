@@ -15,16 +15,21 @@ export interface RegistryEntry {
   config: IntegrationConfig;
 }
 
-const toInput = (config: IntegrationConfig): IntegrationInput => ({
-  kind: config.kind,
-  id: config.id,
-  name: config.name,
-  url: config.url,
-  port: config.port,
-  externalUrl: config.externalUrl,
-  timeoutMs: config.timeoutMs,
-  secrets: [{ kind: 'apiKey', value: config.apiKey ?? '' }],
-});
+const toInput = (config: IntegrationConfig): IntegrationInput => {
+  const secrets: { kind: string; value: string }[] = 'apiKey' in config
+    ? [{ kind: 'apiKey', value: config.apiKey ?? '' }]
+    : [];
+  return {
+    kind: config.kind,
+    id: config.id,
+    name: config.name,
+    url: config.url,
+    port: config.port,
+    externalUrl: config.externalUrl,
+    timeoutMs: config.timeoutMs,
+    secrets,
+  };
+};
 
 const instantiate = (config: IntegrationConfig): Integration => {
   switch (config.kind) {
