@@ -19,4 +19,8 @@ export const integrationDefs = {
     name: 'Jellyfin',
     iconUrl: iconDataUris.jellyfin,
   },
+  docker: {
+    name: 'Docker',
+    iconUrl: iconDataUris.docker,
+  },
 } as const satisfies Record<IntegrationKind, IntegrationDef>;

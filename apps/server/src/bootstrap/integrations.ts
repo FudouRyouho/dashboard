@@ -4,6 +4,7 @@ import {
   RadarrIntegration,
   SonarrIntegration,
   JellyfinIntegration,
+  DockerIntegration,
 } from '@dashboard/integrations';
 import { Config } from '../config';
 
@@ -22,7 +23,7 @@ const toInput = (config: IntegrationConfig): IntegrationInput => ({
   port: config.port,
   externalUrl: config.externalUrl,
   timeoutMs: config.timeoutMs,
-  secrets: [{ kind: 'apiKey', value: config.apiKey }],
+  secrets: [{ kind: 'apiKey', value: config.apiKey ?? '' }],
 });
 
 const instantiate = (config: IntegrationConfig): Integration => {
@@ -33,6 +34,8 @@ const instantiate = (config: IntegrationConfig): Integration => {
       return new RadarrIntegration(toInput(config));
     case 'jellyfin':
       return new JellyfinIntegration(toInput(config));
+    case 'docker':
+      return new DockerIntegration(toInput(config));
   }
 };
 

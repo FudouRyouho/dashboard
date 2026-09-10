@@ -71,6 +71,7 @@ export async function startServer(appConfig: Config) {
     logger: server.log,
     store,
     runLog,
+    db,
   });
 
   server.get('/health', () => ({

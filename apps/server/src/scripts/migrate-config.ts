@@ -25,7 +25,7 @@ async function migrateConfigToDb() {
         name: integration.name,
         url: integration.url,
         externalUrl: integration.externalUrl ?? null,
-        apiKey: integration.apiKey,
+        apiKey: integration.apiKey ?? '',
         port: integration.port ?? null,
       });
 

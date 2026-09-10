@@ -7,8 +7,10 @@ Una clase por servicio externo, cada una se comunica con su propia 'integracion'
 - `base/integration.ts` — clase abstracta: URLs, secretos, timeout, `fetchJson`
 - `base/calendar.ts` — la capacidad `ICalendarIntegration` y su type guard
 - `base/integration-error.ts` — `IntegrationError` y `classifyIntegrationError`
+- `base/docker.ts` — la capacidad `IDockerIntegration` y su type guard
 - `image.ts` — elección de imagen por tipo de cover y sus aspect ratios
 - `sonarr/`, `radarr/` — la integración y el schema Zod de su respuesta
+- `docker/` — integración nativa Docker Engine API (puerto 2375), schemas Zod en `schemas/`
 
 ## Agregar una integración
 
@@ -21,3 +23,4 @@ Una clase por servicio externo, cada una se comunica con su propia 'integracion'
 > [!NOTE]
 > **URL interna vs. externa.** `baseUrl` es a dónde se le pega `externalUrl` es el link que se le muestra al usuario. `publicIntegration` expone la externa, nunca la interna.
 > **La validación Zod.** `parse()` sobre la respuesta cruda antes de mapear: si Sonarr cambia un campo, el error es `invalid-response`, no un `undefined` viajando hasta la UI.
+> **Configuración.** El schema de configuración (`apps/server/src/config.ts`) requiere agregar el `*ConfigSchema` al discriminated union para cada nueva integración.

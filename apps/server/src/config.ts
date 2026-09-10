@@ -44,10 +44,17 @@ const jellyfinConfigSchema = baseIntegrationSchema.extend({
   apiKey: z.string().min(1, 'JELLYFIN_APIKEY es obligatorio'),
 });
 
+const dockerConfigSchema = baseIntegrationSchema.extend({
+  kind: z.literal('docker'),
+  port: z.number().int().positive().default(2375),
+  apiKey: z.string().optional(),
+});
+
 const integrationConfigSchema = z.discriminatedUnion('kind', [
   sonarrConfigSchema,
   radarrConfigSchema,
   jellyfinConfigSchema,
+  dockerConfigSchema,
 ]);
 
 const configSchema = z.object({
