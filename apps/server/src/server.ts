@@ -33,7 +33,7 @@ export async function startServer(appConfig: Config) {
   const runLog = createRunLogDB<IntegrationErrorReason>(db);
 
   const registry = await createIntegrationRegistry(db);
-  
+
   // Build policies map for task definitions
   const policiesMap = new Map<string, { calendar?: any; mediaReleases?: any }>();
   for (const entry of registry) {
@@ -64,7 +64,7 @@ export async function startServer(appConfig: Config) {
     }
     policiesMap.set(entry.row.id, taskPolicies);
   }
-  
+
   const tasks = createTaskDefinitions(registry, policiesMap);
   const purgeTask = createPurgeTask({ db, daysToKeep: 30, logger: server.log });
 
