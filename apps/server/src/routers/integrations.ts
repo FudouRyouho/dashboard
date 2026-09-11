@@ -1,56 +1,40 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
-
-const integrationOutputSchema = z.object({
-  id: z.string(),
-  kind: z.enum(['sonarr', 'radarr', 'jellyfin']),
-  name: z.string(),
-  url: z.string().url(),
-  externalUrl: z.string().url().nullable(),
-  port: z.number().int().positive().nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-});
-
-const getIntegrationsOutput = z.array(integrationOutputSchema);
+import {
+  integrationInputBaseSchema,
+  integrationOutputSchema,
+  type IntegrationKind,
+} from '@dashboard/contracts';
 
 const upsertIntegrationInputSchema = z.discriminatedUnion('kind', [
-  z.object({
+  integrationInputBaseSchema.extend({
     kind: z.literal('sonarr'),
-    id: z.string().min(1),
-    name: z.string().min(1),
-    url: z.string().url(),
-    externalUrl: z.string().url().optional(),
     apiKey: z.string().min(1),
     port: z.number().int().positive().default(8989),
   }),
-  z.object({
+  integrationInputBaseSchema.extend({
     kind: z.literal('radarr'),
-    id: z.string().min(1),
-    name: z.string().min(1),
-    url: z.string().url(),
-    externalUrl: z.string().url().optional(),
     apiKey: z.string().min(1),
     port: z.number().int().positive().default(7878),
   }),
-  z.object({
+  integrationInputBaseSchema.extend({
     kind: z.literal('jellyfin'),
-    id: z.string().min(1),
-    name: z.string().min(1),
-    url: z.string().url(),
-    externalUrl: z.string().url().optional(),
     apiKey: z.string().min(1),
     port: z.number().int().positive().default(8096),
+  }),
+  integrationInputBaseSchema.extend({
+    kind: z.literal('docker'),
+    port: z.number().int().positive().default(2375),
   }),
 ]);
 
 export const integrationsRouter = createTRPCRouter({
-  list: publicProcedure.output(getIntegrationsOutput).query(async ({ ctx }) => {
+  list: publicProcedure.output(z.array(integrationOutputSchema)).query(async ({ ctx }) => {
     const { getAllIntegrations } = await import('@dashboard/db');
     const integrations = await getAllIntegrations(ctx.db);
     return integrations.map((i) => ({
       ...i,
-      kind: i.kind as 'sonarr' | 'radarr' | 'jellyfin',
+      kind: i.kind as IntegrationKind,
     }));
   }),
 
@@ -63,7 +47,7 @@ export const integrationsRouter = createTRPCRouter({
       if (!result) return null;
       return {
         ...result,
-        kind: result.kind as 'sonarr' | 'radarr' | 'jellyfin',
+        kind: result.kind as IntegrationKind,
       };
     }),
 
@@ -78,7 +62,7 @@ export const integrationsRouter = createTRPCRouter({
       );
       return {
         ...result,
-        kind: result.kind as 'sonarr' | 'radarr' | 'jellyfin',
+        kind: result.kind as IntegrationKind,
       };
     }),
 

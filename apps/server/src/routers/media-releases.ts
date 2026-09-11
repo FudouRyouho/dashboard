@@ -1,25 +1,18 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { supportsMediaReleases } from '@dashboard/integrations';
+import { z } from 'zod';
 import {
-  integrationKinds,
   mediaReleasesResponseSchema,
   withResultStatus,
   type MediaReleaseEvent,
+  integrationPublicSchema,
 } from '@dashboard/contracts';
-import { z } from 'zod';
 import { toStatus } from '../tasks/to-status';
 import { mediaReleasesSnapshot } from '../tasks/task-ids';
 
-const mediaReleasesIntegrationSchema = z.object({
-  kind: z.enum(integrationKinds),
-  id: z.string(),
-  name: z.string(),
-  url: z.string(),
-});
-
 export const mediaReleasesResultSchema = withResultStatus(
   z.object({
-    integration: mediaReleasesIntegrationSchema,
+    integration: integrationPublicSchema,
     releases: mediaReleasesResponseSchema,
   }),
 );

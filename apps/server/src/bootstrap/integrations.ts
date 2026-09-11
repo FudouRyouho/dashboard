@@ -3,6 +3,7 @@ import type { DB } from '@dashboard/db';
 import { getAllIntegrations } from '@dashboard/db';
 import type { IntegrationInstanceRow } from '@dashboard/db';
 import { getAllIntegrationFactories } from '@dashboard/integrations';
+import { type IntegrationKind } from '@dashboard/contracts';
 
 export interface RegistryEntry {
   integration: Integration;
@@ -25,7 +26,7 @@ const toInput = (row: IntegrationInstanceRow): IntegrationInput => {
       ? [{ kind: 'apiKey', value: (row as { apiKey?: string }).apiKey ?? '' }]
       : [];
   return {
-    kind: row.kind as 'sonarr' | 'radarr' | 'jellyfin' | 'docker',
+    kind: row.kind as IntegrationKind,
     id: row.id,
     name: row.name,
     url: row.url,
@@ -46,7 +47,7 @@ export const createIntegrationRegistry = async (
 
   for (const integration of integrations) {
     const factory = factoryByKind.get(
-      integration.kind as 'sonarr' | 'radarr' | 'jellyfin' | 'docker',
+      integration.kind as IntegrationKind,
     );
 
     if (!factory) {

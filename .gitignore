@@ -20,3 +20,4 @@ node_modules
 CLAUDE.md
 docs/adr/
 AGENTS.md
+.opencode/

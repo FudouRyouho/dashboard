@@ -1,14 +1,15 @@
 import type { DB } from '../connection';
 import { integrationInstances } from '../schemas/integrations';
 import { eq, desc, and } from 'drizzle-orm';
+import { type IntegrationKind } from '@dashboard/contracts';
 
 export interface IntegrationInstanceRow {
   id: string;
-  kind: string;
+  kind: IntegrationKind;
   name: string;
   url: string;
   externalUrl: string | null;
-  apiKey: string;
+  apiKey?: string | null;
   port: number | null;
   createdAt: Date;
   updatedAt: Date;
@@ -16,21 +17,22 @@ export interface IntegrationInstanceRow {
 
 export interface UpsertIntegrationInput {
   id: string;
-  kind: 'sonarr' | 'radarr' | 'jellyfin' | 'docker';
+  kind: IntegrationKind;
   name: string;
   url: string;
   externalUrl?: string | null;
-  apiKey: string;
+  apiKey?: string;
   port?: number | null;
 }
 
 export async function getAllIntegrations(
   db: DB,
 ): Promise<IntegrationInstanceRow[]> {
-  return db
+  const rows = await db
     .select()
     .from(integrationInstances)
     .orderBy(desc(integrationInstances.createdAt));
+  return rows.map((r) => ({ ...r, kind: r.kind as IntegrationKind }));
 }
 
 export async function getIntegrationById(
@@ -42,7 +44,8 @@ export async function getIntegrationById(
     .from(integrationInstances)
     .where(eq(integrationInstances.id, id))
     .limit(1);
-  return results[0] ?? null;
+  const r = results[0];
+  return r ? { ...r, kind: r.kind as IntegrationKind } : null;
 }
 
 export async function getIntegrationByKindAndName(
@@ -60,7 +63,8 @@ export async function getIntegrationByKindAndName(
       ),
     )
     .limit(1);
-  return results[0] ?? null;
+  const r = results[0];
+  return r ? { ...r, kind: r.kind as IntegrationKind } : null;
 }
 
 export async function upsertIntegration(
@@ -105,7 +109,7 @@ export async function upsertIntegration(
     .limit(1);
   if (!results[0])
     throw new Error(`Failed to retrieve integration: ${input.id}`);
-  return results[0];
+  return { ...results[0], kind: results[0].kind as IntegrationKind };
 }
 
 export async function deleteIntegration(db: DB, id: string): Promise<void> {

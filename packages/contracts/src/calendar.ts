@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { integrationKinds } from './kinds';
 import { withResultStatus } from './result';
+import { integrationPublicSchema } from './integrations';
 
 export const calendarImageBadgeSchema = z.object({
   content: z.string(),
@@ -62,16 +62,9 @@ export const calendarEventSchema = z.object({
   links: z.array(calendarLinkSchema),
 });
 
-export const calendarIntegrationSchema = z.object({
-  kind: z.enum(integrationKinds),
-  id: z.string(),
-  name: z.string(),
-  url: z.string(),
-});
-
 export const calendarResultGroupSchema = withResultStatus(
   z.object({
-    integration: calendarIntegrationSchema,
+    integration: integrationPublicSchema,
     events: z.array(calendarEventSchema),
   }),
 );

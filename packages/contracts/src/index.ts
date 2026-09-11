@@ -3,3 +3,4 @@ export * from './result';
 export * from './kinds';
 export * from './data-view';
 export * from './media-releases';
+export * from './integrations';
