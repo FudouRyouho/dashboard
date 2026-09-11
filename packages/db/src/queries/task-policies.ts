@@ -26,7 +26,7 @@ export interface UpsertTaskPolicyInput {
 
 export async function getAllPoliciesByIntegrationId(
   db: DB,
-  integrationId: string
+  integrationId: string,
 ): Promise<TaskPolicyRow[]> {
   const results = await db
     .select()
@@ -41,14 +41,14 @@ export async function getAllPoliciesByIntegrationId(
 export async function getPolicyByIntegrationAndType(
   db: DB,
   integrationId: string,
-  taskType: 'calendar' | 'mediaReleases'
+  taskType: 'calendar' | 'mediaReleases',
 ): Promise<TaskPolicyRow | null> {
   const results = await db
     .select()
     .from(taskPolicies)
     .where(
       eq(taskPolicies.integrationId, integrationId) &&
-      eq(taskPolicies.taskType, taskType)
+        eq(taskPolicies.taskType, taskType),
     )
     .limit(1);
   const row = results[0];
@@ -61,12 +61,12 @@ export async function getPolicyByIntegrationAndType(
 
 export async function upsertTaskPolicy(
   db: DB,
-  input: UpsertTaskPolicyInput
+  input: UpsertTaskPolicyInput,
 ): Promise<void> {
   const existing = await getPolicyByIntegrationAndType(
     db,
     input.integrationId,
-    input.taskType
+    input.taskType,
   );
 
   if (existing) {
@@ -97,12 +97,12 @@ export async function upsertTaskPolicy(
 export async function deleteTaskPolicy(
   db: DB,
   integrationId: string,
-  taskType: 'calendar' | 'mediaReleases'
+  taskType: 'calendar' | 'mediaReleases',
 ): Promise<void> {
   await db
     .delete(taskPolicies)
     .where(
       eq(taskPolicies.integrationId, integrationId) &&
-      eq(taskPolicies.taskType, taskType)
+        eq(taskPolicies.taskType, taskType),
     );
 }

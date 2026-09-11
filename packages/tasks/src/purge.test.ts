@@ -6,7 +6,6 @@ import { initializeDatabase } from '@dashboard/db';
 import { purgeTaskRunsOlderThan, insertTaskRun } from '@dashboard/db';
 import { createRunLogDB, createPurgeTask } from '.';
 
-
 const tempPath = () => `./data/test-purge-${randomUUID()}.sqlite`;
 const migrationsFolder = new URL(
   '../../../packages/db/migrations',

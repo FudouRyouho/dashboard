@@ -121,11 +121,7 @@ export function CalendarEventList({ events }: { events: CalendarEvent[] }) {
                         }}
                         leftSection={
                           link.logo ? (
-                            <Image
-                              src={`/${link.logo}.svg`}
-                              w={20}
-                              h={20}
-                            />
+                            <Image src={`/${link.logo}.svg`} w={20} h={20} />
                           ) : undefined
                         }
                       >

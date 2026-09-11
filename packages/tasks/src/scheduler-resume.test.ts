@@ -23,7 +23,6 @@ class FakeClock {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-
 const assemble = <T>(
   taskId: string,
   everyMs: number,
@@ -37,7 +36,6 @@ const assemble = <T>(
   expectedDurationMs: 10_000,
   run,
 });
-
 
 /**
  * Test 6: Scheduler resume after clean stop/start

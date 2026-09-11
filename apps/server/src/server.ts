@@ -23,7 +23,9 @@ import { createPurgeTask } from '@dashboard/tasks';
 import { classifyIntegrationError } from '@dashboard/integrations';
 import { getAllPoliciesByIntegrationId } from '@dashboard/db';
 
-const definitionsRoot = dirname(fileURLToPath(import.meta.resolve('@dashboard/definitions')));
+const definitionsRoot = dirname(
+  fileURLToPath(import.meta.resolve('@dashboard/definitions')),
+);
 const iconsDir = join(definitionsRoot, '..', 'icons');
 
 export async function startServer(appConfig: Config) {
@@ -47,7 +49,10 @@ export async function startServer(appConfig: Config) {
   const registry = await createIntegrationRegistry(db);
 
   // Build policies map for task definitions
-  const policiesMap = new Map<string, { calendar?: any; mediaReleases?: any }>();
+  const policiesMap = new Map<
+    string,
+    { calendar?: any; mediaReleases?: any }
+  >();
   for (const entry of registry) {
     const policies = await getAllPoliciesByIntegrationId(db, entry.row.id);
     const taskPolicies: { calendar?: any; mediaReleases?: any } = {};

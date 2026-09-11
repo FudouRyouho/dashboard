@@ -1,7 +1,4 @@
-import {
-  Integration,
-  IntegrationInput,
-} from '@dashboard/integrations';
+import { Integration, IntegrationInput } from '@dashboard/integrations';
 import type { DB } from '@dashboard/db';
 import { getAllIntegrations } from '@dashboard/db';
 import type { IntegrationInstanceRow } from '@dashboard/db';
@@ -23,9 +20,10 @@ export interface TaskPolicy {
 }
 
 const toInput = (row: IntegrationInstanceRow): IntegrationInput => {
-  const secrets: { kind: string; value: string }[] = 'apiKey' in row
-    ? [{ kind: 'apiKey', value: (row as { apiKey?: string }).apiKey ?? '' }]
-    : [];
+  const secrets: { kind: string; value: string }[] =
+    'apiKey' in row
+      ? [{ kind: 'apiKey', value: (row as { apiKey?: string }).apiKey ?? '' }]
+      : [];
   return {
     kind: row.kind as 'sonarr' | 'radarr' | 'jellyfin' | 'docker',
     id: row.id,
@@ -38,14 +36,18 @@ const toInput = (row: IntegrationInstanceRow): IntegrationInput => {
   };
 };
 
-export const createIntegrationRegistry = async (db: DB): Promise<RegistryEntry[]> => {
+export const createIntegrationRegistry = async (
+  db: DB,
+): Promise<RegistryEntry[]> => {
   const integrations = await getAllIntegrations(db);
   const entries: RegistryEntry[] = [];
   const factories = getAllIntegrationFactories();
   const factoryByKind = new Map(factories.map((f) => [f.metadata.kind, f]));
 
   for (const integration of integrations) {
-    const factory = factoryByKind.get(integration.kind as 'sonarr' | 'radarr' | 'jellyfin' | 'docker');
+    const factory = factoryByKind.get(
+      integration.kind as 'sonarr' | 'radarr' | 'jellyfin' | 'docker',
+    );
 
     if (!factory) {
       continue;

@@ -31,15 +31,26 @@ export const taskSnapshots = sqliteTable('task_snapshots', {
   obtainedAt: integer('obtained_at', { mode: 'timestamp_ms' }).notNull(),
 });
 
-export const taskPolicies = sqliteTable('task_policies', {
-  id: text('id').primaryKey(),
-  integrationId: text('integration_id').notNull().references(() => integrationInstances.id, { onDelete: 'cascade' }),
-  taskType: text('task_type', { enum: ['calendar', 'mediaReleases'] }).notNull(),
-  everyMs: integer('every_ms').notNull(),
-  runOnStart: integer('run_on_start').notNull(),
-  expectedDurationMs: integer('expected_duration_ms').notNull(),
-  failureMaxAttempts: integer('failure_max_attempts').notNull(),
-  failureCooldownMs: integer('failure_cooldown_ms').notNull(),
-}, (t) => ({
-  uniq: index('uniq_task_policies_integration_task').on(t.integrationId, t.taskType),
-}));
+export const taskPolicies = sqliteTable(
+  'task_policies',
+  {
+    id: text('id').primaryKey(),
+    integrationId: text('integration_id')
+      .notNull()
+      .references(() => integrationInstances.id, { onDelete: 'cascade' }),
+    taskType: text('task_type', {
+      enum: ['calendar', 'mediaReleases'],
+    }).notNull(),
+    everyMs: integer('every_ms').notNull(),
+    runOnStart: integer('run_on_start').notNull(),
+    expectedDurationMs: integer('expected_duration_ms').notNull(),
+    failureMaxAttempts: integer('failure_max_attempts').notNull(),
+    failureCooldownMs: integer('failure_cooldown_ms').notNull(),
+  },
+  (t) => ({
+    uniq: index('uniq_task_policies_integration_task').on(
+      t.integrationId,
+      t.taskType,
+    ),
+  }),
+);

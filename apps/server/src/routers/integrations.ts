@@ -45,13 +45,14 @@ const upsertIntegrationInputSchema = z.discriminatedUnion('kind', [
 ]);
 
 export const integrationsRouter = createTRPCRouter({
-  list: publicProcedure
-    .output(getIntegrationsOutput)
-    .query(async ({ ctx }) => {
-      const { getAllIntegrations } = await import('@dashboard/db');
-      const integrations = await getAllIntegrations(ctx.db);
-      return integrations.map((i) => ({ ...i, kind: i.kind as 'sonarr' | 'radarr' | 'jellyfin' }));
-    }),
+  list: publicProcedure.output(getIntegrationsOutput).query(async ({ ctx }) => {
+    const { getAllIntegrations } = await import('@dashboard/db');
+    const integrations = await getAllIntegrations(ctx.db);
+    return integrations.map((i) => ({
+      ...i,
+      kind: i.kind as 'sonarr' | 'radarr' | 'jellyfin',
+    }));
+  }),
 
   get: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -60,7 +61,10 @@ export const integrationsRouter = createTRPCRouter({
       const { getIntegrationById } = await import('@dashboard/db');
       const result = await getIntegrationById(ctx.db, input.id);
       if (!result) return null;
-      return { ...result, kind: result.kind as 'sonarr' | 'radarr' | 'jellyfin' };
+      return {
+        ...result,
+        kind: result.kind as 'sonarr' | 'radarr' | 'jellyfin',
+      };
     }),
 
   upsert: publicProcedure
@@ -68,8 +72,14 @@ export const integrationsRouter = createTRPCRouter({
     .output(integrationOutputSchema)
     .mutation(async ({ ctx, input }) => {
       const { upsertIntegration } = await import('@dashboard/db');
-      const result = await upsertIntegration(ctx.db, input as import('@dashboard/db').UpsertIntegrationInput);
-      return { ...result, kind: result.kind as 'sonarr' | 'radarr' | 'jellyfin' };
+      const result = await upsertIntegration(
+        ctx.db,
+        input as import('@dashboard/db').UpsertIntegrationInput,
+      );
+      return {
+        ...result,
+        kind: result.kind as 'sonarr' | 'radarr' | 'jellyfin',
+      };
     }),
 
   delete: publicProcedure

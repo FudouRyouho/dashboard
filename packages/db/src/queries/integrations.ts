@@ -24,11 +24,19 @@ export interface UpsertIntegrationInput {
   port?: number | null;
 }
 
-export async function getAllIntegrations(db: DB): Promise<IntegrationInstanceRow[]> {
-  return db.select().from(integrationInstances).orderBy(desc(integrationInstances.createdAt));
+export async function getAllIntegrations(
+  db: DB,
+): Promise<IntegrationInstanceRow[]> {
+  return db
+    .select()
+    .from(integrationInstances)
+    .orderBy(desc(integrationInstances.createdAt));
 }
 
-export async function getIntegrationById(db: DB, id: string): Promise<IntegrationInstanceRow | null> {
+export async function getIntegrationById(
+  db: DB,
+  id: string,
+): Promise<IntegrationInstanceRow | null> {
   const results = await db
     .select()
     .from(integrationInstances)
@@ -40,7 +48,7 @@ export async function getIntegrationById(db: DB, id: string): Promise<Integratio
 export async function getIntegrationByKindAndName(
   db: DB,
   kind: string,
-  name: string
+  name: string,
 ): Promise<IntegrationInstanceRow | null> {
   const results = await db
     .select()
@@ -48,27 +56,33 @@ export async function getIntegrationByKindAndName(
     .where(
       and(
         eq(integrationInstances.kind, kind),
-        eq(integrationInstances.name, name)
-      )
+        eq(integrationInstances.name, name),
+      ),
     )
     .limit(1);
   return results[0] ?? null;
 }
 
-export async function upsertIntegration(db: DB, input: UpsertIntegrationInput): Promise<IntegrationInstanceRow> {
+export async function upsertIntegration(
+  db: DB,
+  input: UpsertIntegrationInput,
+): Promise<IntegrationInstanceRow> {
   const now = new Date();
   const existing = await getIntegrationById(db, input.id);
 
   if (existing) {
-    const updateQuery = db.update(integrationInstances).set({
-      kind: input.kind,
-      name: input.name,
-      url: input.url,
-      externalUrl: input.externalUrl ?? null,
-      apiKey: input.apiKey,
-      port: input.port ?? null,
-      updatedAt: now,
-    }).where(eq(integrationInstances.id, input.id));
+    const updateQuery = db
+      .update(integrationInstances)
+      .set({
+        kind: input.kind,
+        name: input.name,
+        url: input.url,
+        externalUrl: input.externalUrl ?? null,
+        apiKey: input.apiKey,
+        port: input.port ?? null,
+        updatedAt: now,
+      })
+      .where(eq(integrationInstances.id, input.id));
     await updateQuery;
   } else {
     await db.insert(integrationInstances).values({
@@ -89,7 +103,8 @@ export async function upsertIntegration(db: DB, input: UpsertIntegrationInput): 
     .from(integrationInstances)
     .where(eq(integrationInstances.id, input.id))
     .limit(1);
-  if (!results[0]) throw new Error(`Failed to retrieve integration: ${input.id}`);
+  if (!results[0])
+    throw new Error(`Failed to retrieve integration: ${input.id}`);
   return results[0];
 }
 

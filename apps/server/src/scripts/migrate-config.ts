@@ -14,10 +14,13 @@ async function migrateConfigToDb() {
     await runMigrations(db);
     console.log('Migrations applied successfully');
 
-    const { upsertIntegration, upsertTaskPolicy } = await import('@dashboard/db');
+    const { upsertIntegration, upsertTaskPolicy } =
+      await import('@dashboard/db');
 
     for (const integration of config.integrations) {
-      console.log(`Migrating integration: ${integration.id} (${integration.kind})`);
+      console.log(
+        `Migrating integration: ${integration.id} (${integration.kind})`,
+      );
 
       await upsertIntegration(db, {
         id: integration.id,
@@ -25,7 +28,7 @@ async function migrateConfigToDb() {
         name: integration.name,
         url: integration.url,
         externalUrl: integration.externalUrl ?? null,
-        apiKey: 'apiKey' in integration ? integration.apiKey ?? '' : '',
+        apiKey: 'apiKey' in integration ? (integration.apiKey ?? '') : '',
         port: integration.port ?? null,
       });
 

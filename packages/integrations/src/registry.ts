@@ -22,12 +22,16 @@ const registry = new Map<IntegrationKind, IntegrationFactory>();
 
 export function registerIntegration(factory: IntegrationFactory): void {
   if (registry.has(factory.metadata.kind)) {
-    throw new Error(`Integration kind '${factory.metadata.kind}' already registered`);
+    throw new Error(
+      `Integration kind '${factory.metadata.kind}' already registered`,
+    );
   }
   registry.set(factory.metadata.kind, factory);
 }
 
-export function getIntegrationFactory(kind: IntegrationKind): IntegrationFactory | undefined {
+export function getIntegrationFactory(
+  kind: IntegrationKind,
+): IntegrationFactory | undefined {
   return registry.get(kind);
 }
 

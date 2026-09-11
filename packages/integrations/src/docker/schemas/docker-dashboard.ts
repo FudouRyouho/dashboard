@@ -7,51 +7,66 @@ export const dockerContainerSchema = z.object({
   ImageID: z.string(),
   Command: z.string(),
   Created: z.number(),
-  Ports: z.array(z.object({
-    IP: z.string().optional(),
-    PrivatePort: z.number(),
-    PublicPort: z.number().optional(),
-    Type: z.string(),
-  })),
+  Ports: z.array(
+    z.object({
+      IP: z.string().optional(),
+      PrivatePort: z.number(),
+      PublicPort: z.number().optional(),
+      Type: z.string(),
+    }),
+  ),
   Labels: z.record(z.string()),
   State: z.string(),
   Status: z.string(),
   HostConfig: z.object({
     NetworkMode: z.string(),
   }),
-  Health: z.object({
-    Status: z.enum(['healthy', 'unhealthy', 'starting', 'none']).optional(),
-    FailingStreak: z.number().optional(),
-  }).nullable().optional(),
-  Mounts: z.array(z.object({
-    Type: z.string(),
-    Name: z.string().optional(),
-    Source: z.string().optional(),
-    Destination: z.string(),
-    Driver: z.string().optional(),
-    Mode: z.string().optional(),
-    RW: z.boolean().optional(),
-    Propagation: z.string().optional(),
-  })).optional(),
-  NetworkSettings: z.object({
-    Networks: z.record(z.object({
-      IPAMConfig: z.unknown().nullable().optional(),
-      Links: z.unknown().nullable().optional(),
-      Aliases: z.array(z.string()).nullable().optional(),
-      DriverOpts: z.unknown().nullable().optional(),
-      GwPriority: z.number().optional(),
-      NetworkID: z.string(),
-      EndpointID: z.string(),
-      Gateway: z.string(),
-      IPAddress: z.string(),
-      MacAddress: z.string(),
-      IPPrefixLen: z.number(),
-      IPv6Gateway: z.string().optional(),
-      GlobalIPv6Address: z.string().optional(),
-      GlobalIPv6PrefixLen: z.number().optional(),
-      DNSNames: z.array(z.string()).nullable().optional(),
-    })).optional(),
-  }).optional(),
+  Health: z
+    .object({
+      Status: z.enum(['healthy', 'unhealthy', 'starting', 'none']).optional(),
+      FailingStreak: z.number().optional(),
+    })
+    .nullable()
+    .optional(),
+  Mounts: z
+    .array(
+      z.object({
+        Type: z.string(),
+        Name: z.string().optional(),
+        Source: z.string().optional(),
+        Destination: z.string(),
+        Driver: z.string().optional(),
+        Mode: z.string().optional(),
+        RW: z.boolean().optional(),
+        Propagation: z.string().optional(),
+      }),
+    )
+    .optional(),
+  NetworkSettings: z
+    .object({
+      Networks: z
+        .record(
+          z.object({
+            IPAMConfig: z.unknown().nullable().optional(),
+            Links: z.unknown().nullable().optional(),
+            Aliases: z.array(z.string()).nullable().optional(),
+            DriverOpts: z.unknown().nullable().optional(),
+            GwPriority: z.number().optional(),
+            NetworkID: z.string(),
+            EndpointID: z.string(),
+            Gateway: z.string(),
+            IPAddress: z.string(),
+            MacAddress: z.string(),
+            IPPrefixLen: z.number(),
+            IPv6Gateway: z.string().optional(),
+            GlobalIPv6Address: z.string().optional(),
+            GlobalIPv6PrefixLen: z.number().optional(),
+            DNSNames: z.array(z.string()).nullable().optional(),
+          }),
+        )
+        .optional(),
+    })
+    .optional(),
 });
 
 export const dockerVolumeSchema = z.object({
@@ -77,20 +92,30 @@ export const dockerNetworkSchema = z.object({
   Driver: z.string(),
   EnableIPv4: z.boolean().optional(),
   EnableIPv6: z.boolean().optional(),
-  IPAM: z.object({
-    Driver: z.string().nullable().optional(),
-    Options: z.record(z.string()).nullable().optional(),
-    Config: z.array(z.object({
-      Subnet: z.string(),
-      Gateway: z.string(),
-    })).nullable().optional(),
-  }).nullable().optional(),
+  IPAM: z
+    .object({
+      Driver: z.string().nullable().optional(),
+      Options: z.record(z.string()).nullable().optional(),
+      Config: z
+        .array(
+          z.object({
+            Subnet: z.string(),
+            Gateway: z.string(),
+          }),
+        )
+        .nullable()
+        .optional(),
+    })
+    .nullable()
+    .optional(),
   Internal: z.boolean().optional(),
   Attachable: z.boolean().optional(),
   Ingress: z.boolean().optional(),
-  ConfigFrom: z.object({
-    Network: z.string(),
-  }).optional(),
+  ConfigFrom: z
+    .object({
+      Network: z.string(),
+    })
+    .optional(),
   ConfigOnly: z.boolean().optional(),
   Options: z.record(z.string()).optional(),
   Labels: z.record(z.string()).optional(),

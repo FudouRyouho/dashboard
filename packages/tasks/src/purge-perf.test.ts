@@ -9,8 +9,6 @@ import {
 } from '@dashboard/db';
 import { createRunLogDB } from '.';
 
-
-
 const tempPath = () => `./data/test-purge-${randomUUID()}.sqlite`;
 const migrationsFolder = new URL(
   '../../../packages/db/migrations',

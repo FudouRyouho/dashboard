@@ -27,7 +27,9 @@ export interface DockerDashboardStats {
 }
 
 export interface IDockerIntegration {
-  getDashboardStatsAsync(options?: { signal?: AbortSignal }): Promise<DockerDashboardStats>;
+  getDashboardStatsAsync(options?: {
+    signal?: AbortSignal;
+  }): Promise<DockerDashboardStats>;
 }
 
 const dockerCapability: keyof IDockerIntegration = 'getDashboardStatsAsync';
@@ -35,4 +37,5 @@ const dockerCapability: keyof IDockerIntegration = 'getDashboardStatsAsync';
 export const supportsDocker = (
   integration: Integration,
 ): integration is IDockerIntegration & Integration =>
-  typeof (integration as Partial<IDockerIntegration>)[dockerCapability] === 'function';
+  typeof (integration as Partial<IDockerIntegration>)[dockerCapability] ===
+  'function';

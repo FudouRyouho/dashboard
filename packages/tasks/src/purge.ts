@@ -8,9 +8,11 @@ export interface CreatePurgeTaskOptions {
   logger?: { info: (obj: object, msg: string) => void };
 }
 
-export function createPurgeTask(
-  { db, daysToKeep, logger }: CreatePurgeTaskOptions,
-): TaskDefinition<number> {
+export function createPurgeTask({
+  db,
+  daysToKeep,
+  logger,
+}: CreatePurgeTaskOptions): TaskDefinition<number> {
   const cutoffMs = daysToKeep * 24 * 60 * 60 * 1000;
   const everyMs = 24 * 60 * 60 * 1000;
 

@@ -67,10 +67,7 @@
       "indexes": {
         "uniq_task_policies_integration_task": {
           "name": "uniq_task_policies_integration_task",
-          "columns": [
-            "integration_id",
-            "task_type"
-          ],
+          "columns": ["integration_id", "task_type"],
           "isUnique": false
         }
       },
@@ -79,12 +76,8 @@
           "name": "task_policies_integration_id_integration_instances_id_fk",
           "tableFrom": "task_policies",
           "tableTo": "integration_instances",
-          "columnsFrom": [
-            "integration_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -142,19 +135,14 @@
       "indexes": {
         "idx_task_runs_task_id": {
           "name": "idx_task_runs_task_id",
-          "columns": [
-            "task_id"
-          ],
+          "columns": ["task_id"],
           "isUnique": false
         }
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "task_runs_task_id_started_at_pk": {
-          "columns": [
-            "task_id",
-            "started_at"
-          ],
+          "columns": ["task_id", "started_at"],
           "name": "task_runs_task_id_started_at_pk"
         }
       },

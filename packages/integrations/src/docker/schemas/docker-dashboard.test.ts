@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { dockerContainerSchema, dockerNetworkSchema, dockerVolumesResponseSchema } from './docker-dashboard';
+import {
+  dockerContainerSchema,
+  dockerNetworkSchema,
+  dockerVolumesResponseSchema,
+} from './docker-dashboard';
 
 test('dockerContainerSchema parsea contenedores válidos', () => {
   const validContainer = {
