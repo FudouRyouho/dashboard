@@ -1,4 +1,7 @@
 import Fastify from 'fastify';
+import fastifyStatic from '@fastify/static';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import {
   fastifyTRPCPlugin,
   type CreateFastifyContextOptions,
@@ -20,12 +23,21 @@ import { createPurgeTask } from '@dashboard/tasks';
 import { classifyIntegrationError } from '@dashboard/integrations';
 import { getAllPoliciesByIntegrationId } from '@dashboard/db';
 
+const definitionsRoot = dirname(fileURLToPath(import.meta.resolve('@dashboard/definitions')));
+const iconsDir = join(definitionsRoot, '..', 'icons');
+
 export async function startServer(appConfig: Config) {
   const server = Fastify({
     logger: true,
     routerOptions: {
       maxParamLength: 5000,
     },
+  });
+
+  await server.register(fastifyStatic, {
+    root: iconsDir,
+    prefix: '/icons',
+    decorateReply: false,
   });
 
   const db = await createDatabase();

@@ -30,12 +30,12 @@ El proyecto no está pensado como un producto final, sino como una reimplementac
 - `@dashboard/db` persiste snapshots y corridas de tareas en SQLite: tablas `task_runs`, `task_snapshots`, `server_log_entries`
 - `@dashboard/tasks` es el motor de tareas programadas: timers, techo de concurrencia, cancelación y cooldown tras fallos seguidos
 - `@dashboard/integrations` contiene:
-  - Sonarr, Radarr y Jellyfin integrations
+  - Sonarr, Radarr, Jellyfin y Docker integrations
   - Zod schemas del calendario de cada una
   - clasificación de errores a un motivo estable (`unauthorized`, `unreachable`, `timeout`, `invalid-response`, `unknown`)
 - `@dashboard/definitions` contiene:
   - definiciones de servicios externos
-  - iconos generados para la UI (kind -> icon)
+  - íconos estáticos en `icons/` que el servidor sirve en `/icons/{name}.svg`
 - `apps/clients/react` contiene:
   - el scaffold del dashboard y de las sections
   - mock data para la visualización y validación de la UI y el Schema tipado
@@ -64,10 +64,10 @@ El proyecto no está pensado como un producto final, sino como una reimplementac
   - almacén de snapshots y bitácora de corridas
 - [`packages/integrations/`](packages/integrations/README.md)
   - base de integraciones y capacidades
-  - Sonarr, Radarr y Jellyfin integration
+  - Sonarr, Radarr, Jellyfin y Docker integration
 - [`packages/definitions/`](packages/definitions/README.md)
-  - catálogos del dominio (kind → nombre, ícono). Lo consumen `integrations` y los clientes
-  - generación de assets a partir de `.svg` como data `URIs` embed en un `.ts` local sin dependencia del bundler o de una CDN
+  - catálogos del dominio (kind → nombre, ícono)
+  - íconos estáticos `.svg` servidos desde el servidor
 - `packages/common/`
   - helpers sin dominio utilizados por el `apps/server/` o `packages/integrations/`
 
@@ -110,7 +110,6 @@ pnpm add <pkg> --filter <workspace> # Ejemplo: `pnpm add react-dom --filter @das
 ```bash
 pnpm --filter @dashboard/server dev
 pnpm --filter @dashboard/server smoke   # smoke test del contrato de punta a punta
-
 ```
 
 ### `apps/clients/react`
@@ -118,12 +117,6 @@ pnpm --filter @dashboard/server smoke   # smoke test del contrato de punta a pun
 ```bash
 pnpm --filter @dashboard/client-react lint # eslint configurado para react-ts extendiendo la configuración raíz (eslint.config.mjs)
 pnpm --filter @dashboard/client-react dev
-```
-
-### `packages/definitions`
-
-```bash
-pnpm --filter @dashboard/definitions build:icons
 ```
 
 > [!NOTE]

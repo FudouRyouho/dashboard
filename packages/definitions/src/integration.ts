@@ -1,5 +1,4 @@
 import { IntegrationKind } from '@dashboard/contracts';
-import { iconDataUris } from './icons.generated';
 
 interface IntegrationDef {
   name: string;
@@ -9,18 +8,18 @@ interface IntegrationDef {
 export const integrationDefs = {
   sonarr: {
     name: 'Sonarr',
-    iconUrl: iconDataUris.sonarr,
+    iconUrl: '/icons/sonarr.svg',
   },
   radarr: {
     name: 'Radarr',
-    iconUrl: iconDataUris.radarr,
+    iconUrl: '/icons/radarr.svg',
   },
   jellyfin: {
     name: 'Jellyfin',
-    iconUrl: iconDataUris.jellyfin,
+    iconUrl: '/icons/jellyfin.svg',
   },
   docker: {
     name: 'Docker',
-    iconUrl: iconDataUris.docker,
+    iconUrl: '/icons/docker.svg',
   },
 } as const satisfies Record<IntegrationKind, IntegrationDef>;

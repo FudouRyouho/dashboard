@@ -12,7 +12,6 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { IconPin } from '@tabler/icons-react';
-import { iconDataUris, type IconSlug } from '@dashboard/definitions';
 import { type CalendarEvent } from '@dashboard/contracts';
 
 export function CalendarEventList({ events }: { events: CalendarEvent[] }) {
@@ -123,7 +122,7 @@ export function CalendarEventList({ events }: { events: CalendarEvent[] }) {
                         leftSection={
                           link.logo ? (
                             <Image
-                              src={iconDataUris[link.logo as IconSlug]}
+                              src={`/${link.logo}.svg`}
                               w={20}
                               h={20}
                             />

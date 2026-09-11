@@ -1,5 +1,3 @@
-import { iconDataUris } from './icons.generated';
-
 interface ExternalServiceDef {
   name: string;
   iconUrl: string;
@@ -10,19 +8,19 @@ interface ExternalServiceDef {
 export const externalServiceDefs = {
   imdb: {
     name: 'IMDb',
-    iconUrl: iconDataUris.imdb,
+    iconUrl: '/icons/imdb.svg',
     color: '#f5c518',
     isDark: false,
   },
   theTvdb: {
     name: 'TheTVDB',
-    iconUrl: iconDataUris['the-tvdb'],
+    iconUrl: '/icons/the-tvdb.svg',
     color: '#293a36',
     isDark: true,
   },
   tmdb: {
     name: 'TMDB',
-    iconUrl: iconDataUris.tmdb,
+    iconUrl: '/icons/tmdb.svg',
     color: '#032541',
     isDark: false,
   },

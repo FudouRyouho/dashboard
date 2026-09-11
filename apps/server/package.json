@@ -12,9 +12,10 @@
   },
   "dependencies": {
     "@dashboard/common": "workspace:*",
-    "@dashboard/integrations": "workspace:*",
     "@dashboard/contracts": "workspace:*",
+    "@dashboard/integrations": "workspace:*",
     "@dashboard/tasks": "workspace:*",
+    "@fastify/static": "^10.1.3",
     "@trpc/server": "catalog:",
     "fastify": "catalog:",
     "superjson": "catalog:",

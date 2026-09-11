@@ -21,8 +21,9 @@ Necesita `apps/server/.env` (copiar de `.env.example`):
 
 - `GET /health` — Fastify plano, sin tRPC
 - `/trpc/*` — router tRPC: `health`, `calendar.getEvents`
+- `/icons/*` — servicio de íconos estáticos, sirve archivos SVG desde `packages/definitions/icons/`
 
-## Pegarle sin cliente
+## Conexión remota (sin cliente)
 
     curl -sG http://127.0.0.1:3050/trpc/calendar.getEvents \
       --data-urlencode 'input={"json":{"start":"2026-08-01T00:00:00.000Z","end":"2026-08-31T00:00:00.000Z"}}' \
