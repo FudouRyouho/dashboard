@@ -16,7 +16,7 @@ export interface IntegrationInstanceRow {
 
 export interface UpsertIntegrationInput {
   id: string;
-  kind: 'sonarr' | 'radarr' | 'jellyfin';
+  kind: 'sonarr' | 'radarr' | 'jellyfin' | 'docker';
   name: string;
   url: string;
   externalUrl?: string | null;
