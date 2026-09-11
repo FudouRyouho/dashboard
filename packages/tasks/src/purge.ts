@@ -1,5 +1,5 @@
 import type { DB } from '@dashboard/db';
-import { purgeTaskRunsOlderThan } from '@dashboard/db';
+import { purgeTaskRunsOlderThan, purgeTaskSnapshotsOlderThan } from '@dashboard/db';
 import type { TaskDefinition } from './types';
 
 export interface CreatePurgeTaskOptions {
@@ -24,12 +24,14 @@ export function createPurgeTask({
     expectedDurationMs: 5000,
     async run() {
       const cutoff = new Date(Date.now() - cutoffMs);
-      const result = purgeTaskRunsOlderThan(db, cutoff);
+      const runsResult = purgeTaskRunsOlderThan(db, cutoff);
+      const snapshotsResult = purgeTaskSnapshotsOlderThan(db, cutoff);
+      const totalDeleted = runsResult.deleted + snapshotsResult.deleted;
       logger?.info(
-        { deleted: result.deleted, cutoff: cutoff.toISOString() },
-        'Purged old task runs',
+        { deleted: totalDeleted, cutoff: cutoff.toISOString() },
+        'Purged old task runs and snapshots',
       );
-      return result.deleted;
+      return totalDeleted;
     },
   };
 }

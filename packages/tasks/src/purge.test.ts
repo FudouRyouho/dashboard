@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import { initializeDatabase } from '@dashboard/db';
-import { purgeTaskRunsOlderThan, insertTaskRun } from '@dashboard/db';
+import { purgeTaskRunsOlderThan, insertTaskRun, taskSnapshots } from '@dashboard/db';
 import { createRunLogDB, createPurgeTask } from '.';
 
 const tempPath = () => `./data/test-purge-${randomUUID()}.sqlite`;
@@ -99,9 +99,10 @@ test('createPurgeTask: corre, registra snapshot, retorna count', async () => {
 
     // Con daysToKeep=3, solo se borran corridas de hace más de 3 días
     // old1 (-5d) se borra, old2 (-2d), old3 (-1d) y recent (ahora) se mantienen
+    // no hay snapshots antiguos, así que total = 1
     assert.equal(deleted, 1, 'debe eliminarse 1 run (-5d, que es >3 días)');
 
-    // Nota: el snapshot se guarda a través del scheduler, no al llamar run() directamente
+    // El scheduler guarda snapshots, no run() directamente
   });
 });
 
@@ -112,5 +113,54 @@ test('purge con 0 runs retorna 0, no falla', async () => {
 
     assert.equal(deleted, 0, 'con DB vacía debe retornar 0');
     // Nota: no se guarda snapshot porque run() se llama directo, no por el scheduler
+  });
+});
+
+test('createPurgeTask: también purga snapshots antiguos', async () => {
+  await withTempDb(async (db) => {
+    const now = new Date();
+    const fiveDaysAgo = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000);
+    const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+
+    // Insertar runs
+    insertTaskRun(db, {
+      taskId: 'old-run',
+      startedAt: fiveDaysAgo,
+      durationMs: 100,
+      outcome: 'success',
+      cause: null,
+      detail: null,
+    });
+    insertTaskRun(db, {
+      taskId: 'new-run',
+      startedAt: twoDaysAgo,
+      durationMs: 100,
+      outcome: 'success',
+      cause: null,
+      detail: null,
+    });
+
+    // Insertar snapshots directamente a la tabla (el scheduler usa upsertTaskSnapshot
+    // que siempre usa now, así que para simular snapshots antiguos insertamos directo)
+    db.insert(taskSnapshots)
+      .values([
+        {
+          taskId: 'old-snap',
+          data: JSON.stringify({ foo: 'bar' }),
+          obtainedAt: fiveDaysAgo,
+        },
+        {
+          taskId: 'new-snap',
+          data: JSON.stringify({ baz: 'qux' }),
+          obtainedAt: twoDaysAgo,
+        },
+      ])
+      .run();
+
+    const purgeTask = createPurgeTask({ db, daysToKeep: 3 });
+    const deleted = await purgeTask.run(new AbortController().signal);
+
+    // Debe borrar 1 run (old-run, -5d > 3d) + 1 snapshot (old-snap, -5d > 3d) = 2
+    assert.equal(deleted, 2, 'debe eliminar 1 run y 1 snapshot (>3 días)');
   });
 });

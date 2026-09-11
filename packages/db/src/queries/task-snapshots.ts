@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, lt } from 'drizzle-orm';
 import type { DB } from '../connection';
 import { taskSnapshots } from '../schemas/tasks';
 
@@ -45,4 +45,15 @@ export function upsertTaskSnapshot(
       },
     })
     .run();
+}
+
+export function purgeTaskSnapshotsOlderThan(
+  db: DB,
+  cutoff: Date,
+): { deleted: number } {
+  const result = db
+    .delete(taskSnapshots)
+    .where(lt(taskSnapshots.obtainedAt, cutoff))
+    .run();
+  return { deleted: result.changes };
 }

@@ -27,7 +27,7 @@ El proyecto no está pensado como un producto final, sino como una reimplementac
 - `@dashboard/server` expone un router tRPC con:
   - `health`
   - `calendar.getEvents` — devuelve el último snapshot en memoria más el estado de la última corrida; ya no llama a la integración dentro del request
-- `@dashboard/db` persiste snapshots y corridas de tareas en SQLite: tablas `task_runs`, `task_snapshots`, `server_log_entries`
+- `@dashboard/db` persiste snapshots y corridas de tareas en SQLite: tablas `task_runs`, `task_snapshots`
 - `@dashboard/tasks` es el motor de tareas programadas: timers, techo de concurrencia, cancelación y cooldown tras fallos seguidos
 - `@dashboard/integrations` contiene:
   - Sonarr, Radarr, Jellyfin y Docker integrations

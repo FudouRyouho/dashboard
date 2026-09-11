@@ -29,6 +29,13 @@
       "when": 1789128746669,
       "tag": "0003_nullable_api_key",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1789137261335,
+      "tag": "0004_drop_server_log_entries",
+      "breakpoints": true
     }
   ]
 }
