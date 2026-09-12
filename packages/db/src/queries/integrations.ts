@@ -25,6 +25,11 @@ export interface UpsertIntegrationInput {
   port?: number | null;
 }
 
+/**
+ * Get all integration instances, sorted by creation date descending
+ * @param db Database connection
+ * @returns List of integration instances
+ */
 export async function getAllIntegrations(
   db: DB,
 ): Promise<IntegrationInstanceRow[]> {
@@ -35,6 +40,12 @@ export async function getAllIntegrations(
   return rows.map((r) => ({ ...r, kind: r.kind as IntegrationKind }));
 }
 
+/**
+ * Get a single integration instance by ID
+ * @param db Database connection
+ * @param id Integration ID
+ * @returns Integration instance or null
+ */
 export async function getIntegrationById(
   db: DB,
   id: string,
@@ -48,6 +59,13 @@ export async function getIntegrationById(
   return r ? { ...r, kind: r.kind as IntegrationKind } : null;
 }
 
+/**
+ * Get an integration instance by kind and name
+ * @param db Database connection
+ * @param kind Integration type (sonarr/radarr/jellyfin/docker)
+ * @param name Integration name
+ * @returns Integration instance or null
+ */
 export async function getIntegrationByKindAndName(
   db: DB,
   kind: string,
@@ -67,6 +85,12 @@ export async function getIntegrationByKindAndName(
   return r ? { ...r, kind: r.kind as IntegrationKind } : null;
 }
 
+/**
+ * Insert or update an integration instance
+ * @param db Database connection
+ * @param input Integration data
+ * @returns Updated integration instance
+ */
 export async function upsertIntegration(
   db: DB,
   input: UpsertIntegrationInput,
@@ -112,6 +136,11 @@ export async function upsertIntegration(
   return { ...results[0], kind: results[0].kind as IntegrationKind };
 }
 
+/**
+ * Delete an integration instance
+ * @param db Database connection
+ * @param id Integration ID
+ */
 export async function deleteIntegration(db: DB, id: string): Promise<void> {
   await db.delete(integrationInstances).where(eq(integrationInstances.id, id));
 }
