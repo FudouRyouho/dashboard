@@ -187,6 +187,12 @@ importers:
 
   packages/common:
     devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.12
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -212,6 +218,9 @@ importers:
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.38.4(@types/better-sqlite3@9.6.0)(@types/react@19.2.18)(better-sqlite3@13.0.3)(react@19.2.8)
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
     devDependencies:
       drizzle-kit:
         specifier: 'catalog:'
