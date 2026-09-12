@@ -1,6 +1,5 @@
-import { TaskDefinition } from '@dashboard/tasks';
+import { TaskDefinition, type TaskPolicy } from '@dashboard/tasks';
 import { RegistryEntry } from '../bootstrap/integrations';
-import type { TaskPolicy } from '../bootstrap/integrations';
 import {
   supportsCalendar,
   supportsMediaReleases,
@@ -30,16 +29,24 @@ export function createTaskDefinitions(
       built.push('media-releases');
     }
 
-    assertNoUnknownTasks(row, built);
+    assertNoUnknownTasks(row, built, configPolicies);
   }
 
   return definitions;
 }
 
 function assertNoUnknownTasks(
-  _row: RegistryEntry['row'],
-  _built: string[],
+  row: RegistryEntry['row'],
+  built: string[],
+  configPolicies: { calendar?: TaskPolicy; mediaReleases?: TaskPolicy },
 ): void {
-  // Task validation happens at configuration time via DB policies
-  // This function ensures no duplicate task definitions are created
+  const supported = new Set(built);
+  for (const key of Object.keys(configPolicies) as Array<keyof typeof configPolicies>) {
+    if (configPolicies[key] != null && !supported.has(key)) {
+      throw new Error(
+        `Integration ${row.id} (${row.kind}) has a policy for "${key}" ` +
+        `but does not support this capability. Supported: ${[...supported].join(', ')}`,
+      );
+    }
+  }
 }

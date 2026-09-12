@@ -8,7 +8,7 @@ Esquemas, migraciones y consultas preparadas.
 - `src/connection.ts` — creación de conexión y tipo `DB`
 - `src/bootstrap.ts` — inicialización de la base de datos y configuración
 - `src/migrate.ts` — ejecución de migraciones
-- `src/schemas/` — esquemas de drizzle para tablas (tasks, server-logs, integrations)
+- `src/schemas/` — esquemas de drizzle para tablas (tasks, integrations)
 - `src/queries/` — consultas preparadas para operaciones comunes (task-runs, task-snapshots)
 - `src/index.ts` — reexporta todo lo necesario para usar la capa de datos
 

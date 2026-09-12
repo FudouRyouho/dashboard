@@ -1,6 +1,6 @@
 import type { DB } from '../connection';
 import { taskPolicies } from '../schemas/tasks';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 export interface TaskPolicyRow {
   id: string;
@@ -24,6 +24,20 @@ export interface UpsertTaskPolicyInput {
   failureCooldownMs: number;
 }
 
+function parseRunOnStart(value: number | boolean): boolean {
+  return value === 1 || value === true;
+}
+
+function serializeRunOnStart(value: boolean): number {
+  return value ? 1 : 0;
+}
+
+/**
+ * Get all policies for a given integration
+ * @param db Database connection
+ * @param integrationId Integration ID
+ * @returns Policy list
+ */
 export async function getAllPoliciesByIntegrationId(
   db: DB,
   integrationId: string,
@@ -32,12 +46,19 @@ export async function getAllPoliciesByIntegrationId(
     .select()
     .from(taskPolicies)
     .where(eq(taskPolicies.integrationId, integrationId));
-  return results.map((row) => ({
-    ...row,
-    runOnStart: row.runOnStart === 1,
-  })) as TaskPolicyRow[];
+  return results.map(r => ({
+    ...r,
+    runOnStart: parseRunOnStart(r.runOnStart),
+  })) as unknown as TaskPolicyRow[];
 }
 
+/**
+ * Get a policy for a specific integration and task type
+ * @param db Database connection
+ * @param integrationId Integration ID
+ * @param taskType Task type (calendar/mediaReleases)
+ * @returns Policy or null
+ */
 export async function getPolicyByIntegrationAndType(
   db: DB,
   integrationId: string,
@@ -47,18 +68,25 @@ export async function getPolicyByIntegrationAndType(
     .select()
     .from(taskPolicies)
     .where(
-      eq(taskPolicies.integrationId, integrationId) &&
+      and(
+        eq(taskPolicies.integrationId, integrationId),
         eq(taskPolicies.taskType, taskType),
+      ),
     )
     .limit(1);
   const row = results[0];
   if (!row) return null;
   return {
     ...row,
-    runOnStart: row.runOnStart === 1,
-  } as TaskPolicyRow;
+    runOnStart: parseRunOnStart(row.runOnStart),
+  } as unknown as TaskPolicyRow;
 }
 
+/**
+ * Insert or update a task policy (unique constraint: integrationId + taskType)
+ * @param db Database connection
+ * @param input Policy data
+ */
 export async function upsertTaskPolicy(
   db: DB,
   input: UpsertTaskPolicyInput,
@@ -69,31 +97,33 @@ export async function upsertTaskPolicy(
     input.taskType,
   );
 
+  const serializedInput = {
+    ...input,
+    runOnStart: serializeRunOnStart(input.runOnStart),
+  };
+
   if (existing) {
     await db
       .update(taskPolicies)
       .set({
-        everyMs: input.everyMs,
-        runOnStart: input.runOnStart ? 1 : 0,
-        expectedDurationMs: input.expectedDurationMs,
-        failureMaxAttempts: input.failureMaxAttempts,
-        failureCooldownMs: input.failureCooldownMs,
+        everyMs: serializedInput.everyMs,
+        runOnStart: serializedInput.runOnStart,
+        expectedDurationMs: serializedInput.expectedDurationMs,
+        failureMaxAttempts: serializedInput.failureMaxAttempts,
+        failureCooldownMs: serializedInput.failureCooldownMs,
       })
       .where(eq(taskPolicies.id, input.id));
   } else {
-    await db.insert(taskPolicies).values({
-      id: input.id,
-      integrationId: input.integrationId,
-      taskType: input.taskType,
-      everyMs: input.everyMs,
-      runOnStart: input.runOnStart ? 1 : 0,
-      expectedDurationMs: input.expectedDurationMs,
-      failureMaxAttempts: input.failureMaxAttempts,
-      failureCooldownMs: input.failureCooldownMs,
-    });
+    await db.insert(taskPolicies).values(serializedInput);
   }
 }
 
+/**
+ * Delete a policy for a specific integration and task type
+ * @param db Database connection
+ * @param integrationId Integration ID
+ * @param taskType Task type (calendar/mediaReleases)
+ */
 export async function deleteTaskPolicy(
   db: DB,
   integrationId: string,
@@ -102,7 +132,9 @@ export async function deleteTaskPolicy(
   await db
     .delete(taskPolicies)
     .where(
-      eq(taskPolicies.integrationId, integrationId) &&
+      and(
+        eq(taskPolicies.integrationId, integrationId),
         eq(taskPolicies.taskType, taskType),
+      ),
     );
 }

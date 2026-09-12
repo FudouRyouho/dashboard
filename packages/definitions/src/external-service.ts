@@ -1,3 +1,5 @@
+import type { ExternalServiceKind } from '@dashboard/contracts';
+
 interface ExternalServiceDef {
   name: string;
   iconUrl: string;
@@ -24,6 +26,30 @@ export const externalServiceDefs = {
     color: '#032541',
     isDark: false,
   },
-} as const satisfies Record<string, ExternalServiceDef>;
+  qbittorrent: {
+    name: 'qBittorrent',
+    iconUrl: '/icons/qbittorrent.svg',
+    color: '#3a8ed8',
+    isDark: false,
+  },
+  prowlarr: {
+    name: 'Prowlarr',
+    iconUrl: '/icons/prowlarr.svg',
+    color: '#ff6b35',
+    isDark: false,
+  },
+  prometheus: {
+    name: 'Prometheus',
+    iconUrl: '/icons/prometheus.svg',
+    color: '#e6522c',
+    isDark: false,
+  },
+  portainer: {
+    name: 'Portainer',
+    iconUrl: '/icons/portainer.svg',
+    color: '#1993d8',
+    isDark: false,
+  },
+} as const satisfies Record<ExternalServiceKind, ExternalServiceDef>;
 
-export type ExternalServiceKind = keyof typeof externalServiceDefs;
+export { type ExternalServiceKind } from '@dashboard/contracts';

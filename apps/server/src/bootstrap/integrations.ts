@@ -10,16 +10,6 @@ export interface RegistryEntry {
   row: IntegrationInstanceRow;
 }
 
-export interface TaskPolicy {
-  everyMs?: number;
-  runOnStart?: boolean;
-  expectedDurationMs?: number;
-  failurePolicy?: {
-    maxAttempts?: number;
-    cooldownMs?: number;
-  };
-}
-
 const toInput = (row: IntegrationInstanceRow): IntegrationInput => {
   const secrets: { kind: string; value: string }[] =
     'apiKey' in row
