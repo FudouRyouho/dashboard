@@ -124,10 +124,6 @@ export async function startServer(appConfig: Config) {
     db,
   });
 
-  server.get('/health', () => ({
-    status: 'ok',
-  }));
-
   server.register(fastifyTRPCPlugin, {
     prefix: '/trpc',
     trpcOptions: {
