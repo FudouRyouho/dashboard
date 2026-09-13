@@ -3,6 +3,7 @@ export const integrationKinds = [
   'radarr',
   'jellyfin',
   'docker',
+  'prometheus',
 ] as const;
 export type IntegrationKind = (typeof integrationKinds)[number];
 
@@ -12,7 +13,6 @@ export const externalServiceKinds = [
   'tmdb',
   'qbittorrent',
   'prowlarr',
-  'prometheus',
   'portainer',
 ] as const;
 export type ExternalServiceKind = (typeof externalServiceKinds)[number];

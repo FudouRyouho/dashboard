@@ -38,12 +38,6 @@ export const externalServiceDefs = {
     color: '#ff6b35',
     isDark: false,
   },
-  prometheus: {
-    name: 'Prometheus',
-    iconUrl: '/icons/prometheus.svg',
-    color: '#e6522c',
-    isDark: false,
-  },
   portainer: {
     name: 'Portainer',
     iconUrl: '/icons/portainer.svg',

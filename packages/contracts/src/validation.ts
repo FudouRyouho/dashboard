@@ -91,5 +91,5 @@ export const isDataView = (data: unknown): data is 'never-queried' | 'fresh' | '
 };
 
 export const isIntegrationKind = (data: unknown): data is IntegrationKind => {
-  return ['sonarr', 'radarr', 'jellyfin', 'docker'].includes(data as string);
+  return ['sonarr', 'radarr', 'jellyfin', 'docker', 'prometheus'].includes(data as string);
 };

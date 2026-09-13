@@ -22,4 +22,8 @@ export const integrationDefs = {
     name: 'Docker',
     iconUrl: '/icons/docker.svg',
   },
+  prometheus: {
+    name: 'Prometheus',
+    iconUrl: '/icons/prometheus.svg',
+  },
 } as const satisfies Record<IntegrationKind, IntegrationDef>;
