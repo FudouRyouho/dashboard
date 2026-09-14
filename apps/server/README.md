@@ -10,9 +10,8 @@ Necesita `apps/server/.env` (copiar de `.env.example`):
 | Variable                | Para qué                              |
 | ----------------------- | ------------------------------------- |
 | `DASHBOARD_SERVER_HOST` | host de Fastify (default `127.0.0.1`) |
-| `DASHBOARD_SERVER_PORT` | puerto (default `3000`)               |
-| `SERVER_2_URL`          | URL base de la máquina con Sonarr     |
-| `SONARR_APIKEY`         | Settings → General en Sonarr          |
+| `DASHBOARD_SERVER_PORT` | puerto (default `3050`)               |
+| `DASHBOARD_DB_PATH`     | ruta de la base de datos SQLite       |
 
     pnpm --filter @dashboard/server dev     # tsx watch
     pnpm --filter @dashboard/server smoke   # smoke test del contrato
