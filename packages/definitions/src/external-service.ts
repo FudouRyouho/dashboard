@@ -26,12 +26,6 @@ export const externalServiceDefs = {
     color: '#032541',
     isDark: false,
   },
-  qbittorrent: {
-    name: 'qBittorrent',
-    iconUrl: '/icons/qbittorrent.svg',
-    color: '#3a8ed8',
-    isDark: false,
-  },
   prowlarr: {
     name: 'Prowlarr',
     iconUrl: '/icons/prowlarr.svg',

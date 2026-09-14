@@ -26,6 +26,11 @@ const upsertIntegrationInputSchema = z.discriminatedUnion('kind', [
     kind: z.literal('docker'),
     port: z.number().int().positive().default(2375),
   }),
+  integrationInputBaseSchema.extend({
+    kind: z.literal('qbittorrent'),
+    apiKey: z.string().optional(),
+    port: z.number().int().positive().default(8080),
+  }),
 ]);
 
 export const integrationsRouter = createTRPCRouter({

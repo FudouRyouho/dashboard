@@ -5,3 +5,4 @@ export * from './data-view';
 export * from './media-releases';
 export * from './integrations';
 export * from './validation';
+export * from './download-client';

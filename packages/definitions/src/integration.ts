@@ -26,4 +26,8 @@ export const integrationDefs = {
     name: 'Prometheus',
     iconUrl: '/icons/prometheus.svg',
   },
+  qbittorrent: {
+    name: 'qBittorrent',
+    iconUrl: '/icons/qbittorrent.svg',
+  },
 } as const satisfies Record<IntegrationKind, IntegrationDef>;

@@ -24,8 +24,11 @@ export abstract class Integration {
   protected readonly timeoutMs: number;
 
   constructor(protected integration: IntegrationInput) {
-    const base = removeTrailingSlash(integration.url);
-    this.baseUrl = integration.port ? `${base}:${integration.port}` : base;
+    const urlObj = new URL(integration.url);
+    // If port is explicitly provided, use it; otherwise use port from URL (if any)
+    const port = integration.port !== undefined ? integration.port : urlObj.port;
+    const base = `${urlObj.protocol}//${urlObj.hostname}`;
+    this.baseUrl = port ? `${base}:${port}` : base;
     this.externalBaseUrl = integration.externalUrl
       ? removeTrailingSlash(integration.externalUrl)
       : this.baseUrl;
