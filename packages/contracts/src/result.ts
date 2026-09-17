@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const integrationErrorReasons = [
   'unauthorized',
+  'forbidden',
   'unreachable',
   'timeout',
   'invalid-response',

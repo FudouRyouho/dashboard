@@ -95,9 +95,9 @@ test('IntegrationError.fromHttpResponse creates unauthorized for 401', () => {
   assert.equal(err.httpStatus, 401);
 });
 
-test('IntegrationError.fromHttpResponse creates unauthorized for 403', () => {
+test('IntegrationError.fromHttpResponse creates forbidden for 403', () => {
   const err = IntegrationError.fromHttpResponse(403, 'Forbidden');
-  assert.equal(err.reason, 'unauthorized');
+  assert.equal(err.reason, 'forbidden');
   assert.equal(err.httpStatus, 403);
 });
 
