@@ -1,5 +1,6 @@
 import { QBittorrent } from '@ctrl/qbittorrent';
 import { Integration } from '../../base/integration';
+import { IntegrationError } from '../../base/integration-error';
 import { IDownloadClientIntegration } from '../../base/download-client';
 import type { DownloadClientItem, DownloadClientJobsAndStatus, DownloadClientStatus, GetClientJobsAndStatusInput } from '@dashboard/contracts';
 
@@ -18,7 +19,13 @@ export class QbittorrentIntegration extends Integration implements IDownloadClie
       baseUrl: this.url('/').toString(),
     });
 
-    await this.client.getAppVersion();
+    try {
+      await this.client.getAppVersion();
+    } catch (error) {
+      this.client = null;
+      if (error instanceof IntegrationError) throw error;
+      throw IntegrationError.fromTransport(error);
+    }
     return this.client;
   }
 
