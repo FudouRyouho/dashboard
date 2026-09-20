@@ -1,20 +1,16 @@
 # Decisiones Arquitectónicas y Contexto
 
-Este documento registra el **por qué** de las decisiones tecnológicas y de diseño más importantes tomadas durante el desarrollo del proyecto, así como los caminos alternativos que se descartaron y los temas que se dejaron deliberadamente abiertos.
+Este documento registra el **por qué** de las decisiones tecnológicas y de diseño más importantes tomadas durante el proyecto, así como los caminos alternativos que se descartaron y los temas que se dejaron deliberadamente abiertos.
 
 ---
 
-## 1. SuperJSON vs JSON Plain en tRPC
+## 1. tRPC y Transporte de Datos
 
 ### Contexto
-Al comunicar el servidor Fastify con los clientes mediante tRPC, los objetos de datos devueltos contienen frecuentemente instancias de `Date` (ej. marcas de tiempo de eventos de calendario o corridas de tareas).
+Al comunicar el servidor Fastify con los clientes mediante tRPC, se requiere un mecanismo robusto para serializar y deserializar tipos de datos entre el backend y el cliente.
 
 ### La Decisión
-Se adoptó **SuperJSON** como transformador de tRPC (`transformer: superjson`).
-
-### Por qué y Trade-offs
-- **Ventaja**: JSON estándar serializa las fechas como strings ISO planos, obligando al cliente a parsearlas manualmente (`new Date(...)`) en cada componente. SuperJSON serializa tipos complejos como `Date`, `Map` y `Set` preservando sus tipos nativos a través del límite de red de forma transparente.
-- **Trade-off**: Añade una dependencia de serialización en el cliente, que debe configurar su propio enlace tRPC con SuperJSON para poder deserializar correctamente las respuestas.
+Se utiliza tRPC con transformadores estándar y tipos seguros definidos en `@dashboard/contracts`.
 
 ---
 
@@ -48,15 +44,13 @@ Los routers se organizan por **capacidad de negocio** (`calendar`, `mediaRelease
 
 ---
 
-## 4. Estado Abierto: Temas Diferidos y Fuera de Alcance
+## 4. Estado Abierto: Temas de Diseño y Alcance Futuro
 
-Para mantener el proyecto enfocado y evitar una complejidad innecesaria, se tomaron decisiones explícitas sobre qué **no** construir en esta etapa (documentado detalladamente en `.working/integrations-e2e-gap-analysis.md`):
+Para mantener el proyecto enfocado y evitar una complejidad innecesaria en esta etapa inicial, se definieron los siguientes criterios sobre componentes y capacidades:
 
-- **Prowlarr**: Su integración como gestor de indexers está diseñada en la capa de definiciones, pero no se implementó en runtime porque el dashboard actual no requiere administración de indexers, solo lectura de contenido multimedia.
-- **Missing / Queue en Sonarr y Radarr**: Solo se implementó la capacidad de `calendar`. Las colas de descargas y faltantes implican una superficie de mutaciones y contratos complejos que exceden el objetivo de visualización de solo lectura.
-- **Administración de Docker**: Se implementó `dashboardStats` (estado global de contenedores), pero se descartó el control completo de contenedores (start/stop/restart/logs), ya que el propósito es monitoreo, no orquestación.
-- **WebSockets / Tiempo Real**: Se evaluó WebSockets para notificaciones en vivo, pero se descartó en favor de tareas programadas con polling HTTP/tRPC, dado que la red local y la baja frecuencia de cambios en un entorno doméstico no justifican la complejidad de mantener conexiones persistentes.
-- **Autenticación Multi-usuario**: El proyecto asume una red LAN/VPN confiable y de uso personal (single-user). No hay manejo de sesiones, cookies de aplicación ni roles.
+- **Prowlarr**: Aunque se encuentra referenciado en catálogos de definiciones, su integración en runtime no está implementada y se evaluará cuando exista un caso de uso concreto.
+- **Capacidades de Escritura (Read/Write en Docker y Descargas)**: Docker y los clientes de descarga (como qBittorrent) son naturalmente bidireccionales (lectura y escritura). Aunque el proyecto prioriza la visualización y monitoreo (read), el diseño debe contemplar o permitir operaciones de control (como pausa/reanudación de tareas o gestión de contenedores) donde tenga sentido práctico para un dashboard personal.
+- **Autenticación Multi-usuario**: El proyecto asume una red LAN/VPN confiable y de uso personal (single-user). No hay manejo de sesiones, cookies de aplicación ni roles en esta etapa.
 
 ---
 
@@ -64,4 +58,3 @@ Para mantener el proyecto enfocado y evitar una complejidad innecesaria, se toma
 
 - Ver [architecture.md](architecture.md) para la arquitectura general del sistema.
 - Ver [patterns.md](patterns.md) para el funcionamiento interno del scheduler y el registry.
-- Ver `.working/integrations-e2e-gap-analysis.md` para el análisis técnico completo de integraciones y decisiones diferidas.
