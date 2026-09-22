@@ -34,7 +34,7 @@ async function withTempDb<T>(
 test('getAllIntegrations returns empty array when no integrations', async () => {
   await withTempDb(async (db) => {
     const integrations = await getAllIntegrations(db);
-    expect(integrations.length).toBe(0, 'Debe retornar array vacío');
+    expect(integrations.length).toBe(0);
   });
 });
 
@@ -60,16 +60,16 @@ test('getAllIntegrations returns integrations sorted by createdAt desc', async (
     });
     
     const integrations = await getAllIntegrations(db);
-    expect(integrations.length).toBe(2, 'Debe haber 2 integraciones');
-    expect(integrations[0]?.id).toBe(id2, 'La más reciente debe estar primero');
-    expect(integrations[1]?.id).toBe(id1, 'La más antigua debe estar segunda');
+    expect(integrations.length).toBe(2);
+    expect(integrations[0]?.id).toBe(id2);
+    expect(integrations[1]?.id).toBe(id1);
   });
 });
 
 test('getIntegrationById returns null for non-existent id', async () => {
   await withTempDb(async (db) => {
     const result = await getIntegrationById(db, 'non-existent-id');
-    expect(result).toBe(null, 'Debe retornar null para ID inexistente');
+    expect(result).toBe(null);
   });
 });
 
@@ -95,7 +95,7 @@ test('getIntegrationById returns integration when exists', async () => {
 test('getIntegrationByKindAndName returns null when not found', async () => {
   await withTempDb(async (db) => {
     const result = await getIntegrationByKindAndName(db, 'sonarr', 'NoSuchInstance');
-    expect(result).toBe(null, 'Debe retornar null cuando no existe');
+    expect(result).toBe(null);
   });
 });
 
@@ -190,10 +190,10 @@ test('deleteIntegration removes integration', async () => {
     await deleteIntegration(db, id);
     
     const result = await getIntegrationById(db, id);
-    expect(result).toBe(null, 'Debe retornar null después de eliminar');
+    expect(result).toBe(null);
     
     const all = await getAllIntegrations(db);
-    expect(all.length).toBe(0, 'Debe estar vacío después de eliminar');
+    expect(all.length).toBe(0);
   });
 });
 

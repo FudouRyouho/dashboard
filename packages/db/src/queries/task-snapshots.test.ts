@@ -32,7 +32,7 @@ async function withTempDb<T>(
 test('getTaskSnapshot returns undefined when no snapshot exists', async () => {
   await withTempDb(async (db) => {
     const result = getTaskSnapshot(db, 'non-existent');
-    expect(result).toBe(undefined, 'Debe retornar undefined cuando no existe snapshot');
+    expect(result).toBe(undefined);
   });
 });
 
@@ -44,8 +44,8 @@ test('upsertTaskSnapshot creates new snapshot', async () => {
     upsertTaskSnapshot(db, taskId, data);
     
     const snapshot = getTaskSnapshot(db, taskId);
-    expect(snapshot, 'Debe existir el snapshot').toBeTruthy();
-    expect(snapshot!.data).toEqual(data, 'Los datos deben coincidir');
+    expect(snapshot).toBeTruthy();
+    expect(snapshot!.data).toEqual(data);
   });
 });
 
@@ -60,8 +60,8 @@ test('upsertTaskSnapshot updates existing snapshot', async () => {
     upsertTaskSnapshot(db, taskId, updatedData);
     
     const snapshot = getTaskSnapshot(db, taskId);
-    expect(snapshot, 'Debe existir el snapshot actualizado').toBeTruthy();
-    expect(snapshot!.data).toEqual(updatedData, 'Los datos deben estar actualizados');
+    expect(snapshot).toBeTruthy();
+    expect(snapshot!.data).toEqual(updatedData);
   });
 });
 
@@ -124,7 +124,7 @@ test('purgeTaskSnapshotsOlderThan removes old snapshots', async () => {
     const cutoff = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
     const result = purgeTaskSnapshotsOlderThan(db, cutoff);
     
-    expect(result.deleted).toBe(1, 'Debe eliminar 1 snapshot antiguo');
+    expect(result.deleted).toBe(1);
     
     const remaining = getTaskSnapshot(db, taskId2);
     expect(remaining, 'El snapshot nuevo debe seguir existiendo').toBeTruthy();
@@ -145,13 +145,13 @@ test('purgeTaskSnapshotsOlderThan returns 0 when no old snapshots', async () => 
     const cutoff = new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000);
     const result = purgeTaskSnapshotsOlderThan(db, cutoff);
     
-    expect(result.deleted).toBe(0, 'No debe eliminar nada reciente');
+    expect(result.deleted).toBe(0);
   });
 });
 
 test('purgeTaskSnapshotsOlderThan is safe on empty table', async () => {
   await withTempDb(async (db) => {
     const result = purgeTaskSnapshotsOlderThan(db, new Date());
-    expect(result.deleted).toBe(0, 'Debe retornar 0 en tabla vacía');
+    expect(result.deleted).toBe(0);
   });
 });

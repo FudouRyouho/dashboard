@@ -5,27 +5,38 @@ import type { TRPCContext } from '../trpc';
 let selectCallCount = 0;
 
 function createMockDb() {
-  const mockRows = [{
-    id: 'test-id', kind: 'sonarr', name: 'Test', url: 'http://localhost',
-    apiKey: null, username: null, password: null, port: null, externalUrl: null,
-    createdAt: new Date(), updatedAt: new Date(),
-  }];
+  const baseChain = {
+    from: vi.fn().mockReturnThis(),
+    orderBy: vi.fn().mockReturnThis(),
+    where: vi.fn().mockReturnThis(),
+    limit: vi.fn().mockReturnThis(),
+    // Make it thenable (like drizzle query builder)
+    then: vi.fn().mockImplementation((onFulfilled) => {
+      if (selectCallCount === 1) {
+        return onFulfilled([]);
+      }
+      return onFulfilled([{
+        id: 'test-id', kind: 'sonarr', name: 'Test', url: 'http://localhost',
+        apiKey: null, username: null, password: null, port: null, externalUrl: null,
+        createdAt: new Date(), updatedAt: new Date(),
+      }]);
+    }),
+    get: vi.fn().mockResolvedValue(undefined),
+    run: vi.fn().mockResolvedValue({ changes: 1 }),
+  };
 
   return {
-    select: vi.fn(() => ({
-      from: vi.fn().mockReturnValue({
-        orderBy: vi.fn().mockResolvedValue([]),
-        where: vi.fn().mockReturnValue({
-          limit: vi.fn().mockImplementation(() => {
-            selectCallCount++;
-            return Promise.resolve(selectCallCount > 1 ? mockRows : []);
-          }),
-        }),
-      }),
-    })),
+    select: vi.fn(() => {
+      selectCallCount++;
+      return baseChain;
+    }),
     insert: vi.fn(() => ({
       values: vi.fn().mockReturnValue({
-        returning: vi.fn().mockResolvedValue(mockRows),
+        returning: vi.fn().mockResolvedValue([{
+          id: 'test-id', kind: 'sonarr', name: 'Test', url: 'http://localhost',
+          apiKey: null, username: null, password: null, port: null, externalUrl: null,
+          createdAt: new Date(), updatedAt: new Date(),
+        }]),
       }),
     })),
     update: vi.fn(() => ({

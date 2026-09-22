@@ -61,6 +61,7 @@ describe('dockerRouter', () => {
       const ctx = createMockCtx([integration], undefined);
       const caller = dockerRouter.createCaller(ctx);
       const result = await caller.getContainers();
+      // Router returns empty stats object when no snapshot, not empty array
       expect(result).toHaveLength(1);
       expect(result[0]!.stats.containers.total).toBe(0);
     });

@@ -44,7 +44,7 @@ test('insertTaskRun inserts a new run', async () => {
     });
     
     const runs = listTaskRuns(db, taskId);
-    expect(runs.length).toBe(1, 'Debe haber 1 corrida');
+    expect(runs.length).toBe(1);
     expect(runs[0]!.taskId).toBe(taskId);
     expect(runs[0]!.durationMs).toBe(1000);
     expect(runs[0]!.outcome).toBe('success');
@@ -85,10 +85,10 @@ test('listTaskRuns returns runs ordered by startedAt desc', async () => {
     insertTaskRun(db, { taskId, startedAt: latest, durationMs: 150, outcome: 'aborted' });
     
     const runs = listTaskRuns(db, taskId);
-    expect(runs.length).toBe(3, 'Debe haber 3 corridas');
-    expect(runs[0]!.startedAt.getTime()).toBe(now.getTime(), 'Primera debe ser la más reciente');
-    expect(runs[1]!.startedAt.getTime()).toBe(latest.getTime(), 'Segunda debe ser la siguiente');
-    expect(runs[2]!.startedAt.getTime()).toBe(earlier.getTime(), 'Tercera debe ser la más antigua');
+    expect(runs.length).toBe(3);
+    expect(runs[0]!.startedAt.getTime()).toBe(now.getTime());
+    expect(runs[1]!.startedAt.getTime()).toBe(latest.getTime());
+    expect(runs[2]!.startedAt.getTime()).toBe(earlier.getTime());
   });
 });
 
@@ -106,7 +106,7 @@ test('listTaskRuns filters by range', async () => {
     const range = { from: yesterday, to: now };
     const runs = listTaskRuns(db, taskId, range);
     
-    expect(runs.length).toBe(2, 'Debe filtrar solo las corridas en el rango');
+    expect(runs.length).toBe(2);
   });
 });
 
@@ -122,7 +122,7 @@ test('lastTaskRun returns the most recent run', async () => {
     
     const last = lastTaskRun(db, taskId);
     expect(last, 'Debe haber una última corrida').toBeTruthy();
-    expect(last!.durationMs).toBe(200, 'Debe ser la más reciente');
+    expect(last!.durationMs).toBe(200);
     expect(last!.outcome).toBe('failure');
   });
 });
@@ -130,7 +130,7 @@ test('lastTaskRun returns the most recent run', async () => {
 test('lastTaskRun returns undefined when no runs exist', async () => {
   await withTempDb(async (db) => {
     const last = lastTaskRun(db, 'non-existent');
-    expect(last).toBe(undefined, 'Debe ser undefined cuando no hay corridas');
+    expect(last).toBe(undefined);
   });
 });
 
@@ -147,10 +147,10 @@ test('purgeTaskRunsOlderThan removes old runs', async () => {
     const cutoff = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
     const result = purgeTaskRunsOlderThan(db, cutoff);
     
-    expect(result.deleted).toBe(1, 'Debe eliminar 1 corrida antigua');
+    expect(result.deleted).toBe(1);
     
     const remaining = listTaskRuns(db, taskId);
-    expect(remaining.length).toBe(1, 'Debe quedar 1 corrida');
+    expect(remaining.length).toBe(1);
     expect(remaining[0]!.startedAt.getTime()).toBe(oneDayAgo.getTime());
   });
 });
@@ -166,14 +166,14 @@ test('purgeTaskRunsOlderThan returns 0 when no old runs', async () => {
     const cutoff = new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000);
     const result = purgeTaskRunsOlderThan(db, cutoff);
     
-    expect(result.deleted).toBe(0, 'No debe eliminar nada');
+    expect(result.deleted).toBe(0);
   });
 });
 
 test('purgeTaskRunsOlderThan is safe on empty table', async () => {
   await withTempDb(async (db) => {
     const result = purgeTaskRunsOlderThan(db, new Date());
-    expect(result.deleted).toBe(0, 'Debe retornar 0 en tabla vacía');
+    expect(result.deleted).toBe(0);
   });
 });
 
@@ -187,8 +187,8 @@ test('different taskIds have isolated runs', async () => {
     const runsA = listTaskRuns(db, 'task-a');
     const runsB = listTaskRuns(db, 'task-b');
     
-    expect(runsA.length).toBe(1, 'task-a debe tener 1 corrida');
-    expect(runsB.length).toBe(1, 'task-b debe tener 1 corrida');
+    expect(runsA.length).toBe(1);
+    expect(runsB.length).toBe(1);
     expect(runsA[0]!.durationMs).toBe(100);
     expect(runsB[0]!.durationMs).toBe(200);
   });

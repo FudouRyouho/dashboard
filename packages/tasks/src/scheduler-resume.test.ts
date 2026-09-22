@@ -148,10 +148,12 @@ test('scheduler resumes correctly after clean stop/start', async () => {
     'Both schedulers should have snapshots',
   ).toBeTruthy();
   // The second snapshot should be newer (later timestamp)
-  expect(
-    snapshot2.obtainedAt.getTime() >= snapshot1.obtainedAt.getTime(),
-    'Second snapshot should be newer or equal to first',
-  );
+  if (snapshot1 !== undefined && snapshot2 !== undefined) {
+    expect(
+      snapshot2.obtainedAt.getTime() >= snapshot1.obtainedAt.getTime(),
+      'Second snapshot should be newer or equal to first',
+    ).toBeTruthy();
+  }
 
   // Cleanup
   try {

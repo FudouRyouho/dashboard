@@ -65,9 +65,7 @@ test('purge deletes exactly rows before cutoff', async () => {
 
     // Expect: 4 rows deleted (indices 0,1,2,3)
     expect(
-      result.deleted).toBe(4,
-      `Expected 4 rows deleted, got ${result.deleted}`,
-    );
+      result.deleted).toBe(4);
 
     // Verify remaining rows using runLog
     const runLog = createRunLogDB<string>(db);
@@ -109,9 +107,7 @@ test('purge handles extreme dates correctly', async () => {
     const pastCutoff = new Date(now.getTime() - 2000); // 2 seconds ago
     const recentResult = purgeTaskRunsOlderThan(db, pastCutoff);
     expect(
-      recentResult.deleted).toBe(0,
-      `Expected 0 deleted for recent data, got ${recentResult.deleted}`,
-    );
+      recentResult.deleted).toBe(0);
   });
 
   // Case B: All rows old (31 to 60 days ago)
@@ -139,8 +135,6 @@ test('purge handles extreme dates correctly', async () => {
       new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
     );
     expect(
-      oldResult.deleted).toBe(100,
-      `Expected 100 deleted for old data, got ${oldResult.deleted}`,
-    );
+      oldResult.deleted).toBe(100);
   });
 });

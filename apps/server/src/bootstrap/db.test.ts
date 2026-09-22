@@ -25,15 +25,15 @@ describe('Database Initialization', () => {
     expect(existsSync(tempPath)).toBe(false);
 
     const db = await initializeDatabase({ path: tempPath, migrationsFolder });
-    expect(db);
+    expect(db, 'must return a DB instance').toBeTruthy();
   });
 
   test('initializeDatabase is idempotent (runs twice without error)', async () => {
     const db1 = await initializeDatabase({ path: tempPath, migrationsFolder });
-    expect(db1);
+    expect(db1).toBeTruthy();
 
     const db2 = await initializeDatabase({ path: tempPath, migrationsFolder });
-    expect(db2);
+    expect(db2).toBeTruthy();
   });
 
   test('database persists data across initializeDatabase calls', async () => {
@@ -53,7 +53,7 @@ describe('Database Initialization', () => {
 
     const runs = listTaskRuns(db2, 'test');
     expect(runs.length).toBe(1);
-    expect(runs[0] !== undefined).toBeTruthy();
+    expect(runs[0] !== undefined, 'first run must not be undefined').toBeTruthy();
     expect(runs[0]!.taskId).toBe('test');
   });
 });

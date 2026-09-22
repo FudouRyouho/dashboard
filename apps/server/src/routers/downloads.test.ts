@@ -42,7 +42,7 @@ describe('downloadsRouter', () => {
     test('returns empty array when no download clients', async () => {
       const ctx = createMockCtx([]);
       const caller = downloadsRouter.createCaller(ctx);
-      const result = await caller.getAllJobs({ limit: 50 });
+      const result = await caller.getAllJobs({});
       expect(result).toEqual([]);
     });
   });

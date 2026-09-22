@@ -16,13 +16,13 @@ test('validateTaskRunDetail validates error object', () => {
   const detail = { error: 'timeout', code: 504, message: 'Connection timed out' };
   const result = validateTaskRunDetail(detail);
   expect(result !== null).toBeTruthy();
-  expect(result.error).toBe('timeout');
-  expect(result.code).toBe(504);
+  expect(result!.error).toBe('timeout');
+  expect(result!.code).toBe(504);
 });
 
 test('validateTaskRunDetail validates null', () => {
   const result = validateTaskRunDetail(null);
-  expect(result, null);
+  expect(result).toBeNull();
 });
 
 test('safeValidateTaskRunDetail returns success for valid detail', () => {

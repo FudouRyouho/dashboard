@@ -33,7 +33,7 @@ async function withTempDb<T>(
 test('getAllPoliciesByIntegrationId returns empty array when no policies', async () => {
   await withTempDb(async (db) => {
     const policies = await getAllPoliciesByIntegrationId(db, 'integration-1');
-    expect(policies.length).toBe(0, 'Debe retornar array vacío');
+    expect(policies.length).toBe(0);
   });
 });
 
@@ -72,14 +72,14 @@ test('getAllPoliciesByIntegrationId returns policies for integration', async () 
     });
 
     const policies = await getAllPoliciesByIntegrationId(db, integrationId);
-    expect(policies.length).toBe(2, 'Debe haber 2 políticas');
+    expect(policies.length).toBe(2);
   });
 });
 
 test('getPolicyByIntegrationAndType returns null when not found', async () => {
   await withTempDb(async (db) => {
     const result = await getPolicyByIntegrationAndType(db, 'integration-1', 'calendar');
-    expect(result).toBe(null, 'Debe retornar null cuando no existe');
+    expect(result).toBe(null);
   });
 });
 
@@ -183,9 +183,9 @@ test('upsertTaskPolicy updates existing policy', async () => {
 
     const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
     expect(result, 'Debe existir después de actualizar').toBeTruthy();
-    expect(result!.everyMs).toBe(7200000, 'Debe tener valor actualizado');
-    expect(result!.runOnStart).toBe(false, 'runOnStart debe ser false');
-    expect(result!.failureMaxAttempts).toBe(5, 'failureMaxAttempts debe ser 5');
+    expect(result!.everyMs).toBe(7200000);
+    expect(result!.runOnStart).toBe(false);
+    expect(result!.failureMaxAttempts).toBe(5);
   });
 });
 
@@ -225,7 +225,7 @@ test('upsertTaskPolicy maintains unique constraint', async () => {
     });
 
     const policies = await getAllPoliciesByIntegrationId(db, integrationId);
-    expect(policies.length).toBe(2, 'Debe haber 2 políticas diferentes por taskType');
+    expect(policies.length).toBe(2);
   });
 });
 
@@ -256,7 +256,7 @@ test('deleteTaskPolicy removes policy', async () => {
     await deleteTaskPolicy(db, integrationId, 'calendar');
 
     const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
-    expect(result).toBe(null, 'Debe retornar null después de eliminar');
+    expect(result).toBe(null);
   });
 });
 
@@ -314,8 +314,8 @@ test('policies map to correct integration IDs', async () => {
     const policies1 = await getAllPoliciesByIntegrationId(db, integrationId1);
     const policies2 = await getAllPoliciesByIntegrationId(db, integrationId2);
 
-    expect(policies1.length).toBe(1, 'integrationId1 debe tener 1 política');
-    expect(policies2.length).toBe(1, 'integrationId2 debe tener 1 política');
+    expect(policies1.length).toBe(1);
+    expect(policies2.length).toBe(1);
     expect(policies1[0]!.everyMs).toBe(14400000);
     expect(policies2[0]!.everyMs).toBe(7200000);
   });

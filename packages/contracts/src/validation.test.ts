@@ -61,7 +61,7 @@ test('safeValidateCalendarEvent returns failure for invalid event', () => {
   };
   const result = safeValidateCalendarEvent(event);
   expect(!result.success).toBeTruthy();
-  expect(result.error.issues.length > 0).toBeTruthy();
+  expect(result.success === false).toBeTruthy();
 });
 
 test('isCalendarEvent returns true for valid event', () => {

@@ -1,6 +1,7 @@
-import { describe, test, expect } from 'vitest';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { AppRouter } from '.';
+import test, { describe } from 'node:test';
+import assert from 'node:assert/strict';
 import net from 'node:net';
 
 const trpc = createTRPCClient<AppRouter>({
@@ -11,6 +12,7 @@ const trpc = createTRPCClient<AppRouter>({
   ],
 });
 
+// Helper to check if server is running
 async function isServerRunning(port: number): Promise<boolean> {
   return new Promise((resolve) => {
     const socket = new net.Socket();
@@ -39,7 +41,7 @@ describe('trpc-client integration tests', () => {
       return;
     }
     const result = await trpc.health.query();
-    expect(result).toEqual({ status: 'ok' });
+    assert.deepStrictEqual(result, { status: 'ok' });
   });
 
   test('calendar.getEvents returns array for valid range (requires running server)', async () => {
@@ -52,6 +54,6 @@ describe('trpc-client integration tests', () => {
       start: new Date('2026-08-01T00:00:00.000Z'),
       end: new Date('2026-08-31T23:59:59.999Z'),
     });
-    expect(Array.isArray(result)).toBe(true);
+    assert.ok(Array.isArray(result), 'result should be an array');
   });
 });

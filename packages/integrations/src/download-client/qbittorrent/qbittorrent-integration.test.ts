@@ -55,34 +55,34 @@ test('QbittorrentIntegration - mapTorrentState mapea correctamente todos los est
   });
   const mapState = (integration as any).mapTorrentState.bind(integration);
 
-  expect(mapState('downloading')).toBe('leeching', 'downloading -> leeching');
-  expect(mapState('queuedDL')).toBe('leeching', 'queuedDL -> leeching');
-  expect(mapState('checkingDL')).toBe('leeching', 'checkingDL -> leeching');
-  expect(mapState('allocating')).toBe('leeching', 'allocating -> leeching');
-  expect(mapState('forcedDL')).toBe('leeching', 'forcedDL -> leeching');
-  expect(mapState('forcedMetaDL')).toBe('leeching', 'forcedMetaDL -> leeching');
-  expect(mapState('metaDL')).toBe('leeching', 'metaDL -> leeching');
-  expect(mapState('queuedForChecking')).toBe('leeching', 'queuedForChecking -> leeching');
+  expect(mapState('downloading')).toBe('leeching');
+  expect(mapState('queuedDL')).toBe('leeching');
+  expect(mapState('checkingDL')).toBe('leeching');
+  expect(mapState('allocating')).toBe('leeching');
+  expect(mapState('forcedDL')).toBe('leeching');
+  expect(mapState('forcedMetaDL')).toBe('leeching');
+  expect(mapState('metaDL')).toBe('leeching');
+  expect(mapState('queuedForChecking')).toBe('leeching');
 
-  expect(mapState('uploading')).toBe('seeding', 'uploading -> seeding');
-  expect(mapState('queuedUP')).toBe('seeding', 'queuedUP -> seeding');
-  expect(mapState('checkingUP')).toBe('seeding', 'checkingUP -> seeding');
-  expect(mapState('stalledUP')).toBe('seeding', 'stalledUP -> seeding');
-  expect(mapState('forcedUP')).toBe('seeding', 'forcedUP -> seeding');
+  expect(mapState('uploading')).toBe('seeding');
+  expect(mapState('queuedUP')).toBe('seeding');
+  expect(mapState('checkingUP')).toBe('seeding');
+  expect(mapState('stalledUP')).toBe('seeding');
+  expect(mapState('forcedUP')).toBe('seeding');
 
-  expect(mapState('pausedDL')).toBe('paused', 'pausedDL -> paused');
-  expect(mapState('pausedUP')).toBe('paused', 'pausedUP -> paused');
-  expect(mapState('stoppedDL')).toBe('paused', 'stoppedDL -> paused');
-  expect(mapState('stoppedUP')).toBe('paused', 'stoppedUP -> paused');
+  expect(mapState('pausedDL')).toBe('paused');
+  expect(mapState('pausedUP')).toBe('paused');
+  expect(mapState('stoppedDL')).toBe('paused');
+  expect(mapState('stoppedUP')).toBe('paused');
 
-  expect(mapState('stalledDL')).toBe('stalled', 'stalledDL -> stalled');
+  expect(mapState('stalledDL')).toBe('stalled');
 
-  expect(mapState('error')).toBe('unknown', 'error -> unknown');
-  expect(mapState('missingFiles')).toBe('unknown', 'missingFiles -> unknown');
-  expect(mapState('moving')).toBe('unknown', 'moving -> unknown');
-  expect(mapState('unknown')).toBe('unknown', 'unknown -> unknown');
+  expect(mapState('error')).toBe('unknown');
+  expect(mapState('missingFiles')).toBe('unknown');
+  expect(mapState('moving')).toBe('unknown');
+  expect(mapState('unknown')).toBe('unknown');
 
-  expect(mapState('someUndocumentedState')).toBe('unknown', 'unknown state -> unknown');
+  expect(mapState('someUndocumentedState')).toBe('unknown');
 });
 
 test('QbittorrentIntegration - calculateTime maneja casos borde', () => {
@@ -90,14 +90,14 @@ test('QbittorrentIntegration - calculateTime maneja casos borde', () => {
   const pastCompletionOn = Math.floor((now - 10000) / 1000);
   const completionMs = pastCompletionOn * 1000;
   const timeResult = Math.max(completionMs - now, -1);
-  expect(timeResult).toBe(-1, 'completado en el pasado debería retornar -1');
+  expect(timeResult).toBe(-1);
 
   const infiniteEtaTime = 0;
-  expect(infiniteEtaTime).toBe(0, 'eta infinito debería dar time=0');
+  expect(infiniteEtaTime).toBe(0);
 
   const normalEta = 1800;
   const normalEtaTime = Math.max(normalEta * 1000, 0);
-  expect(normalEtaTime).toBe(1800000, 'eta normal debería ser 1800000ms');
+  expect(normalEtaTime).toBe(1800000);
 });
 
 test('QbittorrentIntegration - rates aggregation con datos reales', () => {
@@ -115,8 +115,8 @@ test('QbittorrentIntegration - rates aggregation con datos reales', () => {
     { down: 0, up: 0 }
   );
 
-  expect(rates.down).toBe(3072, 'total down speed debería ser 3072');
-  expect(rates.up).toBe(1536, 'total up speed debería ser 1536');
+  expect(rates.down).toBe(3072);
+  expect(rates.up).toBe(1536);
 });
 
 test('QbittorrentIntegration - size fallback logic', () => {
@@ -128,7 +128,7 @@ test('QbittorrentIntegration - size fallback logic', () => {
   ];
 
   const sizes = mockTorrents.map(t => t.size ?? t.total_size ?? 0);
-  expect(sizes).toEqual([1000, 2000, 3000, 0], 'fallback logic debería funcionar correctamente');
+  expect(sizes).toEqual([1000, 2000, 3000, 0]);
 });
 
 test('QbittorrentIntegration - paused state logic', () => {
@@ -150,7 +150,7 @@ test('QbittorrentIntegration - paused state logic', () => {
     }
   });
 
-  expect(paused).toBe(true, 'todos pausados debería retornar true');
+  expect(paused).toBe(true);
 
   const torrentsMixed = [
     { state: 'pausedDL' },
@@ -170,7 +170,7 @@ test('QbittorrentIntegration - paused state logic', () => {
     }
   });
 
-  expect(pausedMixed).toBe(false, 'mezcla de estados debería retornar false');
+  expect(pausedMixed).toBe(false);
 });
 
 test('QbittorrentIntegration - action methods exist and are callable', () => {

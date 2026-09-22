@@ -235,8 +235,8 @@ describe('Prometheus Integration - Normalizer', () => {
     expect(result.length).toBe(1);
     const firstResult = result[0];
     expect(firstResult).toBeTruthy();
-    expect(firstResult.server).toBe('10.0.0.1:9100');
-    expect(firstResult.metrics.length > 0).toBeTruthy();
+    expect(firstResult!.server).toBe('10.0.0.1:9100');
+    expect(firstResult!.metrics.length > 0).toBeTruthy();
   });
 
   test('should include isSystemMount=true for system mountpoints', () => {
@@ -286,11 +286,11 @@ describe('Prometheus Integration - Normalizer', () => {
 
     const firstResult = result[0];
     expect(firstResult).toBeTruthy();
-    const diskMetrics = firstResult.metrics.find(m => m.name === 'disk');
-    expect(diskMetrics).toBeTruthy();
+    const diskMetrics = firstResult!.metrics.find(m => m.name === 'disk');
+    expect(diskMetrics!).toBeTruthy();
     // Check values array: [totalBytes, availableBytes, usagePercent, readBytes, writeBytes]
     // Usage percent for / should be ~50% (50GB used out of 100GB)
-    const usagePercent = diskMetrics.values[2];
+    const usagePercent = diskMetrics!.values[2];
     expect(usagePercent !== null).toBeTruthy();
     expect(Math.abs((usagePercent as number) - 50) < 1);
   });

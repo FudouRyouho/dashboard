@@ -56,7 +56,7 @@ test('purgeTaskRunsOlderThan elimina solo corridas anteriores al cutoff', async 
     const cutoff = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000); // -3 días
     const result = purgeTaskRunsOlderThan(db, cutoff);
 
-    expect(result.deleted).toBe(2, 'deben eliminarse 2 runs (-10d y -5d)');
+    expect(result.deleted).toBe(2);
 
     // Verificar que los otros 3 siguen ahí usando el runLog
     const runLog = createRunLogDB<string>(db);
@@ -99,7 +99,7 @@ test('createPurgeTask: corre, registra snapshot, retorna count', async () => {
     // Con daysToKeep=3, solo se borran corridas de hace más de 3 días
     // old1 (-5d) se borra, old2 (-2d), old3 (-1d) y recent (ahora) se mantienen
     // no hay snapshots antiguos, así que total = 1
-    expect(deleted).toBe(1, 'debe eliminarse 1 run (-5d, que es >3 días)');
+    expect(deleted).toBe(1);
 
     // El scheduler guarda snapshots, no run() directamente
   });
@@ -110,7 +110,7 @@ test('purge con 0 runs retorna 0, no falla', async () => {
     const purgeTask = createPurgeTask({ db, daysToKeep: 3 });
     const deleted = await purgeTask.run(new AbortController().signal);
 
-    expect(deleted).toBe(0, 'con DB vacía debe retornar 0');
+    expect(deleted).toBe(0);
     // Nota: no se guarda snapshot porque run() se llama directo, no por el scheduler
   });
 });
@@ -160,6 +160,6 @@ test('createPurgeTask: también purga snapshots antiguos', async () => {
     const deleted = await purgeTask.run(new AbortController().signal);
 
     // Debe borrar 1 run (old-run, -5d > 3d) + 1 snapshot (old-snap, -5d > 3d) = 2
-    expect(deleted).toBe(2, 'debe eliminar 1 run y 1 snapshot (>3 días)');
+    expect(deleted).toBe(2);
   });
 });

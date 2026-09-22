@@ -78,7 +78,7 @@ describe('Scheduler', () => {
       await sleep(400);
       await sleep(50);
       await s.stop();
-      expect(peak).toBe(1, `had ${peak} simultaneous runs of the same task`);
+      expect(peak).toBe(1);
     });
 
     test('concurrency limit bounds running tasks', async () => {
@@ -120,7 +120,7 @@ describe('Scheduler', () => {
       await sleep(200);
       await s.stop();
       const snapshot = d.store.get(key('b'));
-      expect(snapshot?.data).toBe(42, 'first success data is still intact');
+      expect(snapshot?.data).toBe(42);
       expect(
         d.runLog.forTask('b').some((r) => r.outcome === 'failure'),
         'failures should be logged',
@@ -146,7 +146,7 @@ describe('Scheduler', () => {
       await sleep(20);
       await s.stop();
       expect(d.runLog.last('c')?.outcome).toBe('aborted');
-      expect(d.store.get(key('c'))).toBe(undefined, 'an aborted run should not write');
+      expect(d.store.get(key('c'))).toBe(undefined);
     });
   });
 
@@ -190,7 +190,7 @@ describe('Scheduler', () => {
       await sleep(200);
       await s.stop();
       const outcomes = [...d.runLog.forTask('e').map((r) => r.outcome)].reverse();
-      expect(outcomes[0]).toBe('failure', 'first run failed');
+      expect(outcomes[0]).toBe('failure');
       expect(outcomes.slice(1).every((o) => o === 'success'), `subsequent runs after success should succeed`).toBeTruthy();
       expect(n >= 2, `total runs should be at least 2`).toBeTruthy();
     });

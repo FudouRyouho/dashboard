@@ -3,16 +3,16 @@ export * from './radarr/radarr-integration';
 export * from './base/integration';
 export * from './base/integration-error';
 export * from './base/calendar';
-export * from './base/download-client';
-export * from './jellyfin/jellyfin-integration';
 export * from './base/media-releases';
+export * from './base/download-client';
+export * from './base/system-health';
+export * from './jellyfin/jellyfin-integration';
 export * from './base/docker';
 export * from './docker/docker-integration';
-export * from './registry';
 export * from './prometheus/prometheus-integration';
 export * from './prometheus/types';
 export * from './prometheus/normalizer';
-export * from './base/system-health';
+export * from './registry';
 
 // Register integrations
 import './sonarr/registration';
