@@ -11,10 +11,16 @@ export interface RegistryEntry {
 }
 
 const toInput = (row: IntegrationInstanceRow): IntegrationInput => {
-  const secrets: { kind: string; value: string }[] =
-    'apiKey' in row
-      ? [{ kind: 'apiKey', value: (row as { apiKey?: string }).apiKey ?? '' }]
-      : [];
+  const secrets: { kind: string; value: string }[] = [];
+  if (row.apiKey) {
+    secrets.push({ kind: 'apiKey', value: row.apiKey });
+  }
+  if (row.username) {
+    secrets.push({ kind: 'username', value: row.username });
+  }
+  if (row.password) {
+    secrets.push({ kind: 'password', value: row.password });
+  }
   return {
     kind: row.kind as IntegrationKind,
     id: row.id,
