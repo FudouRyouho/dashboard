@@ -1,1 +1,1 @@
-DROP TABLE `server_log_entries`;
+DROP TABLE IF EXISTS `server_log_entries`;
