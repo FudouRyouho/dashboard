@@ -173,7 +173,7 @@ Prometheus expone métricas vía PromQL. El router `systemHealth` provee dos end
 
 ---
 
-## 10. qBittorrent Credenciales: Soporte para username/password + apiKey
+## 10. qBittorrent Credenciales: username/password requerido, apiKey prohibido
 
 ### Contexto
 
@@ -183,17 +183,19 @@ qBittorrent WebUI soporta autenticación via:
 
 ### La Decisión
 
-Soportar **ambos métodos** en la integración qBittorrent:
-- Schema `upsertIntegrationInputSchema` acepta `apiKey` **O** `username`+`password` (ambos opcionales, pero al menos uno requerido a nivel de validación de negocio).
-- DB: columnas `username` y `password` nullable en `integration_instances`.
-- Bootstrap: `toInput()` mapea los tres campos a `secrets[]` array.
-- Integración: `getClientAsync()` usa `apiKey` si existe, sino `username`+`password`.
+Soportar **exclusivamente** `username`+`password` en la integración qBittorrent:
+- Schema `upsertIntegrationInputSchema` REQUIERE `username` Y `password` (ambos string.min(1)).
+- `apiKey` está explícitamente prohibido (`z.never()`). No se acepta.
+- DB: columnas `username` y `password` requeridos, `apiKey` nullable pero no usado.
+- Bootstrap: `toInput()` mapea `username`+`password` a `secrets[]` array.
+- Integración: `getClientAsync()` usa siempre `username`+`password`.
 
 ### Por qué
 
-- **Compatibilidad**: Usuarios en versiones antiguas de qBittorrent (< 4.5) necesitan username/password.
-- **Seguridad**: apiKey es preferible (no expone password en logs/header), pero no obligatorio.
-- **Migración suave**: Usuarios existentes con username/password no requieren migración manual.
+- **Simplicidad**: Un solo camino de autenticación reduce complejidad y errores.
+- **Compatibilidad**: Usuarios en versiones antiguas de qBittorrent (< 4.5) necesitan username/password (y es el único método disponible en esas versiones).
+- **Seguridad**: username/password es el método soportado universalmente; apiKey es opcional en nuevas versiones pero no necesario.
+- **Type safety**: El schema discrimine garantiza que no se pueda crear una integración qBittorrent con apiKey (el error sería silencioso en runtime).
 
 ---
 
