@@ -21,3 +21,15 @@ CLAUDE.md
 docs/adr/
 AGENTS.md
 .opencode/
+openspec/
+odd/
+.github/
+.atl/
+.codegraph/
+
+# vitest coverage
+coverage/
+coverage/*.html
+coverage/*.xml
+coverage/*.json
+coverage/*.lcov
