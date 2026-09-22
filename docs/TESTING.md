@@ -6,7 +6,7 @@ Este documento describe las convenciones, patrones e infraestructura de testing 
 
 El repositorio utiliza **Vitest** como test runner con soporte TypeScript nativo y reporte de cobertura con v8.
 
-- **Framework de Testing**: Vitest `^3.0.0`
+- **Framework de Testing**: Vitest `^5.0.1`
 - **Proveedor de Cobertura**: `@vitest/coverage-v8`
 - **Configuración del Runner**: Modo single-thread mediante configuración de worker pool para mantener bajo overhead de memoria (~50-100MB por ejecución) y prevenir fugas de memoria.
 
@@ -120,8 +120,6 @@ La siguiente tabla resume la cobertura de pruebas por módulo, indicando qué pr
 
 ### Notas de Estado
 
-- **Superjson**: Removido del proyecto en Fase 1. No quedan referencias en el código fuente ni en los tests. Los transformers de tRPC ya no usan `superjson`.
-- **Defectos de Fase 1**: Todos los defectos identificados en Fase 1 están corregidos (eliminación de SuperJSON, doble trabajo en `getMetrics`, uso de `toIntegrationTRPCError`, helper `DownloadClientItem`, validación en `to-status.ts`).
 - **Docker Router**: Nuevo en Fase 2. Aún sin pruebas.
 
 ---

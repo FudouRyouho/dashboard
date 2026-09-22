@@ -21,20 +21,11 @@ Tareas programadas, ejecuta funciones cada x tiempo, guarda el ultimo "estado de
 2. Se crea un `AbortController` propio de esa corrida.
 3. El trabajo entra a la cola; corre cuando hay lugar bajo el techo de
    concurrencia.
-4. Sale bien → escribe el almacén, borra el contador de fallos, registra
+4. Sale bien → escribe el almacén, borra el conteo de fallos, registra
    `success`.
 5. Sale mal → clasifica el error, suma un fallo y, si llegó a `maxAttempts`,
    fija el cooldown.
 6. Fue cancelada → registra `aborted`, que **no** cuenta como fallo.
-
-## Lo que fijan los tests
-
-- una tarea no corre dos veces a la vez
-- sólo el éxito escribe el almacén
-- `stop()` cancela lo que está en vuelo y lo marca `aborted`, no `failure`
-- el límite de concurrencia acota las corridas simultáneas
-- tras `maxAttempts` fallos seguidos, la tarea espera el cooldown
-- un éxito borra el contador de fallos
 
 ## Persistencia
 

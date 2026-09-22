@@ -8,6 +8,10 @@ contrato sin agregarle campos.
 
 - `kinds.ts` — `integrationKinds` y el tipo `IntegrationKind`
 - `calendar.ts` — `CalendarEvent`, `CalendarImage`, `CalendarLink` y el grupo por integración
+- `integrations.ts` — schemas de integración (configuración, instancias)
+- `download-client.ts` — tipos y schemas de trabajos de descarga
+- `media-releases.ts` — tipos y schemas de liberaciones multimedia
+- `validation.ts` — helpers de validación Zod compartidos
 - `result.ts` — `ResultStatus`: los hechos del último intento
 - `data-view.ts` — `dataViewOf` y `inRange`: lectura derivada, no contrato
 

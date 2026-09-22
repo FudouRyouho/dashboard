@@ -27,10 +27,16 @@ El proyecto no está pensado como un producto final, sino como una reimplementac
 - `@dashboard/server` expone un router tRPC con:
   - `health`
   - `calendar.getEvents` — devuelve el último snapshot en memoria más el estado de la última corrida; ya no llama a la integración dentro del request
+  - `mediaReleases.getLatest` — mismo patrón snapshot+runlog para lanzamientos
+  - `integrations.list`, `integrations.get`, `integrations.upsert`, `integrations.delete` — CRUD de instancias
+  - `policies.listByIntegration`, `policies.get`, `policies.upsert`, `policies.delete` — gestión de políticas de tareas
+  - `downloads.getAllJobs`, `downloads.getJobs`, `downloads.pauseQueue`, `downloads.pauseItem`, `downloads.resumeQueue`, `downloads.resumeItem`, `downloads.deleteItem` — control de clientes de descarga
+  - `systemHealth.getAllMetrics`, `systemHealth.getMetrics` — métricas de sistema vía Prometheus
+  - `docker.getContainers`, `docker.startAll`, `docker.stopAll`, `docker.restartAll`, `docker.removeAll` — gestión de contenedores
 - `@dashboard/db` persiste snapshots y corridas de tareas en SQLite: tablas `task_runs`, `task_snapshots`
 - `@dashboard/tasks` es el motor de tareas programadas: timers, techo de concurrencia, cancelación y cooldown tras fallos seguidos
 - `@dashboard/integrations` contiene:
-  - Sonarr, Radarr, Jellyfin y Docker integrations
+  - Sonarr, Radarr, Jellyfin, Docker, Prometheus y qBittorrent integrations
   - Zod schemas del calendario de cada una
   - clasificación de errores a un motivo estable (`unauthorized`, `unreachable`, `timeout`, `invalid-response`, `unknown`)
 - `@dashboard/definitions` contiene:
@@ -42,7 +48,7 @@ El proyecto no está pensado como un producto final, sino como una reimplementac
   - un piloto desechable que ya consume `/trpc` real y muestra el estado del dato
 - Se usa `superjson` en tRPC para transporte de datos
 - Se valida la respuesta de la integración antes de mapearla al contrato de calendario
-- Hay tests con `node:test` en `packages/contracts`, `packages/tasks` y `apps/server`
+- Hay tests con `vitest` en todos los paquetes y apps (ver `docs/TESTING.md`)
 
 ## Estructura
 
