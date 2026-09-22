@@ -1,6 +1,6 @@
 import { describe, test, expect, afterEach } from 'vitest';
 import { randomUUID } from 'node:crypto';
-import { existsSync, mkdirSync, unlinkSync } from 'node:fs';
+import { existsSync, unlinkSync } from 'node:fs';
 import {
   initializeDatabase,
   insertTaskRun,
@@ -22,18 +22,18 @@ describe('Database Initialization', () => {
   });
 
   test('initializeDatabase creates connection and runs migrations', async () => {
-    expect(existsSync(tempPath)).toBe(false, 'temp file must not exist before');
+    expect(existsSync(tempPath)).toBe(false);
 
     const db = await initializeDatabase({ path: tempPath, migrationsFolder });
-    expect(db, 'must return a DB instance').toBeTruthy();
+    expect(db);
   });
 
   test('initializeDatabase is idempotent (runs twice without error)', async () => {
     const db1 = await initializeDatabase({ path: tempPath, migrationsFolder });
-    expect(db1).toBeTruthy();
+    expect(db1);
 
     const db2 = await initializeDatabase({ path: tempPath, migrationsFolder });
-    expect(db2).toBeTruthy();
+    expect(db2);
   });
 
   test('database persists data across initializeDatabase calls', async () => {
@@ -52,8 +52,8 @@ describe('Database Initialization', () => {
     const db2 = await initializeDatabase({ path: tempPath, migrationsFolder });
 
     const runs = listTaskRuns(db2, 'test');
-    expect(runs.length).toBe(1, 'must have 1 row after reopening the DB');
-    expect(runs[0] !== undefined, 'first run must not be undefined').toBeTruthy();
+    expect(runs.length).toBe(1);
+    expect(runs[0] !== undefined).toBeTruthy();
     expect(runs[0]!.taskId).toBe('test');
   });
 });

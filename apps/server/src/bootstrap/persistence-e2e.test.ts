@@ -1,6 +1,6 @@
 import { describe, test, expect, afterEach } from 'vitest';
 import { randomUUID } from 'node:crypto';
-import { mkdirSync, unlinkSync } from 'node:fs';
+import { unlinkSync } from 'node:fs';
 import { initializeDatabase, insertTaskRun, listTaskRuns } from '@dashboard/db';
 
 describe('Database Persistence E2E', () => {
@@ -30,12 +30,12 @@ describe('Database Persistence E2E', () => {
     });
 
     const runs1 = listTaskRuns(db1, 'persist-test');
-    expect(runs1.length).toBe(1, 'should have 1 run in the first instance');
+    expect(runs1.length).toBe(1);
 
     const db2 = await initializeDatabase({ path: tempPath, migrationsFolder });
 
     const runs2 = listTaskRuns(db2, 'persist-test');
-    expect(runs2.length).toBe(1, 'the run must persist in the second instance');
+    expect(runs2.length).toBe(1);
     expect(runs2[0]!.taskId).toBe('persist-test');
     expect(runs2[0]!.detail).toEqual({ message: 'First instance' });
   });
@@ -59,7 +59,7 @@ describe('Database Persistence E2E', () => {
 
     for (let i = 0; i < 5; i++) {
       const runs = listTaskRuns(db, `task-${i}`);
-      expect(runs.length).toBe(1, `task-${i} should have 1 run`);
+      expect(runs.length).toBe(1);
     }
   });
 });
