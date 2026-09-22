@@ -29,6 +29,8 @@ const upsertIntegrationInputSchema = z.discriminatedUnion('kind', [
   integrationInputBaseSchema.extend({
     kind: z.literal('qbittorrent'),
     apiKey: z.string().optional(),
+    username: z.string().optional(),
+    password: z.string().optional(),
     port: z.number().int().positive().default(8080),
   }),
 ]);
