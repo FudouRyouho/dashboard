@@ -3,14 +3,40 @@ import type { DB } from '@dashboard/db';
 import { getAllIntegrations } from '@dashboard/db';
 import type { IntegrationInstanceRow } from '@dashboard/db';
 import { getAllIntegrationFactories } from '@dashboard/integrations';
-import { type IntegrationKind } from '@dashboard/contracts';
+import { type IntegrationKind, secretRequirements } from '@dashboard/contracts';
 
 export interface RegistryEntry {
   integration: Integration;
   row: IntegrationInstanceRow;
 }
 
+/**
+ * Validates that an integration instance has all required secrets for its kind.
+ * Throws a clear error listing the missing required secret kinds.
+ */
+function validateRequiredSecrets(
+  row: IntegrationInstanceRow,
+): void {
+  const required = secretRequirements[row.kind as IntegrationKind] ?? [];
+  const present = new Set<string>();
+  if (row.apiKey) present.add('apiKey');
+  if (row.username) present.add('username');
+  if (row.password) present.add('password');
+
+  const missing = required
+    .filter((r) => r.required)
+    .filter((r) => !present.has(r.kind))
+    .map((r) => r.kind);
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Integration "${row.id}" (${row.kind}) is missing required secrets: ${missing.join(', ')}`,
+    );
+  }
+}
+
 const toInput = (row: IntegrationInstanceRow): IntegrationInput => {
+  validateRequiredSecrets(row);
   const secrets: { kind: string; value: string }[] = [];
   if (row.apiKey) {
     secrets.push({ kind: 'apiKey', value: row.apiKey });

@@ -1,5 +1,5 @@
 import { removeTrailingSlash } from '@dashboard/common';
-import { IntegrationKind } from '@dashboard/contracts';
+import { IntegrationKind, secretRequirements } from '@dashboard/contracts';
 import { IntegrationError } from './integration-error';
 
 export interface IntegrationInput {
@@ -17,6 +17,20 @@ type QueryParams = Record<
   string,
   Date | boolean | number | string | null | undefined
 >;
+
+/**
+ * Returns true if the integration input has all required secrets for its kind.
+ * Used as a type guard / validation before constructing an Integration instance.
+ */
+export function hasRequiredSecrets(input: IntegrationInput): boolean {
+  const required = secretRequirements[input.kind] ?? [];
+  const present = new Set<string>(
+    input.secrets.map((s) => s.kind),
+  );
+  return required
+    .filter((r) => r.required)
+    .every((r) => present.has(r.kind));
+}
 
 export abstract class Integration {
   protected readonly baseUrl: string;

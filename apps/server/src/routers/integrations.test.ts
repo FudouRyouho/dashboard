@@ -111,8 +111,113 @@ describe('integrationsRouter', () => {
         url: 'http://localhost:8080',
         username: 'admin',
         password: 'secret',
-      });
+      } as any);
       expect(result).toBeDefined();
+    });
+
+    test('rejects qbittorrent with apiKey', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      await expect(
+        caller.upsert({
+          id: 'qbittorrent-1',
+          kind: 'qbittorrent' as const,
+          name: 'qBittorrent',
+          url: 'http://localhost:8080',
+          apiKey: 'invalid-key',
+        } as any),
+      ).rejects.toThrow();
+    });
+
+    test('rejects sonarr without apiKey', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      await expect(
+        caller.upsert({
+          id: 'sonarr-1',
+          kind: 'sonarr' as const,
+          name: 'Sonarr',
+          url: 'http://localhost:8989',
+        } as any),
+      ).rejects.toThrow();
+    });
+
+    test('rejects radarr without apiKey', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      await expect(
+        caller.upsert({
+          id: 'radarr-1',
+          kind: 'radarr' as const,
+          name: 'Radarr',
+          url: 'http://localhost:7878',
+        } as any),
+      ).rejects.toThrow();
+    });
+
+    test('rejects jellyfin without apiKey', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      await expect(
+        caller.upsert({
+          id: 'jellyfin-1',
+          kind: 'jellyfin' as const,
+          name: 'Jellyfin',
+          url: 'http://localhost:8096',
+        } as any),
+      ).rejects.toThrow();
+    });
+
+    test('accepts docker without secrets', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      const result = await caller.upsert({
+        id: 'docker-1',
+        kind: 'docker' as const,
+        name: 'Docker',
+        url: 'http://localhost:2375',
+      } as any);
+      expect(result).toBeDefined();
+    });
+
+    test('accepts prometheus without secrets', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      const result = await caller.upsert({
+        id: 'prometheus-1',
+        kind: 'prometheus' as const,
+        name: 'Prometheus',
+        url: 'http://localhost:9090',
+      } as any);
+      expect(result).toBeDefined();
+    });
+
+    test('rejects docker with apiKey', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      await expect(
+        caller.upsert({
+          id: 'docker-1',
+          kind: 'docker' as const,
+          name: 'Docker',
+          url: 'http://localhost:2375',
+          apiKey: 'invalid',
+        } as any),
+      ).rejects.toThrow();
+    });
+
+    test('rejects prometheus with apiKey', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      await expect(
+        caller.upsert({
+          id: 'prometheus-1',
+          kind: 'prometheus' as const,
+          name: 'Prometheus',
+          url: 'http://localhost:9090',
+          apiKey: 'invalid',
+        } as any),
+      ).rejects.toThrow();
     });
   });
 
