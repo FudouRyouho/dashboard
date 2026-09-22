@@ -30,6 +30,10 @@ export interface IDockerIntegration {
   getDashboardStatsAsync(options?: {
     signal?: AbortSignal;
   }): Promise<DockerDashboardStats>;
+  startContainerAsync(id: string): Promise<void>;
+  stopContainerAsync(id: string): Promise<void>;
+  restartContainerAsync(id: string): Promise<void>;
+  removeContainerAsync(id: string): Promise<void>;
 }
 
 const dockerCapability: keyof IDockerIntegration = 'getDashboardStatsAsync';

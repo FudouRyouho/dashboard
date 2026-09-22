@@ -33,6 +33,10 @@ const upsertIntegrationInputSchema = z.discriminatedUnion('kind', [
     password: z.string().optional(),
     port: z.number().int().positive().default(8080),
   }),
+  integrationInputBaseSchema.extend({
+    kind: z.literal('prometheus'),
+    port: z.number().int().positive().default(9090),
+  }),
 ]);
 
 export const integrationsRouter = createTRPCRouter({

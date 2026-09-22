@@ -97,4 +97,20 @@ export class DockerIntegration
       },
     };
   }
+
+  async startContainerAsync(id: string): Promise<void> {
+    await this.fetchDocker(`/containers/${id}/start`, { method: 'POST' });
+  }
+
+  async stopContainerAsync(id: string): Promise<void> {
+    await this.fetchDocker(`/containers/${id}/stop`, { method: 'POST' });
+  }
+
+  async restartContainerAsync(id: string): Promise<void> {
+    await this.fetchDocker(`/containers/${id}/restart`, { method: 'POST' });
+  }
+
+  async removeContainerAsync(id: string): Promise<void> {
+    await this.fetchDocker(`/containers/${id}`, { method: 'DELETE' });
+  }
 }

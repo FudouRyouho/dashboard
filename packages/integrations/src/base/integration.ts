@@ -77,9 +77,11 @@ export abstract class Integration {
         ? AbortSignal.any([init.signal, timeoutSignal])
         : timeoutSignal,
     });
-    if (!res.ok) {
+    if (!res.ok && res.status !== 304) {
       throw IntegrationError.fromHttpResponse(res.status, res.statusText);
     }
+    const contentLength = res.headers.get("content-length");
+    if (!contentLength || contentLength === "0") return undefined as T;
     return (await res.json()) as T;
   }
 
