@@ -2,14 +2,16 @@ import { TaskDefinition, type TaskPolicy } from '@dashboard/tasks';
 import { RegistryEntry } from '../bootstrap/integrations';
 import {
   supportsCalendar,
+  supportsDocker,
   supportsMediaReleases,
 } from '@dashboard/integrations';
 import { calendarTask } from './calendar-task';
+import { dockerTask } from './docker-task';
 import { mediaReleasesTask } from './media-releases-task';
 
 export function createTaskDefinitions(
   entries: RegistryEntry[],
-  policies: Map<string, { calendar?: TaskPolicy; mediaReleases?: TaskPolicy }>,
+  policies: Map<string, { calendar?: TaskPolicy; mediaReleases?: TaskPolicy; docker?: TaskPolicy }>,
 ): TaskDefinition[] {
   const definitions: TaskDefinition[] = [];
 
@@ -29,6 +31,11 @@ export function createTaskDefinitions(
       built.push('media-releases');
     }
 
+    if (supportsDocker(integration)) {
+      definitions.push(dockerTask(integration, configPolicies.docker));
+      built.push('docker');
+    }
+
     assertNoUnknownTasks(row, built, configPolicies);
   }
 
@@ -38,7 +45,7 @@ export function createTaskDefinitions(
 function assertNoUnknownTasks(
   row: RegistryEntry['row'],
   built: string[],
-  configPolicies: { calendar?: TaskPolicy; mediaReleases?: TaskPolicy },
+  configPolicies: { calendar?: TaskPolicy; mediaReleases?: TaskPolicy; docker?: TaskPolicy },
 ): void {
   const supported = new Set(built);
   for (const key of Object.keys(configPolicies) as Array<keyof typeof configPolicies>) {

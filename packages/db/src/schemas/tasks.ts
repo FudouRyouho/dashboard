@@ -39,7 +39,7 @@ export const taskPolicies = sqliteTable(
       .notNull()
       .references(() => integrationInstances.id, { onDelete: 'cascade' }),
     taskType: text('task_type', {
-      enum: ['calendar', 'mediaReleases'],
+      enum: ['calendar', 'mediaReleases', 'docker'],
     }).notNull(),
     everyMs: integer('every_ms').notNull(),
     runOnStart: integer('run_on_start').notNull(),

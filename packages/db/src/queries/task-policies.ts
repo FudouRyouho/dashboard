@@ -2,10 +2,12 @@ import type { DB } from '../connection';
 import { taskPolicies } from '../schemas/tasks';
 import { eq, and } from 'drizzle-orm';
 
+export type TaskType = 'calendar' | 'mediaReleases' | 'docker';
+
 export interface TaskPolicyRow {
   id: string;
   integrationId: string;
-  taskType: 'calendar' | 'mediaReleases';
+  taskType: TaskType;
   everyMs: number;
   runOnStart: boolean;
   expectedDurationMs: number;
@@ -16,7 +18,7 @@ export interface TaskPolicyRow {
 export interface UpsertTaskPolicyInput {
   id: string;
   integrationId: string;
-  taskType: 'calendar' | 'mediaReleases';
+  taskType: TaskType;
   everyMs: number;
   runOnStart: boolean;
   expectedDurationMs: number;
@@ -62,7 +64,7 @@ export async function getAllPoliciesByIntegrationId(
 export async function getPolicyByIntegrationAndType(
   db: DB,
   integrationId: string,
-  taskType: 'calendar' | 'mediaReleases',
+  taskType: TaskType,
 ): Promise<TaskPolicyRow | null> {
   const results = await db
     .select()
@@ -127,7 +129,7 @@ export async function upsertTaskPolicy(
 export async function deleteTaskPolicy(
   db: DB,
   integrationId: string,
-  taskType: 'calendar' | 'mediaReleases',
+  taskType: TaskType,
 ): Promise<void> {
   await db
     .delete(taskPolicies)

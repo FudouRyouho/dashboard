@@ -10,7 +10,7 @@ export const policiesRouter = createTRPCRouter({
     }),
 
   get: publicProcedure
-    .input(z.object({ integrationId: z.string(), taskType: z.enum(['calendar', 'mediaReleases']) }))
+    .input(z.object({ integrationId: z.string(), taskType: z.enum(['calendar', 'mediaReleases', 'docker']) }))
     .query(async ({ ctx, input }) => {
       return await getPolicyByIntegrationAndType(ctx.db, input.integrationId, input.taskType);
     }),
@@ -19,7 +19,7 @@ export const policiesRouter = createTRPCRouter({
     .input(z.object({
       id: z.string(),
       integrationId: z.string(),
-      taskType: z.enum(['calendar', 'mediaReleases']),
+      taskType: z.enum(['calendar', 'mediaReleases', 'docker']),
       everyMs: z.number().int().positive(),
       runOnStart: z.boolean(),
       expectedDurationMs: z.number().int().positive(),
@@ -31,7 +31,7 @@ export const policiesRouter = createTRPCRouter({
     }),
 
   delete: publicProcedure
-    .input(z.object({ integrationId: z.string(), taskType: z.enum(['calendar', 'mediaReleases']) }))
+    .input(z.object({ integrationId: z.string(), taskType: z.enum(['calendar', 'mediaReleases', 'docker']) }))
     .mutation(async ({ ctx, input }) => {
       await deleteTaskPolicy(ctx.db, input.integrationId, input.taskType);
     }),
