@@ -6,7 +6,8 @@ import { PrometheusNormalized, ServerMetrics } from '../prometheus/types';
  */
 export interface ISystemHealthIntegration {
   getSystemMetricsAsync(options?: { signal?: AbortSignal }): Promise<PrometheusNormalized[]>;
-  getServerMetricsAsync(server: string, options?: { signal?: AbortSignal }): Promise<ServerMetrics | null>;
+  getServerMetricsAsync(server: string, options?: { signal?: AbortSignal; instances?: string[]; queryResults?: Map<string, unknown> }): Promise<ServerMetrics | null>;
+  getDiscoveredDataAsync(options?: { signal?: AbortSignal }): Promise<{ instances: string[]; queryResults: Map<string, unknown> }>;
 }
 
 /**

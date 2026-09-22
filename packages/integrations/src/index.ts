@@ -11,6 +11,7 @@ export * from './docker/docker-integration';
 export * from './registry';
 export * from './prometheus/prometheus-integration';
 export * from './prometheus/types';
+export * from './prometheus/normalizer';
 export * from './base/system-health';
 
 // Register integrations

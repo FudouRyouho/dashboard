@@ -18,7 +18,6 @@
     "@fastify/static": "^10.1.3",
     "@trpc/server": "catalog:",
     "fastify": "catalog:",
-    "superjson": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

@@ -72,12 +72,48 @@ export class PrometheusIntegration extends Integration implements ISystemHealthI
 
   /**
    * Get metrics for a specific server.
+   * If instances and queryResults are provided, reuse them to avoid re-discovery and re-querying.
    */
-  async getServerMetricsAsync(server: string, options?: { signal?: AbortSignal }): Promise<ServerMetrics | null> {
-    const allMetrics = await this.getSystemMetricsAsync(options);
-    const serverData = allMetrics.find(m => m.server === server);
+  async getServerMetricsAsync(server: string, options?: { signal?: AbortSignal; instances?: string[]; queryResults?: Map<string, unknown> }): Promise<ServerMetrics | null> {
+    let instances = options?.instances;
+    let queryResults = options?.queryResults;
+
+    if (!instances || !queryResults) {
+      // Fallback: run full discovery and query (for backward compatibility)
+      const allMetrics = await this.getSystemMetricsAsync(options?.signal ? { signal: options.signal } : undefined);
+      const serverData = allMetrics.find(m => m.server === server);
+      if (!serverData) return null;
+
+      return PrometheusNormalizer.toServerMetrics(serverData);
+    }
+
+    // Use pre-discovered data
+    const serverData = PrometheusNormalizer.normalize(queryResults, instances).find(m => m.server === server);
     if (!serverData) return null;
 
     return PrometheusNormalizer.toServerMetrics(serverData);
+  }
+
+  /**
+   * Discover instances and run all queries, returning both for reuse.
+   * Used by getAllMetrics and can be passed to getServerMetricsAsync to avoid double work.
+   */
+  async getDiscoveredDataAsync(options?: { signal?: AbortSignal }): Promise<{ instances: string[]; queryResults: Map<string, unknown> }> {
+    const instances = await this.discovery.discoverInstances(options?.signal);
+    if (!instances || instances.length === 0) {
+      return { instances: [], queryResults: new Map() };
+    }
+
+    const queries = getAllQueries();
+    const queryResults = new Map<string, unknown>();
+
+    await Promise.all(
+      queries.map(async ({ key, promql }) => {
+        const result = await this.client.query(promql, options?.signal);
+        queryResults.set(key, result ?? null);
+      })
+    );
+
+    return { instances, queryResults };
   }
 }

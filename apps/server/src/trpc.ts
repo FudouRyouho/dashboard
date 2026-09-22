@@ -1,5 +1,4 @@
 import { initTRPC } from '@trpc/server';
-import superjson from 'superjson';
 import type { Integration } from '@dashboard/integrations';
 import { RunLog, SnapshotStore } from '@dashboard/tasks';
 import { IntegrationErrorReason } from '@dashboard/contracts';
@@ -13,9 +12,7 @@ export interface TRPCContext {
   db: DB;
 }
 
-const t = initTRPC.context<TRPCContext>().create({
-  transformer: superjson,
-});
+const t = initTRPC.context<TRPCContext>().create();
 
 export const publicProcedure = t.procedure;
 export const createTRPCRouter = t.router;

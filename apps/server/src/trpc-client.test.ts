@@ -1,6 +1,5 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { AppRouter } from '.';
-import superjson from 'superjson';
 import test, { describe } from 'node:test';
 import assert from 'node:assert/strict';
 import net from 'node:net';
@@ -9,7 +8,6 @@ const trpc = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
       url: 'http://127.0.0.1:3050/trpc',
-      transformer: superjson,
     }),
   ],
 });
@@ -56,6 +54,6 @@ describe('trpc-client integration tests', () => {
       start: new Date('2026-08-01T00:00:00.000Z'),
       end: new Date('2026-08-31T23:59:59.999Z'),
     });
-    assert.ok(Array.isArray(result));
+    expect(Array.isArray(result).toBeTruthy());
   });
 });
