@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { describe, test, expect, afterEach } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { existsSync, mkdirSync, unlinkSync } from 'node:fs';
 import {
@@ -9,56 +8,52 @@ import {
   type InsertTaskRunInput,
 } from '@dashboard/db';
 
-mkdirSync('./data', { recursive: true });
+describe('Database Initialization', () => {
+  const tempPath = `./data/test-${randomUUID()}.sqlite`;
+  const migrationsFolder = new URL(
+    '../../../../packages/db/migrations',
+    import.meta.url,
+  ).pathname;
 
-const tempPath = `./data/test-${randomUUID()}.sqlite`;
-const migrationsFolder = new URL(
-  '../../../../packages/db/migrations',
-  import.meta.url,
-).pathname;
+  afterEach(() => {
+    try {
+      unlinkSync(tempPath);
+    } catch {}
+  });
 
-test.afterEach(() => {
-  try {
-    unlinkSync(tempPath);
-  } catch {}
-});
+  test('initializeDatabase creates connection and runs migrations', async () => {
+    expect(existsSync(tempPath)).toBe(false, 'temp file must not exist before');
 
-test('initializeDatabase crea conexión y corre migraciones', async () => {
-  assert.equal(
-    existsSync(tempPath),
-    false,
-    'archivo temporal no debe existir antes',
-  );
+    const db = await initializeDatabase({ path: tempPath, migrationsFolder });
+    expect(db, 'must return a DB instance').toBeTruthy();
+  });
 
-  const db = await initializeDatabase({ path: tempPath, migrationsFolder });
-  assert.ok(db, 'debe retornar una instancia de DB');
-});
+  test('initializeDatabase is idempotent (runs twice without error)', async () => {
+    const db1 = await initializeDatabase({ path: tempPath, migrationsFolder });
+    expect(db1).toBeTruthy();
 
-test('initializeDatabase es idempotente (corre dos veces sin error)', async () => {
-  const db1 = await initializeDatabase({ path: tempPath, migrationsFolder });
-  assert.ok(db1);
+    const db2 = await initializeDatabase({ path: tempPath, migrationsFolder });
+    expect(db2).toBeTruthy();
+  });
 
-  const db2 = await initializeDatabase({ path: tempPath, migrationsFolder });
-  assert.ok(db2);
-});
+  test('database persists data across initializeDatabase calls', async () => {
+    const db1 = await initializeDatabase({ path: tempPath, migrationsFolder });
 
-test('la DB persiste datos entre llamadas a initializeDatabase', async () => {
-  const db1 = await initializeDatabase({ path: tempPath, migrationsFolder });
+    const input: InsertTaskRunInput = {
+      taskId: 'test',
+      startedAt: new Date(),
+      durationMs: 100,
+      outcome: 'success',
+      cause: null,
+      detail: null,
+    };
+    insertTaskRun(db1, input);
 
-  const input: InsertTaskRunInput = {
-    taskId: 'test',
-    startedAt: new Date(),
-    durationMs: 100,
-    outcome: 'success',
-    cause: null,
-    detail: null,
-  };
-  insertTaskRun(db1, input);
+    const db2 = await initializeDatabase({ path: tempPath, migrationsFolder });
 
-  const db2 = await initializeDatabase({ path: tempPath, migrationsFolder });
-
-  const runs = listTaskRuns(db2, 'test');
-  assert.equal(runs.length, 1, 'debe haber 1 fila después de reabrir la DB');
-  assert.ok(runs[0] !== undefined, 'la primera corrida no debe ser undefined');
-  assert.equal(runs[0]!.taskId, 'test');
+    const runs = listTaskRuns(db2, 'test');
+    expect(runs.length).toBe(1, 'must have 1 row after reopening the DB');
+    expect(runs[0] !== undefined, 'first run must not be undefined').toBeTruthy();
+    expect(runs[0]!.taskId).toBe('test');
+  });
 });

@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import {
@@ -65,15 +64,14 @@ test('purge deletes exactly rows before cutoff', async () => {
     const result = purgeTaskRunsOlderThan(db, cutoff);
 
     // Expect: 4 rows deleted (indices 0,1,2,3)
-    assert.equal(
-      result.deleted,
-      4,
+    expect(
+      result.deleted).toBe(4,
       `Expected 4 rows deleted, got ${result.deleted}`,
     );
 
     // Verify remaining rows using runLog
     const runLog = createRunLogDB<string>(db);
-    assert.ok(
+    expect(
       runLog.forTask('purge-test').length >= 3,
       'should have at least 3 remaining rows',
     );
@@ -110,9 +108,8 @@ test('purge handles extreme dates correctly', async () => {
     // Cutoff in the past (before all recent data) -> nothing deleted
     const pastCutoff = new Date(now.getTime() - 2000); // 2 seconds ago
     const recentResult = purgeTaskRunsOlderThan(db, pastCutoff);
-    assert.equal(
-      recentResult.deleted,
-      0,
+    expect(
+      recentResult.deleted).toBe(0,
       `Expected 0 deleted for recent data, got ${recentResult.deleted}`,
     );
   });
@@ -141,9 +138,8 @@ test('purge handles extreme dates correctly', async () => {
       db,
       new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
     );
-    assert.equal(
-      oldResult.deleted,
-      100,
+    expect(
+      oldResult.deleted).toBe(100,
       `Expected 100 deleted for old data, got ${oldResult.deleted}`,
     );
   });

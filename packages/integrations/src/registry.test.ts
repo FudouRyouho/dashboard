@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import {
   registerIntegration,
   getIntegrationFactory,
@@ -31,20 +30,20 @@ test('registerIntegration adds factory to registry', () => {
   const factory = createMockFactory('sonarr');
   registerIntegration(factory);
   const retrieved = getIntegrationFactory('sonarr');
-  assert.ok(retrieved);
-  assert.equal(retrieved!.metadata.kind, 'sonarr');
+  expect(retrieved).toBeTruthy();
+  expect(retrieved!.metadata.kind).toBe('sonarr');
 });
 
 test('registerIntegration throws when kind already registered', () => {
   const factory1 = createMockFactory('radarr');
   registerIntegration(factory1);
   const factory2 = createMockFactory('radarr');
-  assert.throws(() => registerIntegration(factory2), /already registered/);
+  expect(() => registerIntegration(factory2)).toThrow(/already registered/);
 });
 
 test('getIntegrationFactory returns undefined for unregistered kind', () => {
   const result = getIntegrationFactory('nonexistent' as IntegrationKind);
-  assert.equal(result, undefined);
+  expect(result).toBe(undefined);
 });
 
 test('getAllIntegrationFactories returns all registered factories', () => {
@@ -55,33 +54,33 @@ test('getAllIntegrationFactories returns all registered factories', () => {
   const factories = getAllIntegrationFactories();
   // Los módulos de integraciones se registran automáticamente, por lo que
   // el total incluye las factories reales más las mockeadas
-  assert.ok(factories.length >= 2, `Debe haber al menos 2 factories, obtenido ${factories.length}`);
+  expect(factories.length >= 2, `Debe haber al menos 2 factories, obtenido ${factories.length}`).toBeTruthy();
   const kinds = factories.map(f => f.metadata.kind);
-  assert.ok(kinds.includes('jellyfin'));
-  assert.ok(kinds.includes('docker'));
+  expect(kinds.includes('jellyfin')).toBeTruthy();
+  expect(kinds.includes('docker')).toBeTruthy();
 });
 
 test('getRegisteredKinds returns all registered kinds', () => {
   const kinds = getRegisteredKinds();
-  assert.ok(Array.isArray(kinds));
-  assert.ok(kinds.length > 0);
+  expect(Array.isArray(kinds)).toBeTruthy();
+  expect(kinds.length > 0).toBeTruthy();
 });
 
 test('isKindRegistered returns true for registered kinds', () => {
   const kinds = getRegisteredKinds();
   for (const kind of kinds) {
-    assert.ok(isKindRegistered(kind));
+    expect(isKindRegistered(kind)).toBeTruthy();
   }
 });
 
 test('isKindRegistered returns false for unregistered kind', () => {
-  assert.equal(isKindRegistered('nonexistent'), false);
+  expect(isKindRegistered('nonexistent')).toBe(false);
 });
 
 test('isKindRegistered is a type guard', () => {
   const kind: string = 'sonarr';
   if (isKindRegistered(kind)) {
     // TypeScript should recognize this as IntegrationKind
-    assert.ok(typeof kind === 'string');
+    expect(typeof kind === 'string').toBeTruthy();
   }
 });

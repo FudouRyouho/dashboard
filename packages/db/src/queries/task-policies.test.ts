@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import { initializeDatabase } from '@dashboard/db';
@@ -34,7 +33,7 @@ async function withTempDb<T>(
 test('getAllPoliciesByIntegrationId returns empty array when no policies', async () => {
   await withTempDb(async (db) => {
     const policies = await getAllPoliciesByIntegrationId(db, 'integration-1');
-    assert.equal(policies.length, 0, 'Debe retornar array vacío');
+    expect(policies.length).toBe(0, 'Debe retornar array vacío');
   });
 });
 
@@ -73,14 +72,14 @@ test('getAllPoliciesByIntegrationId returns policies for integration', async () 
     });
 
     const policies = await getAllPoliciesByIntegrationId(db, integrationId);
-    assert.equal(policies.length, 2, 'Debe haber 2 políticas');
+    expect(policies.length).toBe(2, 'Debe haber 2 políticas');
   });
 });
 
 test('getPolicyByIntegrationAndType returns null when not found', async () => {
   await withTempDb(async (db) => {
     const result = await getPolicyByIntegrationAndType(db, 'integration-1', 'calendar');
-    assert.equal(result, null, 'Debe retornar null cuando no existe');
+    expect(result).toBe(null, 'Debe retornar null cuando no existe');
   });
 });
 
@@ -109,11 +108,11 @@ test('getPolicyByIntegrationAndType returns policy when exists', async () => {
     });
 
     const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
-    assert.ok(result, 'Debe encontrar la política');
-    assert.equal(result!.id, id);
-    assert.equal(result!.taskType, 'calendar');
-    assert.equal(result!.everyMs, 14400000);
-    assert.equal(result!.runOnStart, true);
+    expect(result, 'Debe encontrar la política').toBeTruthy();
+    expect(result!.id).toBe(id);
+    expect(result!.taskType).toBe('calendar');
+    expect(result!.everyMs).toBe(14400000);
+    expect(result!.runOnStart).toBe(true);
   });
 });
 
@@ -142,8 +141,8 @@ test('upsertTaskPolicy creates new policy', async () => {
     });
 
     const result = await getPolicyByIntegrationAndType(db, integrationId, 'mediaReleases');
-    assert.ok(result, 'Debe existir después de insertar');
-    assert.equal(result!.expectedDurationMs, 5000);
+    expect(result, 'Debe existir después de insertar').toBeTruthy();
+    expect(result!.expectedDurationMs).toBe(5000);
   });
 });
 
@@ -183,10 +182,10 @@ test('upsertTaskPolicy updates existing policy', async () => {
     });
 
     const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
-    assert.ok(result, 'Debe existir después de actualizar');
-    assert.equal(result!.everyMs, 7200000, 'Debe tener valor actualizado');
-    assert.equal(result!.runOnStart, false, 'runOnStart debe ser false');
-    assert.equal(result!.failureMaxAttempts, 5, 'failureMaxAttempts debe ser 5');
+    expect(result, 'Debe existir después de actualizar').toBeTruthy();
+    expect(result!.everyMs).toBe(7200000, 'Debe tener valor actualizado');
+    expect(result!.runOnStart).toBe(false, 'runOnStart debe ser false');
+    expect(result!.failureMaxAttempts).toBe(5, 'failureMaxAttempts debe ser 5');
   });
 });
 
@@ -226,7 +225,7 @@ test('upsertTaskPolicy maintains unique constraint', async () => {
     });
 
     const policies = await getAllPoliciesByIntegrationId(db, integrationId);
-    assert.equal(policies.length, 2, 'Debe haber 2 políticas diferentes por taskType');
+    expect(policies.length).toBe(2, 'Debe haber 2 políticas diferentes por taskType');
   });
 });
 
@@ -257,7 +256,7 @@ test('deleteTaskPolicy removes policy', async () => {
     await deleteTaskPolicy(db, integrationId, 'calendar');
 
     const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
-    assert.equal(result, null, 'Debe retornar null después de eliminar');
+    expect(result).toBe(null, 'Debe retornar null después de eliminar');
   });
 });
 
@@ -315,9 +314,9 @@ test('policies map to correct integration IDs', async () => {
     const policies1 = await getAllPoliciesByIntegrationId(db, integrationId1);
     const policies2 = await getAllPoliciesByIntegrationId(db, integrationId2);
 
-    assert.equal(policies1.length, 1, 'integrationId1 debe tener 1 política');
-    assert.equal(policies2.length, 1, 'integrationId2 debe tener 1 política');
-    assert.equal(policies1[0]!.everyMs, 14400000);
-    assert.equal(policies2[0]!.everyMs, 7200000);
+    expect(policies1.length).toBe(1, 'integrationId1 debe tener 1 política');
+    expect(policies2.length).toBe(1, 'integrationId2 debe tener 1 política');
+    expect(policies1[0]!.everyMs).toBe(14400000);
+    expect(policies2[0]!.everyMs).toBe(7200000);
   });
 });

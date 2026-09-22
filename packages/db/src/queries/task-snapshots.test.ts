@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import { initializeDatabase } from '@dashboard/db';
@@ -33,7 +32,7 @@ async function withTempDb<T>(
 test('getTaskSnapshot returns undefined when no snapshot exists', async () => {
   await withTempDb(async (db) => {
     const result = getTaskSnapshot(db, 'non-existent');
-    assert.equal(result, undefined, 'Debe retornar undefined cuando no existe snapshot');
+    expect(result).toBe(undefined, 'Debe retornar undefined cuando no existe snapshot');
   });
 });
 
@@ -45,8 +44,8 @@ test('upsertTaskSnapshot creates new snapshot', async () => {
     upsertTaskSnapshot(db, taskId, data);
     
     const snapshot = getTaskSnapshot(db, taskId);
-    assert.ok(snapshot, 'Debe existir el snapshot');
-    assert.deepEqual(snapshot!.data, data, 'Los datos deben coincidir');
+    expect(snapshot, 'Debe existir el snapshot').toBeTruthy();
+    expect(snapshot!.data).toEqual(data, 'Los datos deben coincidir');
   });
 });
 
@@ -61,8 +60,8 @@ test('upsertTaskSnapshot updates existing snapshot', async () => {
     upsertTaskSnapshot(db, taskId, updatedData);
     
     const snapshot = getTaskSnapshot(db, taskId);
-    assert.ok(snapshot, 'Debe existir el snapshot actualizado');
-    assert.deepEqual(snapshot!.data, updatedData, 'Los datos deben estar actualizados');
+    expect(snapshot, 'Debe existir el snapshot actualizado').toBeTruthy();
+    expect(snapshot!.data).toEqual(updatedData, 'Los datos deben estar actualizados');
   });
 });
 
@@ -77,9 +76,9 @@ test('upsertTaskSnapshot preserves data across upserts', async () => {
     upsertTaskSnapshot(db, taskId, nestedData);
     
     const snapshot = getTaskSnapshot(db, taskId);
-    assert.ok(snapshot);
-    assert.equal((snapshot!.data as { metadata: { source: string } }).metadata.source, 'sonarr');
-    assert.equal((snapshot!.data as { items: Array<unknown> }).items.length, 2);
+    expect(snapshot).toBeTruthy();
+    expect((snapshot!.data as { metadata: { source: string } }).metadata.source).toBe('sonarr');
+    expect((snapshot!.data as { items: Array<unknown> }).items.length).toBe(2);
   });
 });
 
@@ -94,10 +93,10 @@ test('different taskIds have independent snapshots', async () => {
     const snap1 = getTaskSnapshot(db, taskId1);
     const snap2 = getTaskSnapshot(db, taskId2);
     
-    assert.ok(snap1);
-    assert.ok(snap2);
-    assert.equal((snap1!.data as { value: number }).value, 1);
-    assert.equal((snap2!.data as { value: number }).value, 2);
+    expect(snap1).toBeTruthy();
+    expect(snap2).toBeTruthy();
+    expect((snap1!.data as { value: number }).value).toBe(1);
+    expect((snap2!.data as { value: number }).value).toBe(2);
   });
 });
 
@@ -125,10 +124,10 @@ test('purgeTaskSnapshotsOlderThan removes old snapshots', async () => {
     const cutoff = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
     const result = purgeTaskSnapshotsOlderThan(db, cutoff);
     
-    assert.equal(result.deleted, 1, 'Debe eliminar 1 snapshot antiguo');
+    expect(result.deleted).toBe(1, 'Debe eliminar 1 snapshot antiguo');
     
     const remaining = getTaskSnapshot(db, taskId2);
-    assert.ok(remaining, 'El snapshot nuevo debe seguir existiendo');
+    expect(remaining, 'El snapshot nuevo debe seguir existiendo').toBeTruthy();
   });
 });
 
@@ -146,13 +145,13 @@ test('purgeTaskSnapshotsOlderThan returns 0 when no old snapshots', async () => 
     const cutoff = new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000);
     const result = purgeTaskSnapshotsOlderThan(db, cutoff);
     
-    assert.equal(result.deleted, 0, 'No debe eliminar nada reciente');
+    expect(result.deleted).toBe(0, 'No debe eliminar nada reciente');
   });
 });
 
 test('purgeTaskSnapshotsOlderThan is safe on empty table', async () => {
   await withTempDb(async (db) => {
     const result = purgeTaskSnapshotsOlderThan(db, new Date());
-    assert.equal(result.deleted, 0, 'Debe retornar 0 en tabla vacía');
+    expect(result.deleted).toBe(0, 'Debe retornar 0 en tabla vacía');
   });
 });

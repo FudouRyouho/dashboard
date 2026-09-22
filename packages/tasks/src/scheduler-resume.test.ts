@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import { initializeDatabase } from '@dashboard/db';
@@ -91,10 +90,10 @@ test('scheduler resumes correctly after clean stop/start', async () => {
   let executions1 = runLog1
     .forTask('resume-task')
     .map((r) => r.startedAt.getTime());
-  assert.ok(
+  expect(
     executions1.length >= 2,
     `First scheduler should have recorded at least 2 executions, got ${executions1.length}`,
-  );
+  ).toBeTruthy();
 
   // Create second scheduler instance with same DB
   const db2 = await initializeDatabase({ path: tempPath, migrationsFolder });
@@ -135,21 +134,21 @@ test('scheduler resumes correctly after clean stop/start', async () => {
 
   // Should have executions from first period (0, 50, 100) AND second period (150, 200, 250)
   // Expect at least 4 distinct executions (could be more due to runOnStart behavior)
-  assert.ok(
+  expect(
     executions2.length >= 4,
     `Second scheduler should have recorded executions from both periods, got ${executions2.length}`,
-  );
+  ).toBeTruthy();
 
   // Verify snapshot store also persisted correctly
   const snapshot1 = store1.get({ taskId: 'resume-task' });
   const snapshot2 = store2.get({ taskId: 'resume-task' });
 
-  assert.ok(
+  expect(
     snapshot1 !== undefined && snapshot2 !== undefined,
     'Both schedulers should have snapshots',
-  );
+  ).toBeTruthy();
   // The second snapshot should be newer (later timestamp)
-  assert.ok(
+  expect(
     snapshot2.obtainedAt.getTime() >= snapshot1.obtainedAt.getTime(),
     'Second snapshot should be newer or equal to first',
   );

@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import {
   validateTaskRunDetail,
   safeValidateTaskRunDetail,
@@ -16,26 +15,26 @@ import {
 test('validateTaskRunDetail validates error object', () => {
   const detail = { error: 'timeout', code: 504, message: 'Connection timed out' };
   const result = validateTaskRunDetail(detail);
-  assert.ok(result !== null);
-  assert.equal(result.error, 'timeout');
-  assert.equal(result.code, 504);
+  expect(result !== null).toBeTruthy();
+  expect(result.error).toBe('timeout');
+  expect(result.code).toBe(504);
 });
 
 test('validateTaskRunDetail validates null', () => {
   const result = validateTaskRunDetail(null);
-  assert.strictEqual(result, null);
+  expect(result, null);
 });
 
 test('safeValidateTaskRunDetail returns success for valid detail', () => {
   const detail = { error: 'timeout', code: 504 };
   const result = safeValidateTaskRunDetail(detail);
-  assert.ok(result.success);
+  expect(result.success).toBeTruthy();
 });
 
 test('safeValidateTaskRunDetail returns failure for invalid detail', () => {
   const detail = 'not an object';
   const result = safeValidateTaskRunDetail(detail);
-  assert.ok(!result.success);
+  expect(!result.success).toBeTruthy();
 });
 
 test('validateCalendarSnapshotData validates events array', () => {
@@ -55,8 +54,8 @@ test('validateCalendarSnapshotData validates events array', () => {
     }],
   };
   const result = validateCalendarSnapshotData(data);
-  assert.ok(result.events.length > 0);
-  assert.equal(result.events[0]!.title, 'Test Event');
+  expect(result.events.length > 0).toBeTruthy();
+  expect(result.events[0]!.title).toBe('Test Event');
 });
 
 test('safeValidateCalendarSnapshotData returns success for valid data', () => {
@@ -76,7 +75,7 @@ test('safeValidateCalendarSnapshotData returns success for valid data', () => {
     }],
   };
   const result = safeValidateCalendarSnapshotData(data);
-  assert.ok(result.success);
+  expect(result.success).toBeTruthy();
 });
 
 test('validateMediaReleasesSnapshotData validates movie release', () => {
@@ -96,8 +95,8 @@ test('validateMediaReleasesSnapshotData validates movie release', () => {
     }],
   };
   const result = validateMediaReleasesSnapshotData(data);
-  assert.equal(result.releases.length, 1);
-  assert.equal(result.releases[0]?.type, 'movie');
+  expect(result.releases.length).toBe(1);
+  expect(result.releases[0]?.type).toBe('movie');
 });
 
 test('validateMediaReleasesSnapshotData validates episode release', () => {
@@ -117,7 +116,7 @@ test('validateMediaReleasesSnapshotData validates episode release', () => {
     }],
   };
   const result = validateMediaReleasesSnapshotData(data);
-  assert.equal(result.releases[0]?.type, 'episode');
+  expect(result.releases[0]?.type).toBe('episode');
 });
 
 test('validateMediaReleasesSnapshotData validates series release', () => {
@@ -136,7 +135,7 @@ test('validateMediaReleasesSnapshotData validates series release', () => {
     }],
   };
   const result = validateMediaReleasesSnapshotData(data);
-  assert.equal(result.releases[0]?.type, 'series');
+  expect(result.releases[0]?.type).toBe('series');
 });
 
 test('safeValidateMediaReleasesSnapshotData returns success for valid data', () => {
@@ -156,19 +155,19 @@ test('safeValidateMediaReleasesSnapshotData returns success for valid data', () 
     }],
   };
   const result = safeValidateMediaReleasesSnapshotData(data);
-  assert.ok(result.success);
+  expect(result.success).toBeTruthy();
 });
 
 test('validatePurgeSnapshotData validates purge result', () => {
   const data = { deleted: 5 };
   const result = validatePurgeSnapshotData(data);
-  assert.equal(result.deleted, 5);
+  expect(result.deleted).toBe(5);
 });
 
 test('safeValidatePurgeSnapshotData returns success for valid data', () => {
   const data = { deleted: 3 };
   const result = safeValidatePurgeSnapshotData(data);
-  assert.ok(result.success);
+  expect(result.success).toBeTruthy();
 });
 
 test('validateSnapshotData accepts calendar data', () => {
@@ -188,7 +187,7 @@ test('validateSnapshotData accepts calendar data', () => {
     }],
   };
   const result = validateSnapshotData(data);
-  assert.ok(result && 'events' in result);
+  expect(result && 'events' in result).toBeTruthy();
 });
 
 test('validateSnapshotData accepts media releases data', () => {
@@ -208,29 +207,29 @@ test('validateSnapshotData accepts media releases data', () => {
     }],
   };
   const result = validateSnapshotData(data);
-  assert.ok(result && 'releases' in result);
+  expect(result && 'releases' in result).toBeTruthy();
 });
 
 test('validateSnapshotData accepts purge data', () => {
   const data = { deleted: 10 };
   const result = validateSnapshotData(data);
-  assert.equal(result?.deleted, 10);
+  expect(result?.deleted).toBe(10);
 });
 
 test('validateSnapshotData accepts unknown object', () => {
   const data = { customField: 'customValue' };
   const result = validateSnapshotData(data);
-  assert.equal(result.customField, 'customValue');
+  expect(result.customField).toBe('customValue');
 });
 
 test('safeValidateSnapshotData returns success for valid data', () => {
   const data = { deleted: 1 };
   const result = safeValidateSnapshotData(data);
-  assert.ok(result.success);
+  expect(result.success).toBeTruthy();
 });
 
 test('safeValidateSnapshotData returns failure for completely invalid', () => {
   const data = 'not an object';
   const result = safeValidateSnapshotData(data);
-  assert.ok(!result.success);
+  expect(!result.success).toBeTruthy();
 });

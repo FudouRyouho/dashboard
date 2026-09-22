@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import { initializeDatabase } from '@dashboard/db';
@@ -88,10 +87,10 @@ test('concurrency limit respected under high load (50 tasks)', async () => {
   await s.stop();
   d.cleanup();
 
-  assert.ok(
+  expect(
     peak <= concurrencyLimit,
     `Peak concurrency ${peak} exceeded limit ${concurrencyLimit}`,
-  );
+  ).toBeTruthy();
 });
 
 /**
@@ -121,10 +120,10 @@ test('periodic task executes multiple times', async () => {
   await s.stop();
   d.cleanup();
 
-  assert.ok(
+  expect(
     executionCount.count >= 2,
     `Expected at least 2 executions, got ${executionCount.count}`,
-  );
+  ).toBeTruthy();
 });
 
 /**
@@ -170,12 +169,12 @@ test('mixed fast/slow tasks under load', async () => {
 
   // Both tasks should have executed at least once in 500ms
   // Note: with toad-scheduler (real timers), exact ratios vary by machine.
-  assert.ok(
+  expect(
     fastCount >= 1,
     `Fast task should execute at least 1 time, got ${fastCount}`,
-  );
-  assert.ok(
+  ).toBeTruthy();
+  expect(
     slowCount >= 1,
     `Slow task should execute at least 1 time, got ${slowCount}`,
-  );
+  ).toBeTruthy();
 });

@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { describe, test, expect, afterEach } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import { initializeDatabase } from '@dashboard/db';
@@ -28,6 +27,16 @@ const assemble = <T>(
   run,
 });
 
+let d: Awaited<ReturnType<typeof deps>>;
+
+afterEach(async () => {
+  if (d) {
+    try {
+      d.cleanup();
+    } catch {}
+  }
+});
+
 const deps = async () => {
   const tempPath = `./data/test-scheduler-${randomUUID()}.sqlite`;
   const migrationsFolder = new URL(
@@ -52,231 +61,174 @@ const deps = async () => {
   };
 };
 
-/**
- * Test: una tarea no corre dos veces a la vez
- */
-test('una tarea no corre dos veces a la vez', async () => {
-  const d = await deps();
-  let lives = 0;
-  let peak = 0;
-  const def = assemble('a', 30, async () => {
-    lives++;
-    peak = Math.max(peak, lives);
-    await sleep(120);
-    lives--;
-    return 1;
-  });
-  const s = createScheduler<string>([def], d);
-  await sleep(400);
-  await sleep(50);
-  await s.stop();
-  d.cleanup();
-  assert.equal(peak, 1, `hubo ${peak} corridas simultáneas de la misma tarea`);
-});
-
-/**
- * Test: sólo el éxito escribe el almacén
- */
-test('sólo el éxito escribe el almacén', async () => {
-  const d = await deps();
-  let n = 0;
-  const def = assemble(
-    'b',
-    40,
-    async () => {
-      n++;
-      if (n > 1) throw new Error('boom');
-      return 42;
-    },
-    { maxAttempts: 3, cooldownMs: 60_000 },
-  );
-  const s = createScheduler<string>([def], d);
-  await sleep(200);
-  await s.stop();
-  d.cleanup();
-  const snapshot = d.store.get(key('b'));
-  assert.equal(snapshot?.data, 42, 'el dato del primer éxito sigue intacto');
-  assert.ok(
-    d.runLog.forTask('b').some((r) => r.outcome === 'failure'),
-    'y los fallos quedaron registrados',
-  );
-});
-
-/**
- * Test: stop() cancela la corrida en vuelo y la marca aborted, no failure
- */
-test('stop() cancela la corrida en vuelo y la marca aborted, no failure', async () => {
-  const d = await deps();
-  const def = assemble('c', 1000, async (signal) => {
-    await new Promise((resolve, reject) => {
-      const t = setTimeout(resolve, 5000);
-      signal.addEventListener('abort', () => {
-        clearTimeout(t);
-        reject(new Error('AbortError'));
+describe('Scheduler', () => {
+  describe('concurrency', () => {
+    test('prevents concurrent execution of the same task', async () => {
+      d = await deps();
+      let lives = 0;
+      let peak = 0;
+      const def = assemble('a', 30, async () => {
+        lives++;
+        peak = Math.max(peak, lives);
+        await sleep(120);
+        lives--;
+        return 1;
       });
+      const s = createScheduler<string>([def], d);
+      await sleep(400);
+      await sleep(50);
+      await s.stop();
+      expect(peak).toBe(1, `had ${peak} simultaneous runs of the same task`);
     });
-    return 1;
+
+    test('concurrency limit bounds running tasks', async () => {
+      d = await deps();
+      let lives = 0;
+      let peak = 0;
+      const tasks = Array.from({ length: 10 }, (_, i) =>
+        assemble(`t${i}`, 200, async () => {
+          lives++;
+          peak = Math.max(peak, lives);
+          await sleep(80);
+          lives--;
+          return i;
+        }),
+      );
+      const s = createScheduler<string>(tasks, { ...d, concurrency: 3 });
+      await sleep(250);
+      await sleep(50);
+      await s.stop();
+      expect(peak <= 3, `global peak was ${peak}, with a ceiling of 3`).toBeTruthy();
+    });
   });
-  const s = createScheduler<string>([def], d);
-  await sleep(60);
-  await sleep(20);
-  await s.stop();
-  d.cleanup();
-  assert.equal(d.runLog.last('c')?.outcome, 'aborted');
-  assert.equal(
-    d.store.get(key('c')),
-    undefined,
-    'una corrida abortada no escribe',
-  );
-});
 
-/**
- * Test: el límite de concurrencia acota las corridas en vuelo
- */
-test('el límite de concurrencia acota las corridas en vuelo', async () => {
-  const d = await deps();
-  let lives = 0;
-  let peak = 0;
-  const tasks = Array.from({ length: 10 }, (_, i) =>
-    assemble(`t${i}`, 200, async () => {
-      lives++;
-      peak = Math.max(peak, lives);
-      await sleep(80);
-      lives--;
-      return i;
-    }),
-  );
-  const depsObj = await deps();
-  const s = createScheduler<string>(tasks, { ...depsObj, concurrency: 3 });
-  await sleep(250);
-  await sleep(50);
-  await s.stop();
-  d.cleanup();
-  assert.ok(peak <= 3, `el peak global fue ${peak}, con un techo de 3`);
-});
+  describe('snapshot', () => {
+    test('only successful runs write to snapshot store', async () => {
+      d = await deps();
+      let n = 0;
+      const def = assemble(
+        'b',
+        40,
+        async () => {
+          n++;
+          if (n > 1) throw new Error('boom');
+          return 42;
+        },
+        { maxAttempts: 3, cooldownMs: 60_000 },
+      );
+      const s = createScheduler<string>([def], d);
+      await sleep(200);
+      await s.stop();
+      const snapshot = d.store.get(key('b'));
+      expect(snapshot?.data).toBe(42, 'first success data is still intact');
+      expect(
+        d.runLog.forTask('b').some((r) => r.outcome === 'failure'),
+        'failures should be logged',
+      ).toBeTruthy();
+    });
+  });
 
-/**
- * Test: tras maxAttempts fallos seguidos, la tarea espera el cooldown
- */
-test('tras maxAttempts fallos seguidos, la tarea espera el cooldown', async () => {
-  const d = await deps();
-  let attempts = 0;
-  const def = assemble(
-    'd',
-    30,
-    async () => {
-      attempts++;
-      throw new Error('boom');
-    },
-    { maxAttempts: 3, cooldownMs: 300 },
-  );
-  const s = createScheduler<string>([def], d);
-  await sleep(200); // Wait to see what happens
-  const during = attempts;
-  await sleep(300); // Wait through potential cooldown period
-  await sleep(50); // Additional time to see if task runs again
-  await s.stop();
-  d.cleanup();
-  // We should see at least 2 attempts before any cooldown effect
-  assert.ok(
-    during >= 2,
-    `Should see at least 2 attempts before cooldown, got ${during}`,
-  );
-  // After waiting, we should be able to run again if cooldown worked correctly
-  assert.ok(
-    attempts > during,
-    `Should be able to run again after waiting, got ${attempts} total attempts`,
-  );
-});
+  describe('abort handling', () => {
+    test('stop() cancels in-flight run and marks as aborted', async () => {
+      d = await deps();
+      const def = assemble('c', 1000, async (signal) => {
+        await new Promise((resolve, reject) => {
+          const t = setTimeout(resolve, 5005);
+          signal.addEventListener('abort', () => {
+            clearTimeout(t);
+            reject(new Error('AbortError'));
+          });
+        });
+        return 1;
+      });
+      const s = createScheduler<string>([def], d);
+      await sleep(60);
+      await sleep(20);
+      await s.stop();
+      expect(d.runLog.last('c')?.outcome).toBe('aborted');
+      expect(d.store.get(key('c'))).toBe(undefined, 'an aborted run should not write');
+    });
+  });
 
-/**
- * Test: un éxito borra el contador de fallos
- */
-test('un éxito borra el contador de fallos', async () => {
-  const d = await deps();
-  let n = 0;
-  const def = assemble(
-    'e',
-    30,
-    async () => {
-      n++;
-      if (n === 1) throw new Error('el primero falla');
-      return n;
-    },
-    { maxAttempts: 2, cooldownMs: 60_000 },
-  );
-  const s = createScheduler<string>([def], d);
-  await sleep(200); // Wait to see if we get multiple attempts
-  await s.stop();
-  d.cleanup();
-  // listTaskRuns devuelve DESC; revertir para obtener orden cronológico
-  const outcomes = [...d.runLog.forTask('e').map((r) => r.outcome)].reverse();
-  assert.equal(outcomes[0], 'failure', 'la primera corrida falló');
-  // After a success, the failure count should be reset, so subsequent runs should succeed
-  assert.ok(
-    outcomes.slice(1).every((o) => o === 'success'),
-    `tras el primer fallo todas fueron success: ${outcomes.join(',')}`,
-  );
-  // Should have had at least the initial failure plus some successes
-  assert.ok(
-    n >= 2,
-    `Should have at least one failure and one success, got ${n} total runs`,
-  );
-});
+  describe('failure policy', () => {
+    test('after max attempts, task respects cooldown period', async () => {
+      d = await deps();
+      let attempts = 0;
+      const def = assemble(
+        'd',
+        30,
+        async () => {
+          attempts++;
+          throw new Error('boom');
+        },
+        { maxAttempts: 3, cooldownMs: 300 },
+      );
+      const s = createScheduler<string>([def], d);
+      await sleep(200);
+      const during = attempts;
+      await sleep(300);
+      await sleep(50);
+      await s.stop();
+      expect(during >= 2, `Should see at least 2 attempts before cooldown, got ${during}`).toBeTruthy();
+      expect(attempts > during, `Should run again after cooldown, got ${attempts} total`).toBeTruthy();
+    });
 
-/**
- * Test: cooldownMs = 0: tras maxAttempts, reintenta inmediatamente
- */
-test('cooldownMs = 0: tras maxAttempts, reintenta inmediatamente', async () => {
-  const d = await deps();
-  let attempts = 0;
-  const def = assemble(
-    'immediate-retry',
-    30,
-    async () => {
-      attempts++;
-      throw new Error('boom');
-    },
-    { maxAttempts: 2, cooldownMs: 0 },
-  );
-  const s = createScheduler<string>([def], d);
-  await sleep(200); // Wait to see if we get multiple attempts
-  await s.stop();
-  d.cleanup();
-  // Con cooldown=0, después de maxAttempts failures, debería seguir intentando inmediatamente
-  assert.ok(
-    attempts >= 2,
-    `con cooldown=0 debe reintentar inmediatamente tras maxAttempts, got ${attempts} attempts`,
-  );
-});
+    test('successful run resets failure counter', async () => {
+      d = await deps();
+      let n = 0;
+      const def = assemble(
+        'e',
+        30,
+        async () => {
+          n++;
+          if (n === 1) throw new Error('first fails');
+          return n;
+        },
+        { maxAttempts: 2, cooldownMs: 60_000 },
+      );
+      const s = createScheduler<string>([def], d);
+      await sleep(200);
+      await s.stop();
+      const outcomes = [...d.runLog.forTask('e').map((r) => r.outcome)].reverse();
+      expect(outcomes[0]).toBe('failure', 'first run failed');
+      expect(outcomes.slice(1).every((o) => o === 'success'), `subsequent runs after success should succeed`).toBeTruthy();
+      expect(n >= 2, `total runs should be at least 2`).toBeTruthy();
+    });
 
-/**
- * Test: maxAttempts: 1: un fallo basta para cooldown
- */
-test('maxAttempts: 1: un fallo basta para cooldown', async () => {
-  const d = await deps();
-  let attempts = 0;
-  const def = assemble(
-    'single-attempt',
-    30,
-    async () => {
-      attempts++;
-      throw new Error('boom');
-    },
-    { maxAttempts: 1, cooldownMs: 100 },
-  );
-  const s = createScheduler<string>([def], d);
-  await sleep(200); // Wait to see the behavior
-  await s.stop();
-  d.cleanup();
-  // Con maxAttempts=1, después del primer fallo debería entrar en cooldown
-  // Esperamos 200ms con everyMs=30, so debería haber tenido tiempo para:
-  // - Intento 1 (fallo) -> entra en cooldown de 100ms
-  // - Durante los siguientes 100ms de cooldown, no debería correr
-  // - Después de 100ms, debería poder correr nuevamente
-  // Entonces en 200ms total, debería haber tenido oportunidad de correr 2 veces
-  assert.ok(
-    attempts >= 2,
-    `Con maxAttempts=1 debería haber tenido al menos 2 intentos en 200ms, got ${attempts}`,
-  );
+    test('zero cooldown retries immediately after max attempts', async () => {
+      d = await deps();
+      let attempts = 0;
+      const def = assemble(
+        'immediate-retry',
+        30,
+        async () => {
+          attempts++;
+          throw new Error('boom');
+        },
+        { maxAttempts: 2, cooldownMs: 0 },
+      );
+      const s = createScheduler<string>([def], d);
+      await sleep(200);
+      await s.stop();
+      expect(attempts >= 2, `cooldown=0 should retry immediately, got ${attempts}`).toBeTruthy();
+    });
+
+    test('single attempt triggers cooldown after failure', async () => {
+      d = await deps();
+      let attempts = 0;
+      const def = assemble(
+        'single-attempt',
+        30,
+        async () => {
+          attempts++;
+          throw new Error('boom');
+        },
+        { maxAttempts: 1, cooldownMs: 100 },
+      );
+      const s = createScheduler<string>([def], d);
+      await sleep(200);
+      await s.stop();
+      expect(attempts >= 2, `maxAttempts=1 should run at least 2 times, got ${attempts}`).toBeTruthy();
+    });
+  });
 });

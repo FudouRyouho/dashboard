@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import { QbittorrentIntegration } from './qbittorrent-integration';
 
 test('QbittorrentIntegration throws when qBittorrent is not available', async () => {
@@ -14,14 +13,11 @@ test('QbittorrentIntegration throws when qBittorrent is not available', async ()
 
   const integration = new QbittorrentIntegration(integrationInput);
 
-  await assert.rejects(
+  await expect(
     async () => {
       await integration.getClientJobsAndStatusAsync({ limit: 10 });
-    },
-    (err: unknown) => {
-      return err instanceof Error;
     }
-  );
+  ).rejects.toThrow();
 });
 
 test('QbittorrentIntegration is instance of Integration and has required methods', () => {
@@ -36,13 +32,13 @@ test('QbittorrentIntegration is instance of Integration and has required methods
 
   const integration = new QbittorrentIntegration(integrationInput);
 
-  assert.ok(integration instanceof QbittorrentIntegration);
-  assert.ok(typeof integration.getClientJobsAndStatusAsync === 'function');
-  assert.ok(typeof integration.pauseQueueAsync === 'function');
-  assert.ok(typeof integration.pauseItemAsync === 'function');
-  assert.ok(typeof integration.resumeQueueAsync === 'function');
-  assert.ok(typeof integration.resumeItemAsync === 'function');
-  assert.ok(typeof integration.deleteItemAsync === 'function');
+  expect(integration instanceof QbittorrentIntegration).toBeTruthy();
+  expect(typeof integration.getClientJobsAndStatusAsync === 'function').toBeTruthy();
+  expect(typeof integration.pauseQueueAsync === 'function').toBeTruthy();
+  expect(typeof integration.pauseItemAsync === 'function').toBeTruthy();
+  expect(typeof integration.resumeQueueAsync === 'function').toBeTruthy();
+  expect(typeof integration.resumeItemAsync === 'function').toBeTruthy();
+  expect(typeof integration.deleteItemAsync === 'function').toBeTruthy();
 });
 
 test('QbittorrentIntegration - mapTorrentState mapea correctamente todos los estados', () => {
@@ -59,34 +55,34 @@ test('QbittorrentIntegration - mapTorrentState mapea correctamente todos los est
   });
   const mapState = (integration as any).mapTorrentState.bind(integration);
 
-  assert.equal(mapState('downloading'), 'leeching', 'downloading -> leeching');
-  assert.equal(mapState('queuedDL'), 'leeching', 'queuedDL -> leeching');
-  assert.equal(mapState('checkingDL'), 'leeching', 'checkingDL -> leeching');
-  assert.equal(mapState('allocating'), 'leeching', 'allocating -> leeching');
-  assert.equal(mapState('forcedDL'), 'leeching', 'forcedDL -> leeching');
-  assert.equal(mapState('forcedMetaDL'), 'leeching', 'forcedMetaDL -> leeching');
-  assert.equal(mapState('metaDL'), 'leeching', 'metaDL -> leeching');
-  assert.equal(mapState('queuedForChecking'), 'leeching', 'queuedForChecking -> leeching');
+  expect(mapState('downloading')).toBe('leeching', 'downloading -> leeching');
+  expect(mapState('queuedDL')).toBe('leeching', 'queuedDL -> leeching');
+  expect(mapState('checkingDL')).toBe('leeching', 'checkingDL -> leeching');
+  expect(mapState('allocating')).toBe('leeching', 'allocating -> leeching');
+  expect(mapState('forcedDL')).toBe('leeching', 'forcedDL -> leeching');
+  expect(mapState('forcedMetaDL')).toBe('leeching', 'forcedMetaDL -> leeching');
+  expect(mapState('metaDL')).toBe('leeching', 'metaDL -> leeching');
+  expect(mapState('queuedForChecking')).toBe('leeching', 'queuedForChecking -> leeching');
 
-  assert.equal(mapState('uploading'), 'seeding', 'uploading -> seeding');
-  assert.equal(mapState('queuedUP'), 'seeding', 'queuedUP -> seeding');
-  assert.equal(mapState('checkingUP'), 'seeding', 'checkingUP -> seeding');
-  assert.equal(mapState('stalledUP'), 'seeding', 'stalledUP -> seeding');
-  assert.equal(mapState('forcedUP'), 'seeding', 'forcedUP -> seeding');
+  expect(mapState('uploading')).toBe('seeding', 'uploading -> seeding');
+  expect(mapState('queuedUP')).toBe('seeding', 'queuedUP -> seeding');
+  expect(mapState('checkingUP')).toBe('seeding', 'checkingUP -> seeding');
+  expect(mapState('stalledUP')).toBe('seeding', 'stalledUP -> seeding');
+  expect(mapState('forcedUP')).toBe('seeding', 'forcedUP -> seeding');
 
-  assert.equal(mapState('pausedDL'), 'paused', 'pausedDL -> paused');
-  assert.equal(mapState('pausedUP'), 'paused', 'pausedUP -> paused');
-  assert.equal(mapState('stoppedDL'), 'paused', 'stoppedDL -> paused');
-  assert.equal(mapState('stoppedUP'), 'paused', 'stoppedUP -> paused');
+  expect(mapState('pausedDL')).toBe('paused', 'pausedDL -> paused');
+  expect(mapState('pausedUP')).toBe('paused', 'pausedUP -> paused');
+  expect(mapState('stoppedDL')).toBe('paused', 'stoppedDL -> paused');
+  expect(mapState('stoppedUP')).toBe('paused', 'stoppedUP -> paused');
 
-  assert.equal(mapState('stalledDL'), 'stalled', 'stalledDL -> stalled');
+  expect(mapState('stalledDL')).toBe('stalled', 'stalledDL -> stalled');
 
-  assert.equal(mapState('error'), 'unknown', 'error -> unknown');
-  assert.equal(mapState('missingFiles'), 'unknown', 'missingFiles -> unknown');
-  assert.equal(mapState('moving'), 'unknown', 'moving -> unknown');
-  assert.equal(mapState('unknown'), 'unknown', 'unknown -> unknown');
+  expect(mapState('error')).toBe('unknown', 'error -> unknown');
+  expect(mapState('missingFiles')).toBe('unknown', 'missingFiles -> unknown');
+  expect(mapState('moving')).toBe('unknown', 'moving -> unknown');
+  expect(mapState('unknown')).toBe('unknown', 'unknown -> unknown');
 
-  assert.equal(mapState('someUndocumentedState'), 'unknown', 'unknown state -> unknown');
+  expect(mapState('someUndocumentedState')).toBe('unknown', 'unknown state -> unknown');
 });
 
 test('QbittorrentIntegration - calculateTime maneja casos borde', () => {
@@ -94,14 +90,14 @@ test('QbittorrentIntegration - calculateTime maneja casos borde', () => {
   const pastCompletionOn = Math.floor((now - 10000) / 1000);
   const completionMs = pastCompletionOn * 1000;
   const timeResult = Math.max(completionMs - now, -1);
-  assert.equal(timeResult, -1, 'completado en el pasado debería retornar -1');
+  expect(timeResult).toBe(-1, 'completado en el pasado debería retornar -1');
 
   const infiniteEtaTime = 0;
-  assert.equal(infiniteEtaTime, 0, 'eta infinito debería dar time=0');
+  expect(infiniteEtaTime).toBe(0, 'eta infinito debería dar time=0');
 
   const normalEta = 1800;
   const normalEtaTime = Math.max(normalEta * 1000, 0);
-  assert.equal(normalEtaTime, 1800000, 'eta normal debería ser 1800000ms');
+  expect(normalEtaTime).toBe(1800000, 'eta normal debería ser 1800000ms');
 });
 
 test('QbittorrentIntegration - rates aggregation con datos reales', () => {
@@ -119,8 +115,8 @@ test('QbittorrentIntegration - rates aggregation con datos reales', () => {
     { down: 0, up: 0 }
   );
 
-  assert.equal(rates.down, 3072, 'total down speed debería ser 3072');
-  assert.equal(rates.up, 1536, 'total up speed debería ser 1536');
+  expect(rates.down).toBe(3072, 'total down speed debería ser 3072');
+  expect(rates.up).toBe(1536, 'total up speed debería ser 1536');
 });
 
 test('QbittorrentIntegration - size fallback logic', () => {
@@ -132,7 +128,7 @@ test('QbittorrentIntegration - size fallback logic', () => {
   ];
 
   const sizes = mockTorrents.map(t => t.size ?? t.total_size ?? 0);
-  assert.deepEqual(sizes, [1000, 2000, 3000, 0], 'fallback logic debería funcionar correctamente');
+  expect(sizes).toEqual([1000, 2000, 3000, 0], 'fallback logic debería funcionar correctamente');
 });
 
 test('QbittorrentIntegration - paused state logic', () => {
@@ -154,7 +150,7 @@ test('QbittorrentIntegration - paused state logic', () => {
     }
   });
 
-  assert.equal(paused, true, 'todos pausados debería retornar true');
+  expect(paused).toBe(true, 'todos pausados debería retornar true');
 
   const torrentsMixed = [
     { state: 'pausedDL' },
@@ -174,7 +170,7 @@ test('QbittorrentIntegration - paused state logic', () => {
     }
   });
 
-  assert.equal(pausedMixed, false, 'mezcla de estados debería retornar false');
+  expect(pausedMixed).toBe(false, 'mezcla de estados debería retornar false');
 });
 
 test('QbittorrentIntegration - action methods exist and are callable', () => {
@@ -192,9 +188,9 @@ test('QbittorrentIntegration - action methods exist and are callable', () => {
 
   const integration = new QbittorrentIntegration(integrationInput);
 
-  assert.ok(typeof integration.pauseQueueAsync === 'function');
-  assert.ok(typeof integration.pauseItemAsync === 'function');
-  assert.ok(typeof integration.resumeQueueAsync === 'function');
-  assert.ok(typeof integration.resumeItemAsync === 'function');
-  assert.ok(typeof integration.deleteItemAsync === 'function');
+  expect(typeof integration.pauseQueueAsync === 'function').toBeTruthy();
+  expect(typeof integration.pauseItemAsync === 'function').toBeTruthy();
+  expect(typeof integration.resumeQueueAsync === 'function').toBeTruthy();
+  expect(typeof integration.resumeItemAsync === 'function').toBeTruthy();
+  expect(typeof integration.deleteItemAsync === 'function').toBeTruthy();
 });

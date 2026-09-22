@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect, afterEach } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { initializeDatabase } from '@dashboard/db';
 import { createRunLogDB, createSnapshotStoreDB } from './index';
@@ -11,7 +10,7 @@ const migrationsFolder = new URL(
   import.meta.url,
 ).pathname;
 
-test.afterEach(async () => {
+afterEach(async () => {
   const fs = await import('node:fs');
   try {
     fs.unlinkSync(tempPath);
@@ -59,15 +58,15 @@ test('runLog SQLite persiste runs y los retorna en list()', async () => {
 
   // last debe devolver la última corrida de t1
   const lastT1 = runLog.last('t1');
-  assert.ok(lastT1 !== undefined, 'last() de t1 debería existir');
-  assert.equal(lastT1!.taskId, 't1');
-  assert.equal(lastT1!.outcome, 'failure');
+  expect(lastT1 !== undefined, 'last().toBeTruthy() de t1 debería existir');
+  expect(lastT1!.taskId).toBe('t1');
+  expect(lastT1!.outcome).toBe('failure');
 
   // forTask debe retornar todas las corridas de t1
   const t1Runs = runLog.forTask('t1');
-  assert.equal(t1Runs.length, 2);
-  assert.ok(t1Runs[0] !== undefined, 'debe haber al menos una corrida');
-  assert.equal(t1Runs[0]!.taskId, 't1');
+  expect(t1Runs.length).toBe(2);
+  expect(t1Runs[0] !== undefined, 'debe haber al menos una corrida').toBeTruthy();
+  expect(t1Runs[0]!.taskId).toBe('t1');
 
   // list con rango filtra correctamente
   const range = {
@@ -75,18 +74,17 @@ test('runLog SQLite persiste runs y los retorna en list()', async () => {
     to: new Date('2026-01-01T00:01:30Z'),
   };
   const filtered = runLog.list('t1', range);
-  assert.equal(filtered.length, 1);
-  assert.ok(
+  expect(filtered.length).toBe(1);
+  expect(
     filtered[0] !== undefined,
     'debe haber al menos un resultado filtrado',
-  );
-  assert.equal(
-    filtered[0]!.startedAt.toISOString(),
-    '2026-01-01T00:01:00.000Z',
+  ).toBeTruthy();
+  expect(
+    filtered[0]!.startedAt.toISOString()).toBe('2026-01-01T00:01:00.000Z',
   );
 
   // t2 solo tiene una corrida
-  assert.equal(runLog.forTask('t2').length, 1);
+  expect(runLog.forTask('t2').length).toBe(1);
 });
 
 test('snapshotStore SQLite persiste snapshots entre llamadas', async () => {
@@ -94,32 +92,30 @@ test('snapshotStore SQLite persiste snapshots entre llamadas', async () => {
   const key = { taskId: 'media-releases-sonarr' } as never;
 
   // get sin datos previos devuelve undefined
-  assert.equal(store.get(key), undefined);
+  expect(store.get(key)).toBe(undefined);
 
   // set y get recuperan datos
   store.set(key, { title: 'Breaking Bad S01E01', date: '2026-01-01' });
   const snapshot = store.get(key);
-  assert.ok(
+  expect(
     snapshot !== undefined,
-    'snapshot debería existir después de set()',
+    'snapshot debería existir después de set().toBeTruthy()',
   );
-  assert.equal(
-    (snapshot!.data as { title: string }).title,
-    'Breaking Bad S01E01',
+  expect(
+    (snapshot!.data as { title: string }).title).toBe('Breaking Bad S01E01',
   );
 
   // overwriting actualiza el snapshot
   store.set(key, { title: 'Breaking Bad S01E02', date: '2026-01-08' });
   const updated = store.get(key);
-  assert.ok(updated !== undefined);
-  assert.equal(
-    (updated!.data as { title: string }).title,
-    'Breaking Bad S01E02',
+  expect(updated !== undefined).toBeTruthy();
+  expect(
+    (updated!.data as { title: string }).title).toBe('Breaking Bad S01E02',
   );
 
   // otro taskId es independiente
   const otroKey = { taskId: 'calendar-radarr' } as never;
-  assert.equal(store.get(otroKey), undefined);
+  expect(store.get(otroKey)).toBe(undefined);
   store.set(otroKey, { events: [] });
-  assert.ok(store.get(otroKey) !== undefined);
+  expect(store.get(otroKey) !== undefined);
 });

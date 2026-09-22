@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import { PrometheusClient } from './client';
 import { PrometheusDiscovery } from './discovery';
 import { PrometheusNormalizer } from './normalizer';
@@ -17,8 +16,8 @@ test('Prometheus Integration - E2E', async (t) => {
     const discovery = new PrometheusDiscovery(client);
 
     const instances = await discovery.discoverInstances();
-    assert.ok(instances !== null, 'Should discover instances');
-    assert.ok(instances.length > 0, 'Should have at least one instance');
+    expect(instances !== null, 'Should discover instances').toBeTruthy();
+    expect(instances.length > 0, 'Should have at least one instance').toBeTruthy();
     console.log(`Discovered ${instances.length} instances:`, instances.slice(0, 3));
   });
 
@@ -31,11 +30,11 @@ test('Prometheus Integration - E2E', async (t) => {
 
     const queries = getAllQueries();
     const cpuQuery = queries.find(q => q.key === 'cpuUsage');
-    assert.ok(cpuQuery, 'Should have cpuUsage query');
+    expect(cpuQuery, 'Should have cpuUsage query').toBeTruthy();
 
     const result = await client.query(cpuQuery.promql);
-    assert.ok(result !== null, 'CPU query should return results');
-    assert.ok(result.data.result.length > 0, 'Should have CPU results');
+    expect(result !== null, 'CPU query should return results').toBeTruthy();
+    expect(result.data.result.length > 0, 'Should have CPU results').toBeTruthy();
     console.log(`CPU query returned ${result.data.result.length} series`);
   });
 
@@ -48,11 +47,11 @@ test('Prometheus Integration - E2E', async (t) => {
 
     const queries = getAllQueries();
     const memQuery = queries.find(q => q.key === 'memoryTotal');
-    assert.ok(memQuery, 'Should have memoryTotal query');
+    expect(memQuery, 'Should have memoryTotal query').toBeTruthy();
 
     const result = await client.query(memQuery.promql);
-    assert.ok(result !== null, 'Memory query should return results');
-    assert.ok(result.data.result.length > 0, 'Should have memory results');
+    expect(result !== null, 'Memory query should return results').toBeTruthy();
+    expect(result.data.result.length > 0, 'Should have memory results').toBeTruthy();
     console.log(`Memory query returned ${result.data.result.length} series`);
   });
 
@@ -81,13 +80,13 @@ test('Prometheus Integration - E2E', async (t) => {
     );
 
     const normalized = PrometheusNormalizer.normalize(queryResults, instances);
-    assert.ok(normalized.length > 0, 'Should normalize at least one server');
+    expect(normalized.length > 0, 'Should normalize at least one server').toBeTruthy();
     console.log(`Normalized ${normalized.length} servers`);
 
     // Check first server has metrics
     const firstServer = normalized[0];
-    assert.ok(firstServer !== null && firstServer !== undefined, 'Should find first server');
-    assert.ok(firstServer!.metrics.length > 0, 'Server should have metrics');
+    expect(firstServer !== null && firstServer !== undefined, 'Should find first server').toBeTruthy();
+    expect(firstServer!.metrics.length > 0, 'Server should have metrics').toBeTruthy();
     console.log(`First server (${firstServer!.server}) has ${firstServer!.metrics.length} metric series`);
   });
 });

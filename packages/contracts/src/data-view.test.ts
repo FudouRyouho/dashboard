@@ -1,29 +1,37 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect, describe } from 'vitest';
 import { dataViewOf } from './data-view';
 
 const t = '2026-08-26T10:00:00.000Z';
 
-test('sin intento registrado, el dato nunca se consultó', () => {
-  assert.equal(dataViewOf({ data: null, attempt: null }), 'never-queried');
-});
+describe('dataViewOf', () => {
+  test('no attempt registered, data never queried', () => {
+    expect(dataViewOf({ data: null, attempt: null })).toBe('never-queried');
+  });
 
-test('intento exitoso, el dato está fresco', () => {
-  assert.equal(
-    dataViewOf({
-      data: { obtainedAt: t },
-      attempt: { outcome: 'success', at: t },
-    }),
-    'fresh',
-  );
-});
+  test('successful attempt, data is fresh', () => {
+    expect(
+      dataViewOf({
+        data: { obtainedAt: t },
+        attempt: { outcome: 'success', at: t },
+      })
+    ).toBe('fresh');
+  });
 
-test('intento fallido con dato previo, el dato quedó viejo', () => {
-  assert.equal(
-    dataViewOf({
-      data: { obtainedAt: t },
-      attempt: { outcome: 'failure', at: t, reason: 'unreachable' },
-    }),
-    'outdated',
-  );
+  test('failed attempt with prior data, data became outdated', () => {
+    expect(
+      dataViewOf({
+        data: { obtainedAt: t },
+        attempt: { outcome: 'failure', at: t, reason: 'unreachable' },
+      })
+    ).toBe('outdated');
+  });
+
+  test('failed attempt with no prior data, data is missing', () => {
+    expect(
+      dataViewOf({
+        data: null,
+        attempt: { outcome: 'failure', at: t, reason: 'unreachable' },
+      })
+    ).toBe('missing');
+  });
 });

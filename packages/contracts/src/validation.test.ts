@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import {
   validateCalendarEvent,
   safeValidateCalendarEvent,
@@ -33,7 +32,7 @@ test('validateCalendarEvent validates valid event', () => {
     links: [],
   };
   const result = validateCalendarEvent(event);
-  assert.equal(result.id, 'evt-1');
+  expect(result.id).toBe('evt-1');
 });
 
 test('safeValidateCalendarEvent returns success for valid event', () => {
@@ -51,7 +50,7 @@ test('safeValidateCalendarEvent returns success for valid event', () => {
     links: [],
   };
   const result = safeValidateCalendarEvent(event);
-  assert.ok(result.success);
+  expect(result.success).toBeTruthy();
 });
 
 test('safeValidateCalendarEvent returns failure for invalid event', () => {
@@ -61,8 +60,8 @@ test('safeValidateCalendarEvent returns failure for invalid event', () => {
     // missing required fields
   };
   const result = safeValidateCalendarEvent(event);
-  assert.ok(!result.success);
-  assert.ok(result.error.issues.length > 0);
+  expect(!result.success).toBeTruthy();
+  expect(result.error.issues.length > 0).toBeTruthy();
 });
 
 test('isCalendarEvent returns true for valid event', () => {
@@ -79,12 +78,12 @@ test('isCalendarEvent returns true for valid event', () => {
     indicatorColor: '#ff0000',
     links: [],
   };
-  assert.ok(isCalendarEvent(event));
+  expect(isCalendarEvent(event)).toBeTruthy();
 });
 
 test('isCalendarEvent returns false for invalid event', () => {
   const event = { id: 'evt-1' };
-  assert.ok(!isCalendarEvent(event));
+  expect(!isCalendarEvent(event)).toBeTruthy();
 });
 
 test('validateMediaReleaseEvent validates movie', () => {
@@ -102,8 +101,8 @@ test('validateMediaReleaseEvent validates movie', () => {
     href: 'https://example.com/movie/1',
   };
   const result = validateMediaReleaseEvent(movie);
-  assert.equal(result.type, 'movie');
-  assert.equal(result.title, 'Test Movie');
+  expect(result.type).toBe('movie');
+  expect(result.title).toBe('Test Movie');
 });
 
 test('validateMediaReleaseEvent validates episode', () => {
@@ -121,7 +120,7 @@ test('validateMediaReleaseEvent validates episode', () => {
     href: 'https://example.com/episode/1',
   };
   const result = validateMediaReleaseEvent(episode);
-  assert.equal(result.type, 'episode');
+  expect(result.type).toBe('episode');
 });
 
 test('validateMediaReleaseEvent validates series', () => {
@@ -138,7 +137,7 @@ test('validateMediaReleaseEvent validates series', () => {
     href: 'https://example.com/series/1',
   };
   const result = validateMediaReleaseEvent(series);
-  assert.equal(result.type, 'series');
+  expect(result.type).toBe('series');
 });
 
 test('safeValidateMediaReleaseEvent returns success for valid release', () => {
@@ -156,13 +155,13 @@ test('safeValidateMediaReleaseEvent returns success for valid release', () => {
     href: 'https://example.com/movie/1',
   };
   const result = safeValidateMediaReleaseEvent(movie);
-  assert.ok(result.success);
+  expect(result.success).toBeTruthy();
 });
 
 test('safeValidateMediaReleaseEvent returns failure for invalid release', () => {
   const release = { type: 'movie', id: 'movie-1' };
   const result = safeValidateMediaReleaseEvent(release);
-  assert.ok(!result.success);
+  expect(!result.success).toBeTruthy();
 });
 
 test('isMediaReleaseEvent returns true for valid release', () => {
@@ -179,11 +178,11 @@ test('isMediaReleaseEvent returns true for valid release', () => {
     imageUrls: { poster: 'https://example.com/poster.jpg', backdrop: 'https://example.com/backdrop.jpg' },
     href: 'https://example.com/movie/1',
   };
-  assert.ok(isMediaReleaseEvent(movie));
+  expect(isMediaReleaseEvent(movie)).toBeTruthy();
 });
 
 test('isMediaReleaseEvent returns false for invalid release', () => {
-  assert.ok(!isMediaReleaseEvent({ type: 'movie' }));
+  expect(!isMediaReleaseEvent({ type: 'movie' })).toBeTruthy();
 });
 
 test('validateIntegrationInput validates base input', () => {
@@ -193,19 +192,19 @@ test('validateIntegrationInput validates base input', () => {
     url: 'https://example.com',
   };
   const result = validateIntegrationInput(input);
-  assert.equal(result.id, 'int-1');
+  expect(result.id).toBe('int-1');
 });
 
 test('safeValidateIntegrationInput returns success for valid input', () => {
   const input = { id: 'int-1', name: 'Test', url: 'https://example.com' };
   const result = safeValidateIntegrationInput(input);
-  assert.ok(result.success);
+  expect(result.success).toBeTruthy();
 });
 
 test('safeValidateIntegrationInput returns failure for invalid input', () => {
   const input = { id: 'int-1', name: 'Test' }; // missing url
   const result = safeValidateIntegrationInput(input);
-  assert.ok(!result.success);
+  expect(!result.success).toBeTruthy();
 });
 
 test('validateIntegrationOutput validates output', () => {
@@ -220,7 +219,7 @@ test('validateIntegrationOutput validates output', () => {
     updatedAt: new Date(),
   };
   const result = validateIntegrationOutput(output);
-  assert.equal(result.id, 'int-1');
+  expect(result.id).toBe('int-1');
 });
 
 test('validateIntegrationPublic validates public schema', () => {
@@ -231,7 +230,7 @@ test('validateIntegrationPublic validates public schema', () => {
     url: 'https://example.com',
   };
   const result = validateIntegrationPublic(pub);
-  assert.equal(result.kind, 'sonarr');
+  expect(result.kind).toBe('sonarr');
 });
 
 test('validateResultStatus validates valid status with success', () => {
@@ -240,7 +239,7 @@ test('validateResultStatus validates valid status with success', () => {
     attempt: { outcome: 'success' as const, at: '2026-01-15T10:00:00.000Z' },
   };
   const result = validateResultStatus(status);
-  assert.equal(result.attempt?.outcome, 'success');
+  expect(result.attempt?.outcome).toBe('success');
 });
 
 test('validateResultStatus validates valid status with failure', () => {
@@ -250,7 +249,7 @@ test('validateResultStatus validates valid status with failure', () => {
   };
   const result = validateResultStatus(status);
   if (result.attempt && result.attempt.outcome === 'failure') {
-    assert.equal(result.attempt.reason, 'timeout');
+    expect(result.attempt.reason).toBe('timeout');
   }
 });
 
@@ -260,52 +259,52 @@ test('validateResultStatus validates status with null data and attempt', () => {
     attempt: null,
   };
   const result = validateResultStatus(status);
-  assert.equal(result.data, null);
-  assert.equal(result.attempt, null);
+  expect(result.data).toBe(null);
+  expect(result.attempt).toBe(null);
 });
 
 test('safeValidateResultStatus returns success for valid status', () => {
   const status = { data: null, attempt: null };
   const result = safeValidateResultStatus(status);
-  assert.ok(result.success);
+  expect(result.success).toBeTruthy();
 });
 
 test('safeValidateResultStatus returns failure for invalid status', () => {
   const status = { data: 'invalid', attempt: null };
   const result = safeValidateResultStatus(status);
-  assert.ok(!result.success);
+  expect(!result.success).toBeTruthy();
 });
 
 test('isResultStatus returns true for valid status', () => {
   const status = { data: null, attempt: null };
-  assert.ok(isResultStatus(status));
+  expect(isResultStatus(status)).toBeTruthy();
 });
 
 test('isResultStatus returns false for invalid status', () => {
-  assert.ok(!isResultStatus({ data: 'invalid' }));
+  expect(!isResultStatus({ data: 'invalid' })).toBeTruthy();
 });
 
 test('isDataView returns true for valid views', () => {
-  assert.ok(isDataView('never-queried'));
-  assert.ok(isDataView('fresh'));
-  assert.ok(isDataView('outdated'));
-  assert.ok(isDataView('missing'));
+  expect(isDataView('never-queried')).toBeTruthy();
+  expect(isDataView('fresh')).toBeTruthy();
+  expect(isDataView('outdated')).toBeTruthy();
+  expect(isDataView('missing')).toBeTruthy();
 });
 
 test('isDataView returns false for invalid view', () => {
-  assert.ok(!isDataView('invalid'));
-  assert.ok(!isDataView(''));
-  assert.ok(!isDataView(null));
+  expect(!isDataView('invalid')).toBeTruthy();
+  expect(!isDataView('')).toBeTruthy();
+  expect(!isDataView(null)).toBeTruthy();
 });
 
 test('isIntegrationKind returns true for valid kinds', () => {
-  assert.ok(isIntegrationKind('sonarr'));
-  assert.ok(isIntegrationKind('radarr'));
-  assert.ok(isIntegrationKind('jellyfin'));
-  assert.ok(isIntegrationKind('docker'));
+  expect(isIntegrationKind('sonarr')).toBeTruthy();
+  expect(isIntegrationKind('radarr')).toBeTruthy();
+  expect(isIntegrationKind('jellyfin')).toBeTruthy();
+  expect(isIntegrationKind('docker')).toBeTruthy();
 });
 
 test('isIntegrationKind returns false for invalid kind', () => {
-  assert.ok(!isIntegrationKind('invalid'));
-  assert.ok(!isIntegrationKind(''));
+  expect(!isIntegrationKind('invalid')).toBeTruthy();
+  expect(!isIntegrationKind('')).toBeTruthy();
 });

@@ -1,21 +1,22 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { describe, test, expect } from 'vitest';
 import { serverCalendarWindow } from './calendar-window';
 
-test('diciembre: start cae en noviembre del mismo año', () => {
-  const { start } = serverCalendarWindow(new Date('2026-12-15T12:00:00Z'));
-  assert.equal(start.getFullYear(), 2026);
-  assert.equal(start.getMonth(), 10);
-});
+describe('serverCalendarWindow', () => {
+  test('December: start falls in November of the same year', () => {
+    const { start } = serverCalendarWindow(new Date('2026-12-15T12:00:00Z'));
+    expect(start.getFullYear()).toBe(2026);
+    expect(start.getMonth()).toBe(10); // November (0-indexed)
+  });
 
-test('enero: start cae en diciembre del año anterior', () => {
-  const { start } = serverCalendarWindow(new Date('2026-01-15T12:00:00Z'));
-  assert.equal(start.getFullYear(), 2025);
-  assert.equal(start.getMonth(), 11);
-});
+  test('January: start falls in December of the previous year', () => {
+    const { start } = serverCalendarWindow(new Date('2026-01-15T12:00:00Z'));
+    expect(start.getFullYear()).toBe(2025);
+    expect(start.getMonth()).toBe(11); // December (0-indexed)
+  });
 
-test('febrero: end cae en marzo (último día, no 0 de abril)', () => {
-  const { end } = serverCalendarWindow(new Date('2026-02-15T12:00:00Z'));
-  assert.equal(end.getMonth(), 2);
-  assert.equal(end.getDate(), 31);
+  test('February: end falls in March (last day, not April 0)', () => {
+    const { end } = serverCalendarWindow(new Date('2026-02-15T12:00:00Z'));
+    expect(end.getMonth()).toBe(2); // March (0-indexed)
+    expect(end.getDate()).toBe(31);
+  });
 });
