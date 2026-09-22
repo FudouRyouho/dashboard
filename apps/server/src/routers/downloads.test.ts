@@ -127,3 +127,31 @@ describe('downloadsRouter', () => {
     });
   });
 });
+
+  describe('getAllJobs with partial failure', () => {
+    test('returns jobs from working integrations when one fails', async () => {
+      const failingIntegration = createMockDownloadIntegration('qbittorrent-fail', 'Failing QBittorrent');
+      const successIntegration = createMockDownloadIntegration('qbittorrent-ok', 'Working QBittorrent');
+      (failingIntegration.getClientJobsAndStatusAsync as any).mockRejectedValue(new Error('Connection refused'));
+      
+      const ctx = createMockCtx([failingIntegration, successIntegration]);
+      const caller = downloadsRouter.createCaller(ctx);
+
+      const result = await caller.getAllJobs({ limit: 50 });
+      expect(result).toHaveLength(1);
+      expect(result[0]!.integration.id).toBe('qbittorrent-ok');
+    });
+
+    test('returns empty array when all integrations fail', async () => {
+      const failingIntegration1 = createMockDownloadIntegration('qbittorrent-fail-1', 'Failing 1');
+      const failingIntegration2 = createMockDownloadIntegration('qbittorrent-fail-2', 'Failing 2');
+      (failingIntegration1.getClientJobsAndStatusAsync as any).mockRejectedValue(new Error('Error 1'));
+      (failingIntegration2.getClientJobsAndStatusAsync as any).mockRejectedValue(new Error('Error 2'));
+      
+      const ctx = createMockCtx([failingIntegration1, failingIntegration2]);
+      const caller = downloadsRouter.createCaller(ctx);
+
+      const result = await caller.getAllJobs({ limit: 50 });
+      expect(result).toEqual([]);
+    });
+  });

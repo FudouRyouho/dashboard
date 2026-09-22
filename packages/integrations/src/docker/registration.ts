@@ -10,7 +10,7 @@ const metadata: IntegrationMetadata = {
   defaultPort: 2375,
   displayName: 'Docker',
   description: 'Docker management via socket/API',
-  capabilities: ['docker', 'containerManagement'],
+  capabilities: ['docker'],
 };
 
 const factory: IntegrationFactory = {

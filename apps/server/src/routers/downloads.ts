@@ -49,7 +49,7 @@ export const downloadsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const downloadClients = ctx.integrations.filter(supportsDownloadClient);
 
-      const results = await Promise.all(
+      const results = await Promise.allSettled(
         downloadClients.map(async (integration) => {
           const jobsAndStatus = await integration.getClientJobsAndStatusAsync(
             { limit: input.limit }
@@ -65,7 +65,9 @@ export const downloadsRouter = createTRPCRouter({
         })
       );
 
-      return results;
+      return results
+        .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
+        .map((r) => r.value);
     }),
 
   getJobs: publicProcedure

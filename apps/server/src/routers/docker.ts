@@ -39,6 +39,51 @@ function emptyStats(): DockerDashboardStats {
   };
 }
 
+/**
+ * Helper to execute a Docker operation across all integrations.
+ * Uses Promise.allSettled to handle partial failures gracefully.
+ * Only throws if ALL integrations fail.
+ */
+async function executeDockerOperation(
+  integrations: any[],
+  operationName: string,
+  operationFn: (manager: DockerContainerManager, id: string) => Promise<void>,
+  ctx: any,
+  input: { ids: string[] },
+) {
+  const results = await Promise.allSettled(
+    integrations.map(async (integration) => {
+      const manager = getContainerManager(integration);
+      if (!manager) {
+        throw toIntegrationTRPCError(
+          new Error('Docker integration does not support container management'),
+          'Docker operation failed',
+        );
+      }
+      const errors: Error[] = [];
+      for (const id of input.ids) {
+        try {
+          await operationFn(manager, id);
+        } catch (err) {
+          errors.push(err instanceof Error ? err : new Error(String(err)));
+          ctx.logger.error(
+            { integrationId: integration.publicIntegration.id, containerId: id },
+            `Failed to ${operationName} container: ${err instanceof Error ? err.message : String(err)}`,
+          );
+        }
+      }
+      if (errors.length > 0) {
+        throw new Error(`Failed to ${operationName} ${errors.length} container(s)`);
+      }
+    }),
+  );
+
+  const failures = results.filter((r): r is PromiseRejectedResult => r.status === 'rejected');
+  if (failures.length === integrations.length) {
+    throw toIntegrationTRPCError(new Error('All Docker integrations failed'), 'Docker operation failed');
+  }
+}
+
 export const dockerRouter = createTRPCRouter({
   getContainers: publicProcedure
     .output(
@@ -72,23 +117,12 @@ export const dockerRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const dockerIntegrations = ctx.integrations.filter(supportsDocker);
-      await Promise.all(
-        dockerIntegrations.map(async (integration) => {
-          const manager = getContainerManager(integration);
-          if (!manager) {
-            throw toIntegrationTRPCError(
-              new Error('Docker integration does not support container management'),
-              'Docker operation failed',
-            );
-          }
-          for (const id of input.ids) {
-            try {
-              await manager.startContainerAsync(id);
-            } catch (err) {
-              throw toIntegrationTRPCError(err, `Failed to start container ${id}`);
-            }
-          }
-        }),
+      await executeDockerOperation(
+        dockerIntegrations,
+        'start',
+        (manager, id) => manager.startContainerAsync(id),
+        ctx,
+        input,
       );
     }),
 
@@ -97,23 +131,12 @@ export const dockerRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const dockerIntegrations = ctx.integrations.filter(supportsDocker);
-      await Promise.all(
-        dockerIntegrations.map(async (integration) => {
-          const manager = getContainerManager(integration);
-          if (!manager) {
-            throw toIntegrationTRPCError(
-              new Error('Docker integration does not support container management'),
-              'Docker operation failed',
-            );
-          }
-          for (const id of input.ids) {
-            try {
-              await manager.stopContainerAsync(id);
-            } catch (err) {
-              throw toIntegrationTRPCError(err, `Failed to stop container ${id}`);
-            }
-          }
-        }),
+      await executeDockerOperation(
+        dockerIntegrations,
+        'stop',
+        (manager, id) => manager.stopContainerAsync(id),
+        ctx,
+        input,
       );
     }),
 
@@ -122,23 +145,12 @@ export const dockerRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const dockerIntegrations = ctx.integrations.filter(supportsDocker);
-      await Promise.all(
-        dockerIntegrations.map(async (integration) => {
-          const manager = getContainerManager(integration);
-          if (!manager) {
-            throw toIntegrationTRPCError(
-              new Error('Docker integration does not support container management'),
-              'Docker operation failed',
-            );
-          }
-          for (const id of input.ids) {
-            try {
-              await manager.restartContainerAsync(id);
-            } catch (err) {
-              throw toIntegrationTRPCError(err, `Failed to restart container ${id}`);
-            }
-          }
-        }),
+      await executeDockerOperation(
+        dockerIntegrations,
+        'restart',
+        (manager, id) => manager.restartContainerAsync(id),
+        ctx,
+        input,
       );
     }),
 
@@ -147,23 +159,12 @@ export const dockerRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const dockerIntegrations = ctx.integrations.filter(supportsDocker);
-      await Promise.all(
-        dockerIntegrations.map(async (integration) => {
-          const manager = getContainerManager(integration);
-          if (!manager) {
-            throw toIntegrationTRPCError(
-              new Error('Docker integration does not support container management'),
-              'Docker operation failed',
-            );
-          }
-          for (const id of input.ids) {
-            try {
-              await manager.removeContainerAsync(id);
-            } catch (err) {
-              throw toIntegrationTRPCError(err, `Failed to remove container ${id}`);
-            }
-          }
-        }),
+      await executeDockerOperation(
+        dockerIntegrations,
+        'remove',
+        (manager, id) => manager.removeContainerAsync(id),
+        ctx,
+        input,
       );
     }),
 });

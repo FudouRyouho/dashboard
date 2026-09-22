@@ -112,3 +112,43 @@ describe('dockerRouter', () => {
     });
   });
 });
+
+  describe('startAll with partial failure', () => {
+    test('succeeds when one integration fails but another succeeds', async () => {
+      const failingIntegration = createMockDockerIntegration('docker-fail', 'Failing Docker');
+      const successIntegration = createMockDockerIntegration('docker-ok', 'Working Docker');
+      (failingIntegration.startContainerAsync as any).mockRejectedValue(new Error('Connection refused'));
+      
+      const ctx = createMockCtx([failingIntegration, successIntegration]);
+      const caller = dockerRouter.createCaller(ctx);
+
+      // Should not throw because at least one integration succeeded
+      await expect(caller.startAll({ ids: ['container-1'] })).resolves.toBeUndefined();
+      expect(successIntegration.startContainerAsync).toHaveBeenCalledWith('container-1');
+    });
+
+    test('throws when ALL integrations fail', async () => {
+      const failingIntegration1 = createMockDockerIntegration('docker-fail-1', 'Failing Docker 1');
+      const failingIntegration2 = createMockDockerIntegration('docker-fail-2', 'Failing Docker 2');
+      (failingIntegration1.startContainerAsync as any).mockRejectedValue(new Error('Error 1'));
+      (failingIntegration2.startContainerAsync as any).mockRejectedValue(new Error('Error 2'));
+      
+      const ctx = createMockCtx([failingIntegration1, failingIntegration2]);
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(caller.startAll({ ids: ['container-1'] })).rejects.toThrow('Docker operation failed');
+    });
+  });
+
+  describe('stopAll with partial failure', () => {
+    test('succeeds when one integration is unreachable', async () => {
+      const failingIntegration = createMockDockerIntegration('docker-fail', 'Failing Docker');
+      const successIntegration = createMockDockerIntegration('docker-ok', 'Working Docker');
+      (failingIntegration.stopContainerAsync as any).mockRejectedValue(new Error('ECONNREFUSED'));
+      
+      const ctx = createMockCtx([failingIntegration, successIntegration]);
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(caller.stopAll({ ids: ['container-1'] })).resolves.toBeUndefined();
+    });
+  });
