@@ -23,7 +23,10 @@ export class PrometheusClient {
   private readonly password?: string;
 
   // Cache for label_values responses
-  private readonly cache = new Map<string, { values: string[]; fetchedAt: number }>();
+  private readonly cache = new Map<
+    string,
+    { values: string[]; fetchedAt: number }
+  >();
 
   constructor(options: {
     baseUrl: string;
@@ -47,7 +50,10 @@ export class PrometheusClient {
    * Execute an instant query against Prometheus.
    * Returns parsed response or null if query fails.
    */
-  async query(promql: string, signal?: AbortSignal): Promise<PrometheusInstantQueryResponse | null> {
+  async query(
+    promql: string,
+    signal?: AbortSignal,
+  ): Promise<PrometheusInstantQueryResponse | null> {
     const url = `${this.baseUrl}${PROMETHEUS_API_PATHS.query}?query=${encodeURIComponent(promql)}`;
 
     try {
@@ -65,13 +71,16 @@ export class PrometheusClient {
    * Get label values from Prometheus.
    * Uses cache with TTL to avoid excessive API calls.
    */
-  async labelValues(labelName: string, signal?: AbortSignal): Promise<string[] | null> {
+  async labelValues(
+    labelName: string,
+    signal?: AbortSignal,
+  ): Promise<string[] | null> {
     const cacheKey = labelName;
     const now = Date.now();
     const cached = this.cache.get(cacheKey);
 
     // Return cached value if still valid
-    if (cached && (now - cached.fetchedAt) < DEFAULT_DISCOVERY_TTL_MS) {
+    if (cached && now - cached.fetchedAt < DEFAULT_DISCOVERY_TTL_MS) {
       return cached.values;
     }
 
@@ -82,7 +91,10 @@ export class PrometheusClient {
       const data = prometheusLabelValuesResponseSchema.parse(response);
 
       if (data.status !== 'success') {
-        console.warn(`Prometheus label_values failed for ${labelName}:`, data.error);
+        console.warn(
+          `Prometheus label_values failed for ${labelName}:`,
+          data.error,
+        );
         return null;
       }
 
@@ -94,7 +106,10 @@ export class PrometheusClient {
 
       return data.data;
     } catch (error) {
-      console.warn(`Prometheus label_values request failed for ${labelName}:`, error);
+      console.warn(
+        `Prometheus label_values request failed for ${labelName}:`,
+        error,
+      );
       return null;
     }
   }
@@ -110,14 +125,19 @@ export class PrometheusClient {
   /**
    * Internal: fetch with auth headers and timeout.
    */
-  private async fetchWithAuth(url: string, signal?: AbortSignal): Promise<unknown> {
+  private async fetchWithAuth(
+    url: string,
+    signal?: AbortSignal,
+  ): Promise<unknown> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
 
     // Add Basic Auth if configured
     if (this.hasAuth && this.username && this.password) {
-      const auth = Buffer.from(`${this.username}:${this.password}`).toString('base64');
+      const auth = Buffer.from(`${this.username}:${this.password}`).toString(
+        'base64',
+      );
       headers['Authorization'] = `Basic ${auth}`;
     }
 

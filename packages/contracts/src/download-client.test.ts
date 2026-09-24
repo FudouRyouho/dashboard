@@ -1,5 +1,9 @@
 import { test, expect } from 'vitest';
-import { downloadClientItemSchema, downloadClientStatusSchema, downloadClientJobsAndStatusSchema } from './download-client.js';
+import {
+  downloadClientItemSchema,
+  downloadClientStatusSchema,
+  downloadClientJobsAndStatusSchema,
+} from './download-client.js';
 
 test('downloadClientItemSchema parses a completed torrent (uploading state)', () => {
   const raw = {
@@ -45,67 +49,75 @@ test('downloadClientItemSchema parses a queued torrent (leeching state)', () => 
 });
 
 test('downloadClientItemSchema rejects missing required fields', () => {
-  expect(() => downloadClientItemSchema.parse({
-    type: 'torrent',
-    // missing id
-    name: 'test',
-    size: 100,
-    sent: 0,
-    downSpeed: 0,
-    upSpeed: 0,
-    time: 0,
-    added: 0,
-    state: 'unknown' as const,
-    progress: 0,
-  })).toThrow();
+  expect(() =>
+    downloadClientItemSchema.parse({
+      type: 'torrent',
+      // missing id
+      name: 'test',
+      size: 100,
+      sent: 0,
+      downSpeed: 0,
+      upSpeed: 0,
+      time: 0,
+      added: 0,
+      state: 'unknown' as const,
+      progress: 0,
+    }),
+  ).toThrow();
 });
 
 test('downloadClientItemSchema rejects invalid state', () => {
-  expect(() => downloadClientItemSchema.parse({
-    type: 'torrent',
-    id: 'abc',
-    name: 'test',
-    size: 100,
-    sent: 0,
-    downSpeed: 0,
-    upSpeed: 0,
-    time: 0,
-    added: 0,
-    state: 'invalid-state' as any,
-    progress: 0,
-  })).toThrow();
+  expect(() =>
+    downloadClientItemSchema.parse({
+      type: 'torrent',
+      id: 'abc',
+      name: 'test',
+      size: 100,
+      sent: 0,
+      downSpeed: 0,
+      upSpeed: 0,
+      time: 0,
+      added: 0,
+      state: 'invalid-state' as any,
+      progress: 0,
+    }),
+  ).toThrow();
 });
 
 test('downloadClientItemSchema rejects negative progress', () => {
-  expect(() => downloadClientItemSchema.parse({
-    type: 'torrent',
-    id: 'abc',
-    name: 'test',
-    size: 100,
-    sent: 0,
-    downSpeed: 0,
-    upSpeed: 0,
-    time: 0,
-    added: 0,
-    state: 'unknown' as const,
-    progress: -0.1,
-  })).toThrow();
+  expect(() =>
+    downloadClientItemSchema.parse({
+      type: 'torrent',
+      id: 'abc',
+      name: 'test',
+      size: 100,
+      sent: 0,
+      downSpeed: 0,
+      upSpeed: 0,
+      time: 0,
+      added: 0,
+      state: 'unknown' as const,
+      progress: -0.1,
+    }),
+  ).toThrow();
 });
 
 test('downloadClientItemSchema rejects progress > 1', () => {
-  expect(() => downloadClientItemSchema.parse({
-    type: 'torrent',
-    id: 'abc',
-    name: 'test',
-    size: 100,
-    sent: 0,
-    downSpeed: 0,
-    upSpeed: 0,
-    time: 0,
-    added: 0,
-    state: 'unknown' as const,
-    progress: 1.1,
-  })).toThrow();
+  expect(() =>
+    downloadClientItemSchema.parse({
+      type: 'torrent',
+      id: 'abc',
+      name: 'test',
+      size: 100,
+      sent: 0,
+      downSpeed: 0,
+      upSpeed: 0,
+      time: 0,
+      added: 0,
+      state: 'unknown' as const,
+      progress: 1.1,
+    }),
+  ).toThrow();
 });
 
 test('downloadClientStatusSchema parses status with rates', () => {

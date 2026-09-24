@@ -1,6 +1,11 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import { getAllPoliciesByIntegrationId, getPolicyByIntegrationAndType, upsertTaskPolicy, deleteTaskPolicy } from '@dashboard/db';
+import {
+  getAllPoliciesByIntegrationId,
+  getPolicyByIntegrationAndType,
+  upsertTaskPolicy,
+  deleteTaskPolicy,
+} from '@dashboard/db';
 
 export const policiesRouter = createTRPCRouter({
   listByIntegration: publicProcedure
@@ -10,28 +15,44 @@ export const policiesRouter = createTRPCRouter({
     }),
 
   get: publicProcedure
-    .input(z.object({ integrationId: z.string(), taskType: z.enum(['calendar', 'mediaReleases', 'docker']) }))
+    .input(
+      z.object({
+        integrationId: z.string(),
+        taskType: z.enum(['calendar', 'mediaReleases', 'docker']),
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      return await getPolicyByIntegrationAndType(ctx.db, input.integrationId, input.taskType);
+      return await getPolicyByIntegrationAndType(
+        ctx.db,
+        input.integrationId,
+        input.taskType,
+      );
     }),
 
   upsert: publicProcedure
-    .input(z.object({
-      id: z.string(),
-      integrationId: z.string(),
-      taskType: z.enum(['calendar', 'mediaReleases', 'docker']),
-      everyMs: z.number().int().positive(),
-      runOnStart: z.boolean(),
-      expectedDurationMs: z.number().int().positive(),
-      failureMaxAttempts: z.number().int().min(0),
-      failureCooldownMs: z.number().int().min(0),
-    }))
+    .input(
+      z.object({
+        id: z.string(),
+        integrationId: z.string(),
+        taskType: z.enum(['calendar', 'mediaReleases', 'docker']),
+        everyMs: z.number().int().positive(),
+        runOnStart: z.boolean(),
+        expectedDurationMs: z.number().int().positive(),
+        failureMaxAttempts: z.number().int().min(0),
+        failureCooldownMs: z.number().int().min(0),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       await upsertTaskPolicy(ctx.db, input);
     }),
 
   delete: publicProcedure
-    .input(z.object({ integrationId: z.string(), taskType: z.enum(['calendar', 'mediaReleases', 'docker']) }))
+    .input(
+      z.object({
+        integrationId: z.string(),
+        taskType: z.enum(['calendar', 'mediaReleases', 'docker']),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       await deleteTaskPolicy(ctx.db, input.integrationId, input.taskType);
     }),

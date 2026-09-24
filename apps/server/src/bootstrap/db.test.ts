@@ -53,7 +53,10 @@ describe('Database Initialization', () => {
 
     const runs = listTaskRuns(db2, 'test');
     expect(runs.length).toBe(1);
-    expect(runs[0] !== undefined, 'first run must not be undefined').toBeTruthy();
+    expect(
+      runs[0] !== undefined,
+      'first run must not be undefined',
+    ).toBeTruthy();
     expect(runs[0]!.taskId).toBe('test');
   });
 });

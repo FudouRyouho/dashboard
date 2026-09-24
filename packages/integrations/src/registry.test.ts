@@ -54,8 +54,11 @@ test('getAllIntegrationFactories returns all registered factories', () => {
   const factories = getAllIntegrationFactories();
   // Los módulos de integraciones se registran automáticamente, por lo que
   // el total incluye las factories reales más las mockeadas
-  expect(factories.length >= 2, `Debe haber al menos 2 factories, obtenido ${factories.length}`).toBeTruthy();
-  const kinds = factories.map(f => f.metadata.kind);
+  expect(
+    factories.length >= 2,
+    `Debe haber al menos 2 factories, obtenido ${factories.length}`,
+  ).toBeTruthy();
+  const kinds = factories.map((f) => f.metadata.kind);
   expect(kinds.includes('jellyfin')).toBeTruthy();
   expect(kinds.includes('docker')).toBeTruthy();
 });

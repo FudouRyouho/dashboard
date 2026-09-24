@@ -7,10 +7,7 @@ module.exports = defineConfig({
     environment: 'node',
     singleThread: true,
     testTimeout: 120000,
-    include: [
-      'packages/*/src/**/*.test.ts',
-      'apps/server/src/**/*.test.ts',
-    ],
+    include: ['packages/*/src/**/*.test.ts', 'apps/server/src/**/*.test.ts'],
     exclude: [
       'apps/server/src/scripts/trpc-error-smoke.test.ts',
       'apps/server/src/trpc-client.test.ts',
@@ -23,10 +20,7 @@ module.exports = defineConfig({
       provider: 'v8',
       reporters: ['text', 'html', 'lcov', 'json'],
       reportsDirectory: './coverage',
-      include: [
-        'packages/*/src/**/*.ts',
-        'apps/server/src/**/*.ts',
-      ],
+      include: ['packages/*/src/**/*.ts', 'apps/server/src/**/*.ts'],
       exclude: [
         '**/*.test.ts',
         '**/*.spec.ts',
@@ -51,10 +45,19 @@ module.exports = defineConfig({
       '@dashboard/common': path.resolve(__dirname, 'packages/common/src'),
       '@dashboard/contracts': path.resolve(__dirname, 'packages/contracts/src'),
       '@dashboard/db': path.resolve(__dirname, 'packages/db/src'),
-      '@dashboard/definitions': path.resolve(__dirname, 'packages/definitions/src'),
-      '@dashboard/integrations': path.resolve(__dirname, 'packages/integrations/src'),
+      '@dashboard/definitions': path.resolve(
+        __dirname,
+        'packages/definitions/src',
+      ),
+      '@dashboard/integrations': path.resolve(
+        __dirname,
+        'packages/integrations/src',
+      ),
       '@dashboard/tasks': path.resolve(__dirname, 'packages/tasks/src'),
-      '@dashboard/testing-utils': path.resolve(__dirname, 'packages/testing-utils/src'),
+      '@dashboard/testing-utils': path.resolve(
+        __dirname,
+        'packages/testing-utils/src',
+      ),
     },
   },
 });

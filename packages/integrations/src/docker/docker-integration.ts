@@ -42,7 +42,8 @@ export class DockerIntegration
       }),
     ]);
 
-    const containers = results[0].status === 'fulfilled' ? results[0].value : [];
+    const containers =
+      results[0].status === 'fulfilled' ? results[0].value : [];
     const images = results[1].status === 'fulfilled' ? results[1].value : [];
     const networks = results[2].status === 'fulfilled' ? results[2].value : [];
     const volumes = results[3].status === 'fulfilled' ? results[3].value : [];

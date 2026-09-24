@@ -14,9 +14,7 @@ export interface RegistryEntry {
  * Validates that an integration instance has all required secrets for its kind.
  * Throws a clear error listing the missing required secret kinds.
  */
-function validateRequiredSecrets(
-  row: IntegrationInstanceRow,
-): void {
+function validateRequiredSecrets(row: IntegrationInstanceRow): void {
   const required = secretRequirements[row.kind as IntegrationKind] ?? [];
   const present = new Set<string>();
   if (row.apiKey) present.add('apiKey');
@@ -68,9 +66,7 @@ export const createIntegrationRegistry = async (
   const factoryByKind = new Map(factories.map((f) => [f.metadata.kind, f]));
 
   for (const integration of integrations) {
-    const factory = factoryByKind.get(
-      integration.kind as IntegrationKind,
-    );
+    const factory = factoryByKind.get(integration.kind as IntegrationKind);
 
     if (!factory) {
       continue;

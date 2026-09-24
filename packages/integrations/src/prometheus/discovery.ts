@@ -57,7 +57,9 @@ export class PrometheusDiscovery {
    * Discover temperature sensors.
    * Returns array of { chip, sensor } pairs.
    */
-  async discoverSensors(signal?: AbortSignal): Promise<Array<{ chip: string; sensor: string }> | null> {
+  async discoverSensors(
+    signal?: AbortSignal,
+  ): Promise<Array<{ chip: string; sensor: string }> | null> {
     const chips = await this.client.labelValues('chip', signal);
     if (!chips) return null;
 
@@ -79,7 +81,10 @@ export class PrometheusDiscovery {
    * Discover all relevant labels for a metric.
    * Used for dynamic query building.
    */
-  async discoverMetricLabels(_metricName: string, _signal?: AbortSignal): Promise<string[]> {
+  async discoverMetricLabels(
+    _metricName: string,
+    _signal?: AbortSignal,
+  ): Promise<string[]> {
     // This requires a different approach - we'd need to query the metric first
     // and extract unique label names from the response
     // For now, we use the predefined GROUPING_LABELS
@@ -91,12 +96,20 @@ export class PrometheusDiscovery {
    */
   static isSystemMount(mountpoint: string): boolean {
     // Check if it's in the system mountpoints list
-    if (SYSTEM_MOUNTPOINTS.includes(mountpoint as typeof SYSTEM_MOUNTPOINTS[number])) {
+    if (
+      SYSTEM_MOUNTPOINTS.includes(
+        mountpoint as (typeof SYSTEM_MOUNTPOINTS)[number],
+      )
+    ) {
       return true;
     }
 
     // Check if it's explicitly excluded
-    if (NON_SYSTEM_MOUNT_EXCLUDE.some((exclude: string) => mountpoint.startsWith(exclude))) {
+    if (
+      NON_SYSTEM_MOUNT_EXCLUDE.some((exclude: string) =>
+        mountpoint.startsWith(exclude),
+      )
+    ) {
       return false;
     }
 

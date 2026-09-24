@@ -15,7 +15,8 @@ import { NODE_EXPORTER_METRICS } from './constants';
  * Uses sum(...) by (...) pattern because rate() doesn't support by() directly in Prometheus.
  */
 function rateQuery(metric: string, groupingLabels: readonly string[]): string {
-  const byClause = groupingLabels.length > 0 ? ` by (${groupingLabels.join(', ')})` : '';
+  const byClause =
+    groupingLabels.length > 0 ? ` by (${groupingLabels.join(', ')})` : '';
   return `sum(rate(${metric}[5m]))${byClause}`;
 }
 
@@ -108,7 +109,11 @@ export type PrometheusQueryKey = keyof typeof PROMETHEUS_QUERIES;
 /**
  * Get all query definitions as an array for batch execution.
  */
-export function getAllQueries(): Array<{ key: PrometheusQueryKey; promql: string; groupingLabels: readonly string[] }> {
+export function getAllQueries(): Array<{
+  key: PrometheusQueryKey;
+  promql: string;
+  groupingLabels: readonly string[];
+}> {
   return Object.entries(PROMETHEUS_QUERIES).map(([key, def]) => ({
     key: key as PrometheusQueryKey,
     promql: def.promql,
@@ -122,12 +127,15 @@ export function getAllQueries(): Array<{ key: PrometheusQueryKey; promql: string
  */
 export function buildQueryWithInstanceFilter(
   basePromql: string,
-  instance: string
+  instance: string,
 ): string {
   // If the query already has label matchers, add instance filter
   if (basePromql.includes('{')) {
     return basePromql.replace('{', `{instance="${instance}",`);
   }
   // Otherwise wrap the metric selector
-  return basePromql.replace(/^([a-zA-Z_:][a-zA-Z0-9_:]*)/, `$1{instance="${instance}"}`);
+  return basePromql.replace(
+    /^([a-zA-Z_:][a-zA-Z0-9_:]*)/,
+    `$1{instance="${instance}"}`,
+  );
 }

@@ -24,12 +24,8 @@ type QueryParams = Record<
  */
 export function hasRequiredSecrets(input: IntegrationInput): boolean {
   const required = secretRequirements[input.kind] ?? [];
-  const present = new Set<string>(
-    input.secrets.map((s) => s.kind),
-  );
-  return required
-    .filter((r) => r.required)
-    .every((r) => present.has(r.kind));
+  const present = new Set<string>(input.secrets.map((s) => s.kind));
+  return required.filter((r) => r.required).every((r) => present.has(r.kind));
 }
 
 export abstract class Integration {
@@ -40,7 +36,8 @@ export abstract class Integration {
   constructor(protected integration: IntegrationInput) {
     const urlObj = new URL(integration.url);
     // If port is explicitly provided, use it; otherwise use port from URL (if any)
-    const port = integration.port !== undefined ? integration.port : urlObj.port;
+    const port =
+      integration.port !== undefined ? integration.port : urlObj.port;
     const base = `${urlObj.protocol}//${urlObj.hostname}`;
     this.baseUrl = port ? `${base}:${port}` : base;
     this.externalBaseUrl = integration.externalUrl
@@ -94,8 +91,8 @@ export abstract class Integration {
     if (!res.ok && res.status !== 304) {
       throw IntegrationError.fromHttpResponse(res.status, res.statusText);
     }
-    const contentLength = res.headers.get("content-length");
-    if (!contentLength || contentLength === "0") return undefined as T;
+    const contentLength = res.headers.get('content-length');
+    if (!contentLength || contentLength === '0') return undefined as T;
     return (await res.json()) as T;
   }
 

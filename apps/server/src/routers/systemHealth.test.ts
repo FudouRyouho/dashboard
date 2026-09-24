@@ -60,9 +60,13 @@ describe('systemHealthRouter', () => {
       const integration = createTestIntegration('prometheus', {
         id: 'prom-fail',
         name: 'Failing Prometheus',
-        getDiscoveredDataAsync: vi.fn().mockRejectedValue(
-          errorFixtures.integration.unreachable(new Error('Connection refused')),
-        ),
+        getDiscoveredDataAsync: vi
+          .fn()
+          .mockRejectedValue(
+            errorFixtures.integration.unreachable(
+              new Error('Connection refused'),
+            ),
+          ),
       });
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = systemHealthRouter.createCaller(ctx);
@@ -77,9 +81,9 @@ describe('systemHealthRouter', () => {
       const integration = createTestIntegration('prometheus', {
         id: 'prom-fail',
         name: 'Failing Prometheus',
-        getDiscoveredDataAsync: vi.fn().mockRejectedValue(
-          errorFixtures.integration.timeout(),
-        ),
+        getDiscoveredDataAsync: vi
+          .fn()
+          .mockRejectedValue(errorFixtures.integration.timeout()),
         getServerMetricsAsync: vi.fn(),
       });
       const ctx = createTestTRPCContext({ integrations: [integration] });

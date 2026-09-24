@@ -11,10 +11,7 @@ import {
 import { upsertIntegration } from './integrations.js';
 
 const tempPath = () => `./data/test-policies-${randomUUID()}.sqlite`;
-const migrationsFolder = new URL(
-  '../../migrations',
-  import.meta.url,
-).pathname;
+const migrationsFolder = new URL('../../migrations', import.meta.url).pathname;
 
 async function withTempDb<T>(
   fn: (db: Awaited<ReturnType<typeof initializeDatabase>>) => Promise<T>,
@@ -40,7 +37,7 @@ test('getAllPoliciesByIntegrationId returns empty array when no policies', async
 test('getAllPoliciesByIntegrationId returns policies for integration', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -78,7 +75,11 @@ test('getAllPoliciesByIntegrationId returns policies for integration', async () 
 
 test('getPolicyByIntegrationAndType returns null when not found', async () => {
   await withTempDb(async (db) => {
-    const result = await getPolicyByIntegrationAndType(db, 'integration-1', 'calendar');
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      'integration-1',
+      'calendar',
+    );
     expect(result).toBe(null);
   });
 });
@@ -87,7 +88,7 @@ test('getPolicyByIntegrationAndType returns policy when exists', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
     const id = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -107,7 +108,11 @@ test('getPolicyByIntegrationAndType returns policy when exists', async () => {
       failureCooldownMs: 60000,
     });
 
-    const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      integrationId,
+      'calendar',
+    );
     expect(result, 'Debe encontrar la política').toBeTruthy();
     expect(result!.id).toBe(id);
     expect(result!.taskType).toBe('calendar');
@@ -120,7 +125,7 @@ test('upsertTaskPolicy creates new policy', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
     const id = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -140,7 +145,11 @@ test('upsertTaskPolicy creates new policy', async () => {
       failureCooldownMs: 30000,
     });
 
-    const result = await getPolicyByIntegrationAndType(db, integrationId, 'mediaReleases');
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      integrationId,
+      'mediaReleases',
+    );
     expect(result, 'Debe existir después de insertar').toBeTruthy();
     expect(result!.expectedDurationMs).toBe(5000);
   });
@@ -150,7 +159,7 @@ test('upsertTaskPolicy updates existing policy', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
     const id = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -181,7 +190,11 @@ test('upsertTaskPolicy updates existing policy', async () => {
       failureCooldownMs: 120000,
     });
 
-    const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      integrationId,
+      'calendar',
+    );
     expect(result, 'Debe existir después de actualizar').toBeTruthy();
     expect(result!.everyMs).toBe(7200000);
     expect(result!.runOnStart).toBe(false);
@@ -192,7 +205,7 @@ test('upsertTaskPolicy updates existing policy', async () => {
 test('upsertTaskPolicy maintains unique constraint', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -233,7 +246,7 @@ test('deleteTaskPolicy removes policy', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
     const id = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -255,7 +268,11 @@ test('deleteTaskPolicy removes policy', async () => {
 
     await deleteTaskPolicy(db, integrationId, 'calendar');
 
-    const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      integrationId,
+      'calendar',
+    );
     expect(result).toBe(null);
   });
 });
@@ -273,7 +290,7 @@ test('policies map to correct integration IDs', async () => {
   await withTempDb(async (db) => {
     const integrationId1 = randomUUID();
     const integrationId2 = randomUUID();
-    
+
     // Create integration instances first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId1,
@@ -281,7 +298,7 @@ test('policies map to correct integration IDs', async () => {
       name: 'TestSonarr1',
       url: 'http://localhost:8989',
     });
-    
+
     await upsertIntegration(db, {
       id: integrationId2,
       kind: 'radarr',

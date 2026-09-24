@@ -1,7 +1,10 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import { toIntegrationTRPCError } from '../integration-errors';
-import { supportsDocker, type DockerDashboardStats } from '@dashboard/integrations';
+import {
+  supportsDocker,
+  type DockerDashboardStats,
+} from '@dashboard/integrations';
 import { dockerSnapshot } from '../tasks/task-ids';
 
 const containerIdsInput = z.object({
@@ -67,20 +70,30 @@ async function executeDockerOperation(
         } catch (err) {
           errors.push(err instanceof Error ? err : new Error(String(err)));
           ctx.logger.error(
-            { integrationId: integration.publicIntegration.id, containerId: id },
+            {
+              integrationId: integration.publicIntegration.id,
+              containerId: id,
+            },
             `Failed to ${operationName} container: ${err instanceof Error ? err.message : String(err)}`,
           );
         }
       }
       if (errors.length > 0) {
-        throw new Error(`Failed to ${operationName} ${errors.length} container(s)`);
+        throw new Error(
+          `Failed to ${operationName} ${errors.length} container(s)`,
+        );
       }
     }),
   );
 
-  const failures = results.filter((r): r is PromiseRejectedResult => r.status === 'rejected');
+  const failures = results.filter(
+    (r): r is PromiseRejectedResult => r.status === 'rejected',
+  );
   if (failures.length === integrations.length) {
-    throw toIntegrationTRPCError(new Error('All Docker integrations failed'), 'Docker operation failed');
+    throw toIntegrationTRPCError(
+      new Error('All Docker integrations failed'),
+      'Docker operation failed',
+    );
   }
 }
 
@@ -99,17 +112,15 @@ export const dockerRouter = createTRPCRouter({
       ),
     )
     .query(({ ctx }) => {
-      return ctx.integrations
-        .filter(supportsDocker)
-        .map((integration) => {
-          const key = dockerSnapshot(integration.publicIntegration.id);
-          const snapshot = ctx.store.get<DockerDashboardStats>(key);
+      return ctx.integrations.filter(supportsDocker).map((integration) => {
+        const key = dockerSnapshot(integration.publicIntegration.id);
+        const snapshot = ctx.store.get<DockerDashboardStats>(key);
 
-          return {
-            integration: integration.publicIntegration,
-            stats: snapshot?.data ?? emptyStats(),
-          };
-        });
+        return {
+          integration: integration.publicIntegration,
+          stats: snapshot?.data ?? emptyStats(),
+        };
+      });
     }),
 
   startAll: publicProcedure

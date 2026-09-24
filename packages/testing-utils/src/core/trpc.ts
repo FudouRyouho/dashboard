@@ -13,15 +13,54 @@ export interface MockLogger {
 }
 
 export interface MockStore {
-  get: <T>(key: { taskId: string }) => { data: T; obtainedAt: Date } | undefined;
+  get: <T>(key: {
+    taskId: string;
+  }) => { data: T; obtainedAt: Date } | undefined;
   set: <T>(key: { taskId: string }, data: T) => void;
 }
 
 export interface MockRunLog {
-  record: (run: { taskId: string; startedAt: Date; durationMs: number; outcome: 'success' | 'failure' | 'aborted'; cause?: string; detail?: unknown }) => void;
-  last: (taskId: string) => { taskId: string; startedAt: Date; durationMs: number; outcome: 'success' | 'failure' | 'aborted'; cause?: string; detail?: unknown } | undefined;
-  forTask: (taskId: string) => Array<{ taskId: string; startedAt: Date; durationMs: number; outcome: 'success' | 'failure' | 'aborted'; cause?: string; detail?: unknown }>;
-  list: (taskId: string, range: { from: Date; to: Date }) => Array<{ taskId: string; startedAt: Date; durationMs: number; outcome: 'success' | 'failure' | 'aborted'; cause?: string; detail?: unknown }>;
+  record: (run: {
+    taskId: string;
+    startedAt: Date;
+    durationMs: number;
+    outcome: 'success' | 'failure' | 'aborted';
+    cause?: string;
+    detail?: unknown;
+  }) => void;
+  last: (
+    taskId: string,
+  ) =>
+    | {
+        taskId: string;
+        startedAt: Date;
+        durationMs: number;
+        outcome: 'success' | 'failure' | 'aborted';
+        cause?: string;
+        detail?: unknown;
+      }
+    | undefined;
+  forTask: (
+    taskId: string,
+  ) => Array<{
+    taskId: string;
+    startedAt: Date;
+    durationMs: number;
+    outcome: 'success' | 'failure' | 'aborted';
+    cause?: string;
+    detail?: unknown;
+  }>;
+  list: (
+    taskId: string,
+    range: { from: Date; to: Date },
+  ) => Array<{
+    taskId: string;
+    startedAt: Date;
+    durationMs: number;
+    outcome: 'success' | 'failure' | 'aborted';
+    cause?: string;
+    detail?: unknown;
+  }>;
 }
 
 export interface TestTRPCContext {

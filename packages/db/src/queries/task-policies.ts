@@ -48,7 +48,7 @@ export async function getAllPoliciesByIntegrationId(
     .select()
     .from(taskPolicies)
     .where(eq(taskPolicies.integrationId, integrationId));
-  return results.map(r => ({
+  return results.map((r) => ({
     ...r,
     runOnStart: parseRunOnStart(r.runOnStart),
   })) as unknown as TaskPolicyRow[];

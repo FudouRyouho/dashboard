@@ -18,7 +18,10 @@ describe('Prometheus Integration - E2E', () => {
     const instances = await discovery.discoverInstances();
     expect(instances).not.toBeNull();
     expect(instances?.length).toBeGreaterThan(0);
-    console.log(`Discovered ${instances?.length ?? 0} instances:`, instances?.slice(0, 3));
+    console.log(
+      `Discovered ${instances?.length ?? 0} instances:`,
+      instances?.slice(0, 3),
+    );
   });
 
   test('should query CPU metrics', async () => {
@@ -29,7 +32,7 @@ describe('Prometheus Integration - E2E', () => {
     });
 
     const queries = getAllQueries();
-    const cpuQuery = queries.find(q => q.key === 'cpuUsage');
+    const cpuQuery = queries.find((q) => q.key === 'cpuUsage');
     expect(cpuQuery).toBeTruthy();
 
     if (!cpuQuery) return;
@@ -48,7 +51,7 @@ describe('Prometheus Integration - E2E', () => {
     });
 
     const queries = getAllQueries();
-    const memQuery = queries.find(q => q.key === 'memoryTotal');
+    const memQuery = queries.find((q) => q.key === 'memoryTotal');
     expect(memQuery).toBeTruthy();
 
     if (!memQuery) return;
@@ -56,7 +59,9 @@ describe('Prometheus Integration - E2E', () => {
     const result = await client.query(memQuery.promql);
     expect(result).not.toBeNull();
     expect(result?.data.result.length).toBeGreaterThan(0);
-    console.log(`Memory query returned ${result?.data.result.length ?? 0} series`);
+    console.log(
+      `Memory query returned ${result?.data.result.length ?? 0} series`,
+    );
   });
 
   test('should normalize full response', async () => {
@@ -80,7 +85,7 @@ describe('Prometheus Integration - E2E', () => {
       queries.map(async ({ key, promql }) => {
         const result = await client.query(promql);
         queryResults.set(key, result ?? null);
-      })
+      }),
     );
 
     const normalized = PrometheusNormalizer.normalize(queryResults, instances);
@@ -91,6 +96,8 @@ describe('Prometheus Integration - E2E', () => {
     const firstServer = normalized[0];
     expect(firstServer).toBeTruthy();
     expect(firstServer?.metrics.length).toBeGreaterThan(0);
-    console.log(`First server (${firstServer?.server}) has ${firstServer?.metrics.length ?? 0} metric series`);
+    console.log(
+      `First server (${firstServer?.server}) has ${firstServer?.metrics.length ?? 0} metric series`,
+    );
   });
 });

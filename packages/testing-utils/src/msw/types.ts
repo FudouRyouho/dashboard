@@ -17,7 +17,8 @@ export type HandlerConfig =
   | (BaseHandlerConfig & {
       apiKey?: string;
       responses?: {
-        calendar?: 'success' | 'error_401' | 'error_500' | 'malformed' | 'empty';
+        calendar?:
+          'success' | 'error_401' | 'error_500' | 'malformed' | 'empty';
       };
     })
   | (BaseHandlerConfig & {
@@ -28,7 +29,8 @@ export type HandlerConfig =
     })
   | (BaseHandlerConfig & {
       responses?: {
-        containers?: 'success' | 'error_401' | 'error_500' | 'malformed' | 'empty';
+        containers?:
+          'success' | 'error_401' | 'error_500' | 'malformed' | 'empty';
         volumes?: 'success' | 'error_500' | 'empty';
         networks?: 'success' | 'error_500' | 'empty';
       };
@@ -37,7 +39,8 @@ export type HandlerConfig =
       username?: string;
       password?: string;
       responses?: {
-        torrents?: 'success' | 'error_401' | 'error_500' | 'malformed' | 'empty';
+        torrents?:
+          'success' | 'error_401' | 'error_500' | 'malformed' | 'empty';
         appVersion?: 'success' | 'error_401' | 'error_500';
       };
     })

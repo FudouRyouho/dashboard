@@ -38,7 +38,10 @@ test('los 9 Episodes tienen SeriesName, SeasonId, IndexNumber, ParentIndexNumber
     expect(ep.SeriesName, 'SeriesName presente').toBeTruthy();
     expect(ep.SeasonId, 'SeasonId presente').toBeTruthy();
     expect(ep.IndexNumber !== undefined, 'IndexNumber presente').toBeTruthy();
-    expect(ep.ParentIndexNumber !== undefined, 'ParentIndexNumber presente').toBeTruthy();
+    expect(
+      ep.ParentIndexNumber !== undefined,
+      'ParentIndexNumber presente',
+    ).toBeTruthy();
   }
 });
 

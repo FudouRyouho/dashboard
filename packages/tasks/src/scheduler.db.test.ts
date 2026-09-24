@@ -65,7 +65,10 @@ test('runLog SQLite persiste runs y los retorna en list()', async () => {
   // forTask debe retornar todas las corridas de t1
   const t1Runs = runLog.forTask('t1');
   expect(t1Runs.length).toBe(2);
-  expect(t1Runs[0] !== undefined, 'debe haber al menos una corrida').toBeTruthy();
+  expect(
+    t1Runs[0] !== undefined,
+    'debe haber al menos una corrida',
+  ).toBeTruthy();
   expect(t1Runs[0]!.taskId).toBe('t1');
 
   // list con rango filtra correctamente
@@ -79,9 +82,7 @@ test('runLog SQLite persiste runs y los retorna en list()', async () => {
     filtered[0] !== undefined,
     'debe haber al menos un resultado filtrado',
   ).toBeTruthy();
-  expect(
-    filtered[0]!.startedAt.toISOString()).toBe('2026-01-01T00:01:00.000Z',
-  );
+  expect(filtered[0]!.startedAt.toISOString()).toBe('2026-01-01T00:01:00.000Z');
 
   // t2 solo tiene una corrida
   expect(runLog.forTask('t2').length).toBe(1);
@@ -101,16 +102,16 @@ test('snapshotStore SQLite persiste snapshots entre llamadas', async () => {
     snapshot !== undefined,
     'snapshot debería existir después de set().toBeTruthy()',
   );
-  expect(
-    (snapshot!.data as { title: string }).title).toBe('Breaking Bad S01E01',
+  expect((snapshot!.data as { title: string }).title).toBe(
+    'Breaking Bad S01E01',
   );
 
   // overwriting actualiza el snapshot
   store.set(key, { title: 'Breaking Bad S01E02', date: '2026-01-08' });
   const updated = store.get(key);
   expect(updated !== undefined).toBeTruthy();
-  expect(
-    (updated!.data as { title: string }).title).toBe('Breaking Bad S01E02',
+  expect((updated!.data as { title: string }).title).toBe(
+    'Breaking Bad S01E02',
   );
 
   // otro taskId es independiente

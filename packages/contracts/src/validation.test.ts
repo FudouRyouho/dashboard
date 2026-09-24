@@ -97,7 +97,10 @@ test('validateMediaReleaseEvent validates movie', () => {
     studio: 'Studio',
     rating: 8.5,
     genres: ['Action'],
-    imageUrls: { poster: 'https://example.com/poster.jpg', backdrop: 'https://example.com/backdrop.jpg' },
+    imageUrls: {
+      poster: 'https://example.com/poster.jpg',
+      backdrop: 'https://example.com/backdrop.jpg',
+    },
     href: 'https://example.com/movie/1',
   };
   const result = validateMediaReleaseEvent(movie);
@@ -116,7 +119,10 @@ test('validateMediaReleaseEvent validates episode', () => {
     seriesId: 'series-1',
     seasonNumber: 1,
     episodeNumber: 1,
-    imageUrls: { poster: 'https://example.com/poster.jpg', backdrop: 'https://example.com/backdrop.jpg' },
+    imageUrls: {
+      poster: 'https://example.com/poster.jpg',
+      backdrop: 'https://example.com/backdrop.jpg',
+    },
     href: 'https://example.com/episode/1',
   };
   const result = validateMediaReleaseEvent(episode);
@@ -133,7 +139,10 @@ test('validateMediaReleaseEvent validates series', () => {
     firstAired: '2025-01-01T00:00:00.000Z',
     childCount: 10,
     status: 'Continuing',
-    imageUrls: { poster: 'https://example.com/poster.jpg', backdrop: 'https://example.com/backdrop.jpg' },
+    imageUrls: {
+      poster: 'https://example.com/poster.jpg',
+      backdrop: 'https://example.com/backdrop.jpg',
+    },
     href: 'https://example.com/series/1',
   };
   const result = validateMediaReleaseEvent(series);
@@ -151,7 +160,10 @@ test('safeValidateMediaReleaseEvent returns success for valid release', () => {
     studio: 'Studio',
     rating: 8.5,
     genres: ['Action'],
-    imageUrls: { poster: 'https://example.com/poster.jpg', backdrop: 'https://example.com/backdrop.jpg' },
+    imageUrls: {
+      poster: 'https://example.com/poster.jpg',
+      backdrop: 'https://example.com/backdrop.jpg',
+    },
     href: 'https://example.com/movie/1',
   };
   const result = safeValidateMediaReleaseEvent(movie);
@@ -175,7 +187,10 @@ test('isMediaReleaseEvent returns true for valid release', () => {
     studio: 'Studio',
     rating: 8.5,
     genres: ['Action'],
-    imageUrls: { poster: 'https://example.com/poster.jpg', backdrop: 'https://example.com/backdrop.jpg' },
+    imageUrls: {
+      poster: 'https://example.com/poster.jpg',
+      backdrop: 'https://example.com/backdrop.jpg',
+    },
     href: 'https://example.com/movie/1',
   };
   expect(isMediaReleaseEvent(movie)).toBeTruthy();
@@ -245,7 +260,11 @@ test('validateResultStatus validates valid status with success', () => {
 test('validateResultStatus validates valid status with failure', () => {
   const status = {
     data: { obtainedAt: '2026-01-15T10:00:00.000Z' },
-    attempt: { outcome: 'failure' as const, at: '2026-01-15T10:00:00.000Z', reason: 'timeout' as const },
+    attempt: {
+      outcome: 'failure' as const,
+      at: '2026-01-15T10:00:00.000Z',
+      reason: 'timeout' as const,
+    },
   };
   const result = validateResultStatus(status);
   if (result.attempt && result.attempt.outcome === 'failure') {

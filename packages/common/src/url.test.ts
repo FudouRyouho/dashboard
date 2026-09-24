@@ -6,7 +6,9 @@ test('removeTrailingSlash removes single trailing slash', () => {
 });
 
 test('removeTrailingSlash removes multiple trailing slashes', () => {
-  expect(removeTrailingSlash('http://example.com///')).toBe('http://example.com');
+  expect(removeTrailingSlash('http://example.com///')).toBe(
+    'http://example.com',
+  );
 });
 
 test('removeTrailingSlash does not modify path without trailing slash', () => {
@@ -22,5 +24,7 @@ test('removeTrailingSlash handles root path', () => {
 });
 
 test('removeTrailingSlash preserves internal slashes', () => {
-  expect(removeTrailingSlash('http://example.com/path/to/resource/')).toBe('http://example.com/path/to/resource');
+  expect(removeTrailingSlash('http://example.com/path/to/resource/')).toBe(
+    'http://example.com/path/to/resource',
+  );
 });

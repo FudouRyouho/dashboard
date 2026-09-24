@@ -14,7 +14,11 @@ export class IntegrationError extends Error {
 
   static fromHttpResponse(status: number, statusText: string) {
     const reason: IntegrationErrorReason =
-      status === 401 ? 'unauthorized' : status === 403 ? 'forbidden' : 'unknown';
+      status === 401
+        ? 'unauthorized'
+        : status === 403
+          ? 'forbidden'
+          : 'unknown';
 
     return new IntegrationError(
       reason,
@@ -25,17 +29,36 @@ export class IntegrationError extends Error {
 
   static fromTransport(error: unknown) {
     if (error instanceof IntegrationError) return error;
-    if (error instanceof Error && (error.name === 'AbortError' || error.name === 'TimeoutError')) {
-      return new IntegrationError('timeout', 'Integration request timed out', undefined, { cause: error });
+    if (
+      error instanceof Error &&
+      (error.name === 'AbortError' || error.name === 'TimeoutError')
+    ) {
+      return new IntegrationError(
+        'timeout',
+        'Integration request timed out',
+        undefined,
+        { cause: error },
+      );
     }
 
     // Handle FetchError (from ofetch) and similar errors with HTTP status
-    const status = (error as { status?: number; statusCode?: number; response?: { status?: number } })?.status
-      ?? (error as { statusCode?: number })?.statusCode
-      ?? (error as { response?: { status?: number } })?.response?.status;
+    const status =
+      (
+        error as {
+          status?: number;
+          statusCode?: number;
+          response?: { status?: number };
+        }
+      )?.status ??
+      (error as { statusCode?: number })?.statusCode ??
+      (error as { response?: { status?: number } })?.response?.status;
     if (Number.isFinite(status)) {
       const reason: IntegrationErrorReason =
-        status === 401 ? 'unauthorized' : status === 403 ? 'forbidden' : 'unknown';
+        status === 401
+          ? 'unauthorized'
+          : status === 403
+            ? 'forbidden'
+            : 'unknown';
       return new IntegrationError(
         reason,
         `Integration request failed with HTTP ${status}`,
@@ -44,7 +67,12 @@ export class IntegrationError extends Error {
       );
     }
 
-    return new IntegrationError('unknown', 'Integration request failed', undefined, { cause: error });
+    return new IntegrationError(
+      'unknown',
+      'Integration request failed',
+      undefined,
+      { cause: error },
+    );
   }
 }
 
@@ -64,7 +92,9 @@ export const classifyIntegrationError = (
       return { reason: 'timeout' };
     }
 
-    const cause = (err as { cause?: { code?: string; cause?: { code?: string } } }).cause;
+    const cause = (
+      err as { cause?: { code?: string; cause?: { code?: string } } }
+    ).cause;
     const networkCodes = [
       'ECONNREFUSED',
       'ENOTFOUND',
@@ -80,13 +110,25 @@ export const classifyIntegrationError = (
       return { reason: 'unreachable' };
     }
 
-    const status = (err as { status?: number; statusCode?: number; response?: { status?: number } })?.status
-      ?? (err as { statusCode?: number })?.statusCode
-      ?? (err as { response?: { status?: number } })?.response?.status
-      ?? Number(err.message.match(/HTTP\s+(\d{3})/)?.[1]);
+    const status =
+      (
+        err as {
+          status?: number;
+          statusCode?: number;
+          response?: { status?: number };
+        }
+      )?.status ??
+      (err as { statusCode?: number })?.statusCode ??
+      (err as { response?: { status?: number } })?.response?.status ??
+      Number(err.message.match(/HTTP\s+(\d{3})/)?.[1]);
     if (Number.isFinite(status)) {
       return {
-        reason: status === 401 ? 'unauthorized' : status === 403 ? 'forbidden' : 'unknown',
+        reason:
+          status === 401
+            ? 'unauthorized'
+            : status === 403
+              ? 'forbidden'
+              : 'unknown',
         httpStatus: status,
       };
     }

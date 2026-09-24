@@ -1,8 +1,6 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { integrationsRouter } from './integrations';
-import {
-  createTestTRPCContext,
-} from '@dashboard/testing-utils';
+import { createTestTRPCContext } from '@dashboard/testing-utils';
 let selectCallCount = 0;
 function createMockDb() {
   const baseChain = {
@@ -15,11 +13,21 @@ function createMockDb() {
       if (selectCallCount === 1) {
         return onFulfilled([]);
       }
-      return onFulfilled([{
-        id: 'test-id', kind: 'sonarr', name: 'Test', url: 'http://localhost',
-        apiKey: null, username: null, password: null, port: null, externalUrl: null,
-        createdAt: new Date(), updatedAt: new Date(),
-      }]);
+      return onFulfilled([
+        {
+          id: 'test-id',
+          kind: 'sonarr',
+          name: 'Test',
+          url: 'http://localhost',
+          apiKey: null,
+          username: null,
+          password: null,
+          port: null,
+          externalUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
     }),
     get: vi.fn().mockResolvedValue(undefined),
     run: vi.fn().mockResolvedValue({ changes: 1 }),
@@ -31,11 +39,21 @@ function createMockDb() {
     }),
     insert: vi.fn(() => ({
       values: vi.fn().mockReturnValue({
-        returning: vi.fn().mockResolvedValue([{
-          id: 'test-id', kind: 'sonarr', name: 'Test', url: 'http://localhost',
-          apiKey: null, username: null, password: null, port: null, externalUrl: null,
-          createdAt: new Date(), updatedAt: new Date(),
-        }]),
+        returning: vi.fn().mockResolvedValue([
+          {
+            id: 'test-id',
+            kind: 'sonarr',
+            name: 'Test',
+            url: 'http://localhost',
+            apiKey: null,
+            username: null,
+            password: null,
+            port: null,
+            externalUrl: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ]),
       }),
     })),
     update: vi.fn(() => ({

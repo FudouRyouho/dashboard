@@ -6,12 +6,23 @@ export function createMockLogger() {
   return { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
 }
 
-export function createMockStore(overrides?: { get?: ReturnType<typeof vi.fn>; set?: ReturnType<typeof vi.fn> }) {
-  return { get: overrides?.get ?? vi.fn().mockReturnValue(undefined), set: overrides?.set ?? vi.fn() };
+export function createMockStore(overrides?: {
+  get?: ReturnType<typeof vi.fn>;
+  set?: ReturnType<typeof vi.fn>;
+}) {
+  return {
+    get: overrides?.get ?? vi.fn().mockReturnValue(undefined),
+    set: overrides?.set ?? vi.fn(),
+  };
 }
 
 export function createMockRunLog() {
-  return { record: vi.fn(), last: vi.fn().mockReturnValue(undefined), forTask: vi.fn().mockReturnValue([]), list: vi.fn().mockReturnValue([]) };
+  return {
+    record: vi.fn(),
+    last: vi.fn().mockReturnValue(undefined),
+    forTask: vi.fn().mockReturnValue([]),
+    list: vi.fn().mockReturnValue([]),
+  };
 }
 
 export interface TestTRPCContextOverrides {
@@ -26,7 +37,9 @@ export interface TestTRPCContextOverrides {
  * Returns `any` so the mock context satisfies TRPC's strict context shape without
  * requiring real Integration instances — routers only use publicIntegration and capability methods.
  */
-export function createTestTRPCContext(overrides: TestTRPCContextOverrides = {}): any {
+export function createTestTRPCContext(
+  overrides: TestTRPCContextOverrides = {},
+): any {
   return {
     integrations: overrides.integrations ?? [],
     logger: overrides.logger ?? createMockLogger(),
@@ -36,6 +49,9 @@ export function createTestTRPCContext(overrides: TestTRPCContextOverrides = {}):
   };
 }
 
-export function createCallerFor<T extends Record<string, any>>(router: { createCaller: (ctx: any) => T }, ctxOverrides?: TestTRPCContextOverrides): T {
+export function createCallerFor<T extends Record<string, any>>(
+  router: { createCaller: (ctx: any) => T },
+  ctxOverrides?: TestTRPCContextOverrides,
+): T {
   return router.createCaller(createTestTRPCContext(ctxOverrides));
 }

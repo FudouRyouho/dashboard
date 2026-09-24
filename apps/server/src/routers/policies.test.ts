@@ -9,10 +9,12 @@ const mockUpsertTaskPolicy = vi.fn();
 const mockDeleteTaskPolicy = vi.fn();
 
 vi.mock('@dashboard/db', () => ({
-  getAllPoliciesByIntegrationId: (...args: Parameters<typeof mockGetAllPoliciesByIntegrationId>) =>
-    mockGetAllPoliciesByIntegrationId(...args),
-  getPolicyByIntegrationAndType: (...args: Parameters<typeof mockGetPolicyByIntegrationAndType>) =>
-    mockGetPolicyByIntegrationAndType(...args),
+  getAllPoliciesByIntegrationId: (
+    ...args: Parameters<typeof mockGetAllPoliciesByIntegrationId>
+  ) => mockGetAllPoliciesByIntegrationId(...args),
+  getPolicyByIntegrationAndType: (
+    ...args: Parameters<typeof mockGetPolicyByIntegrationAndType>
+  ) => mockGetPolicyByIntegrationAndType(...args),
   upsertTaskPolicy: (...args: Parameters<typeof mockUpsertTaskPolicy>) =>
     mockUpsertTaskPolicy(...args),
   deleteTaskPolicy: (...args: Parameters<typeof mockDeleteTaskPolicy>) =>
@@ -92,7 +94,10 @@ describe('policiesRouter', () => {
       const caller = policiesRouter.createCaller(mockCtx);
       const result = await caller.listByIntegration({ integrationId });
 
-      expect(mockGetAllPoliciesByIntegrationId).toHaveBeenCalledWith(mockDb, integrationId);
+      expect(mockGetAllPoliciesByIntegrationId).toHaveBeenCalledWith(
+        mockDb,
+        integrationId,
+      );
       expect(result).toEqual(mockPolicies);
       expect(result.length).toBe(3);
     });
@@ -103,7 +108,10 @@ describe('policiesRouter', () => {
       const caller = policiesRouter.createCaller(mockCtx);
       const result = await caller.listByIntegration({ integrationId });
 
-      expect(mockGetAllPoliciesByIntegrationId).toHaveBeenCalledWith(mockDb, integrationId);
+      expect(mockGetAllPoliciesByIntegrationId).toHaveBeenCalledWith(
+        mockDb,
+        integrationId,
+      );
       expect(result).toEqual([]);
       expect(result.length).toBe(0);
     });
@@ -130,7 +138,11 @@ describe('policiesRouter', () => {
         const caller = policiesRouter.createCaller(mockCtx);
         const result = await caller.get({ integrationId, taskType });
 
-        expect(mockGetPolicyByIntegrationAndType).toHaveBeenCalledWith(mockDb, integrationId, taskType);
+        expect(mockGetPolicyByIntegrationAndType).toHaveBeenCalledWith(
+          mockDb,
+          integrationId,
+          taskType,
+        );
         expect(result).toEqual(mockPolicy);
       });
     }
@@ -141,7 +153,11 @@ describe('policiesRouter', () => {
       const caller = policiesRouter.createCaller(mockCtx);
       const result = await caller.get({ integrationId, taskType: 'calendar' });
 
-      expect(mockGetPolicyByIntegrationAndType).toHaveBeenCalledWith(mockDb, integrationId, 'calendar');
+      expect(mockGetPolicyByIntegrationAndType).toHaveBeenCalledWith(
+        mockDb,
+        integrationId,
+        'calendar',
+      );
       expect(result).toBeNull();
     });
   });
@@ -177,32 +193,32 @@ describe('policiesRouter', () => {
 
       // Test invalid everyMs (must be positive integer)
       await expect(
-        caller.upsert({ ...validInput, everyMs: -1 })
+        caller.upsert({ ...validInput, everyMs: -1 }),
       ).rejects.toThrow();
 
       // Test invalid expectedDurationMs (must be positive integer)
       await expect(
-        caller.upsert({ ...validInput, expectedDurationMs: 0 })
+        caller.upsert({ ...validInput, expectedDurationMs: 0 }),
       ).rejects.toThrow();
 
       // Test invalid failureMaxAttempts (must be >= 0)
       await expect(
-        caller.upsert({ ...validInput, failureMaxAttempts: -1 })
+        caller.upsert({ ...validInput, failureMaxAttempts: -1 }),
       ).rejects.toThrow();
 
       // Test invalid failureCooldownMs (must be >= 0)
       await expect(
-        caller.upsert({ ...validInput, failureCooldownMs: -1 })
+        caller.upsert({ ...validInput, failureCooldownMs: -1 }),
       ).rejects.toThrow();
 
       // Test non-integer everyMs
       await expect(
-        caller.upsert({ ...validInput, everyMs: 3600000.5 })
+        caller.upsert({ ...validInput, everyMs: 3600000.5 }),
       ).rejects.toThrow();
 
       // Test non-integer expectedDurationMs
       await expect(
-        caller.upsert({ ...validInput, expectedDurationMs: 30000.5 })
+        caller.upsert({ ...validInput, expectedDurationMs: 30000.5 }),
       ).rejects.toThrow();
     });
 
@@ -210,7 +226,7 @@ describe('policiesRouter', () => {
       const caller = policiesRouter.createCaller(mockCtx);
 
       await expect(
-        caller.upsert({ ...validInput, taskType: 'invalid' as any })
+        caller.upsert({ ...validInput, taskType: 'invalid' as any }),
       ).rejects.toThrow();
     });
   });
@@ -225,7 +241,11 @@ describe('policiesRouter', () => {
         const caller = policiesRouter.createCaller(mockCtx);
         await caller.delete({ integrationId, taskType });
 
-        expect(mockDeleteTaskPolicy).toHaveBeenCalledWith(mockDb, integrationId, taskType);
+        expect(mockDeleteTaskPolicy).toHaveBeenCalledWith(
+          mockDb,
+          integrationId,
+          taskType,
+        );
       });
     }
 
@@ -233,7 +253,7 @@ describe('policiesRouter', () => {
       const caller = policiesRouter.createCaller(mockCtx);
 
       await expect(
-        caller.delete({ integrationId, taskType: 'invalid' as any })
+        caller.delete({ integrationId, taskType: 'invalid' as any }),
       ).rejects.toThrow();
     });
   });

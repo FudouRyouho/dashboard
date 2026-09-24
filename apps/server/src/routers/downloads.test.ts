@@ -45,7 +45,9 @@ describe('downloadsRouter', () => {
     test('throws when integration not found', async () => {
       const ctx = createTestTRPCContext({ integrations: [] });
       const caller = downloadsRouter.createCaller(ctx);
-      await expect(caller.getJobs({ integrationId: 'nonexistent' })).rejects.toThrow();
+      await expect(
+        caller.getJobs({ integrationId: 'nonexistent' }),
+      ).rejects.toThrow();
     });
   });
 
@@ -58,7 +60,9 @@ describe('downloadsRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = downloadsRouter.createCaller(ctx);
 
-      const result = await caller.pauseQueue({ integrationId: 'qbittorrent-1' });
+      const result = await caller.pauseQueue({
+        integrationId: 'qbittorrent-1',
+      });
       expect(result).toEqual({ success: true });
       expect(integration.pauseQueueAsync).toHaveBeenCalledTimes(1);
     });
@@ -73,11 +77,14 @@ describe('downloadsRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = downloadsRouter.createCaller(ctx);
 
-      const result = await caller.pauseItem({ integrationId: 'qbittorrent-1', torrentHash: 'abc123' });
+      const result = await caller.pauseItem({
+        integrationId: 'qbittorrent-1',
+        torrentHash: 'abc123',
+      });
       expect(result).toEqual({ success: true });
       expect(integration.pauseItemAsync).toHaveBeenCalledTimes(1);
       expect(integration.pauseItemAsync).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'abc123', type: 'torrent' })
+        expect.objectContaining({ id: 'abc123', type: 'torrent' }),
       );
     });
   });
@@ -91,7 +98,9 @@ describe('downloadsRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = downloadsRouter.createCaller(ctx);
 
-      const result = await caller.resumeQueue({ integrationId: 'qbittorrent-1' });
+      const result = await caller.resumeQueue({
+        integrationId: 'qbittorrent-1',
+      });
       expect(result).toEqual({ success: true });
       expect(integration.resumeQueueAsync).toHaveBeenCalledTimes(1);
     });
@@ -106,11 +115,14 @@ describe('downloadsRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = downloadsRouter.createCaller(ctx);
 
-      const result = await caller.resumeItem({ integrationId: 'qbittorrent-1', torrentHash: 'abc123' });
+      const result = await caller.resumeItem({
+        integrationId: 'qbittorrent-1',
+        torrentHash: 'abc123',
+      });
       expect(result).toEqual({ success: true });
       expect(integration.resumeItemAsync).toHaveBeenCalledTimes(1);
       expect(integration.resumeItemAsync).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'abc123', type: 'torrent' })
+        expect.objectContaining({ id: 'abc123', type: 'torrent' }),
       );
     });
   });
@@ -124,12 +136,15 @@ describe('downloadsRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = downloadsRouter.createCaller(ctx);
 
-      const result = await caller.deleteItem({ integrationId: 'qbittorrent-1', torrentHash: 'abc123' });
+      const result = await caller.deleteItem({
+        integrationId: 'qbittorrent-1',
+        torrentHash: 'abc123',
+      });
       expect(result).toEqual({ success: true });
       expect(integration.deleteItemAsync).toHaveBeenCalledTimes(1);
       expect(integration.deleteItemAsync).toHaveBeenCalledWith(
         expect.objectContaining({ id: 'abc123', type: 'torrent' }),
-        false
+        false,
       );
     });
 
@@ -141,11 +156,15 @@ describe('downloadsRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = downloadsRouter.createCaller(ctx);
 
-      await caller.deleteItem({ integrationId: 'qbittorrent-1', torrentHash: 'abc123', fromDisk: true });
+      await caller.deleteItem({
+        integrationId: 'qbittorrent-1',
+        torrentHash: 'abc123',
+        fromDisk: true,
+      });
       expect(integration.deleteItemAsync).toHaveBeenCalledTimes(1);
       expect(integration.deleteItemAsync).toHaveBeenCalledWith(
         expect.objectContaining({ id: 'abc123', type: 'torrent' }),
-        true
+        true,
       );
     });
   });
@@ -155,14 +174,18 @@ describe('downloadsRouter', () => {
       const failingIntegration = createTestIntegration('qbittorrent', {
         id: 'qbittorrent-fail',
         name: 'Failing QBittorrent',
-        getClientJobsAndStatusAsync: vi.fn().mockRejectedValue(new Error('Connection refused')),
+        getClientJobsAndStatusAsync: vi
+          .fn()
+          .mockRejectedValue(new Error('Connection refused')),
       });
       const successIntegration = createTestIntegration('qbittorrent', {
         id: 'qbittorrent-ok',
         name: 'Working QBittorrent',
       });
 
-      const ctx = createTestTRPCContext({ integrations: [failingIntegration, successIntegration] });
+      const ctx = createTestTRPCContext({
+        integrations: [failingIntegration, successIntegration],
+      });
       const caller = downloadsRouter.createCaller(ctx);
 
       const result = await caller.getAllJobs({ limit: 50 });
@@ -174,15 +197,21 @@ describe('downloadsRouter', () => {
       const failingIntegration1 = createTestIntegration('qbittorrent', {
         id: 'qbittorrent-fail-1',
         name: 'Failing 1',
-        getClientJobsAndStatusAsync: vi.fn().mockRejectedValue(new Error('Error 1')),
+        getClientJobsAndStatusAsync: vi
+          .fn()
+          .mockRejectedValue(new Error('Error 1')),
       });
       const failingIntegration2 = createTestIntegration('qbittorrent', {
         id: 'qbittorrent-fail-2',
         name: 'Failing 2',
-        getClientJobsAndStatusAsync: vi.fn().mockRejectedValue(new Error('Error 2')),
+        getClientJobsAndStatusAsync: vi
+          .fn()
+          .mockRejectedValue(new Error('Error 2')),
       });
 
-      const ctx = createTestTRPCContext({ integrations: [failingIntegration1, failingIntegration2] });
+      const ctx = createTestTRPCContext({
+        integrations: [failingIntegration1, failingIntegration2],
+      });
       const caller = downloadsRouter.createCaller(ctx);
 
       const result = await caller.getAllJobs({ limit: 50 });
@@ -194,26 +223,34 @@ describe('downloadsRouter', () => {
     test('getJobs with a non-existent integrationId throws', async () => {
       const ctx = createTestTRPCContext({ integrations: [] });
       const caller = downloadsRouter.createCaller(ctx);
-      await expect(caller.getJobs({ integrationId: 'does-not-exist' })).rejects.toThrow();
+      await expect(
+        caller.getJobs({ integrationId: 'does-not-exist' }),
+      ).rejects.toThrow();
     });
 
     test('pauseQueue on a missing integration throws', async () => {
       const ctx = createTestTRPCContext({ integrations: [] });
       const caller = downloadsRouter.createCaller(ctx);
-      await expect(caller.pauseQueue({ integrationId: 'ghost' })).rejects.toThrow();
+      await expect(
+        caller.pauseQueue({ integrationId: 'ghost' }),
+      ).rejects.toThrow();
     });
 
     test('getJobs when getClientJobsAndStatusAsync rejects with IntegrationError', async () => {
       const integration = createTestIntegration('qbittorrent', {
         id: 'qbittorrent-unauth',
         name: 'Unauthorized QB',
-        getClientJobsAndStatusAsync: vi.fn().mockRejectedValue(
-          errorFixtures.integration.unauthorized('Bad API key'),
-        ),
+        getClientJobsAndStatusAsync: vi
+          .fn()
+          .mockRejectedValue(
+            errorFixtures.integration.unauthorized('Bad API key'),
+          ),
       });
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = downloadsRouter.createCaller(ctx);
-      await expect(caller.getJobs({ integrationId: 'qbittorrent-unauth' })).rejects.toThrow();
+      await expect(
+        caller.getJobs({ integrationId: 'qbittorrent-unauth' }),
+      ).rejects.toThrow();
     });
 
     test('deleteItem on a missing integration throws', async () => {

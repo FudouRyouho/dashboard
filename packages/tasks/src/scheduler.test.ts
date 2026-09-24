@@ -98,7 +98,10 @@ describe('Scheduler', () => {
       await sleep(250);
       await sleep(50);
       await s.stop();
-      expect(peak <= 3, `global peak was ${peak}, with a ceiling of 3`).toBeTruthy();
+      expect(
+        peak <= 3,
+        `global peak was ${peak}, with a ceiling of 3`,
+      ).toBeTruthy();
     });
   });
 
@@ -169,8 +172,14 @@ describe('Scheduler', () => {
       await sleep(300);
       await sleep(50);
       await s.stop();
-      expect(during >= 2, `Should see at least 2 attempts before cooldown, got ${during}`).toBeTruthy();
-      expect(attempts > during, `Should run again after cooldown, got ${attempts} total`).toBeTruthy();
+      expect(
+        during >= 2,
+        `Should see at least 2 attempts before cooldown, got ${during}`,
+      ).toBeTruthy();
+      expect(
+        attempts > during,
+        `Should run again after cooldown, got ${attempts} total`,
+      ).toBeTruthy();
     });
 
     test('successful run resets failure counter', async () => {
@@ -189,9 +198,14 @@ describe('Scheduler', () => {
       const s = createScheduler<string>([def], d);
       await sleep(200);
       await s.stop();
-      const outcomes = [...d.runLog.forTask('e').map((r) => r.outcome)].reverse();
+      const outcomes = [
+        ...d.runLog.forTask('e').map((r) => r.outcome),
+      ].reverse();
       expect(outcomes[0]).toBe('failure');
-      expect(outcomes.slice(1).every((o) => o === 'success'), `subsequent runs after success should succeed`).toBeTruthy();
+      expect(
+        outcomes.slice(1).every((o) => o === 'success'),
+        `subsequent runs after success should succeed`,
+      ).toBeTruthy();
       expect(n >= 2, `total runs should be at least 2`).toBeTruthy();
     });
 
@@ -210,7 +224,10 @@ describe('Scheduler', () => {
       const s = createScheduler<string>([def], d);
       await sleep(200);
       await s.stop();
-      expect(attempts >= 2, `cooldown=0 should retry immediately, got ${attempts}`).toBeTruthy();
+      expect(
+        attempts >= 2,
+        `cooldown=0 should retry immediately, got ${attempts}`,
+      ).toBeTruthy();
     });
 
     test('single attempt triggers cooldown after failure', async () => {
@@ -228,7 +245,10 @@ describe('Scheduler', () => {
       const s = createScheduler<string>([def], d);
       await sleep(200);
       await s.stop();
-      expect(attempts >= 2, `maxAttempts=1 should run at least 2 times, got ${attempts}`).toBeTruthy();
+      expect(
+        attempts >= 2,
+        `maxAttempts=1 should run at least 2 times, got ${attempts}`,
+      ).toBeTruthy();
     });
   });
 });

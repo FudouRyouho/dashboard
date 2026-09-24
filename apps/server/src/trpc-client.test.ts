@@ -37,7 +37,9 @@ describe('trpc-client integration tests', () => {
   test('health query returns ok (requires running server)', async () => {
     const running = await isServerRunning(3050);
     if (!running) {
-      console.log('SKIP: Server not running at 127.0.0.1:3050, skipping network test');
+      console.log(
+        'SKIP: Server not running at 127.0.0.1:3050, skipping network test',
+      );
       return;
     }
     const result = await trpc.health.query();
@@ -47,7 +49,9 @@ describe('trpc-client integration tests', () => {
   test('calendar.getEvents returns array for valid range (requires running server)', async () => {
     const running = await isServerRunning(3050);
     if (!running) {
-      console.log('SKIP: Server not running at 127.0.0.1:3050, skipping network test');
+      console.log(
+        'SKIP: Server not running at 127.0.0.1:3050, skipping network test',
+      );
       return;
     }
     const result = await trpc.calendar.getEvents.query({

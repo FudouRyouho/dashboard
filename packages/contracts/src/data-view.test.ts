@@ -13,7 +13,7 @@ describe('dataViewOf', () => {
       dataViewOf({
         data: { obtainedAt: t },
         attempt: { outcome: 'success', at: t },
-      })
+      }),
     ).toBe('fresh');
   });
 
@@ -22,7 +22,7 @@ describe('dataViewOf', () => {
       dataViewOf({
         data: { obtainedAt: t },
         attempt: { outcome: 'failure', at: t, reason: 'unreachable' },
-      })
+      }),
     ).toBe('outdated');
   });
 
@@ -31,7 +31,7 @@ describe('dataViewOf', () => {
       dataViewOf({
         data: null,
         attempt: { outcome: 'failure', at: t, reason: 'unreachable' },
-      })
+      }),
     ).toBe('missing');
   });
 });

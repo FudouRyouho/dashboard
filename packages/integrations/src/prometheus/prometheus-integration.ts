@@ -12,14 +12,18 @@ import { ISystemHealthIntegration } from '../base/system-health';
  * Uses IntegrationInput base + secrets for auth.
  * Implements ISystemHealthIntegration capability.
  */
-export class PrometheusIntegration extends Integration implements ISystemHealthIntegration {
+export class PrometheusIntegration
+  extends Integration
+  implements ISystemHealthIntegration
+{
   private readonly client: PrometheusClient;
   private readonly discovery: PrometheusDiscovery;
 
   constructor(integration: import('../base/integration').IntegrationInput) {
     super(integration);
 
-    const hasAuth = this.hasSecretValue('username') && this.hasSecretValue('password');
+    const hasAuth =
+      this.hasSecretValue('username') && this.hasSecretValue('password');
     let username: string | undefined;
     let password: string | undefined;
 
@@ -48,7 +52,9 @@ export class PrometheusIntegration extends Integration implements ISystemHealthI
    * 2. Run all queries
    * 3. Normalize results by instance
    */
-  async getSystemMetricsAsync(options?: { signal?: AbortSignal }): Promise<PrometheusNormalized[]> {
+  async getSystemMetricsAsync(options?: {
+    signal?: AbortSignal;
+  }): Promise<PrometheusNormalized[]> {
     // Discover instances
     const instances = await this.discovery.discoverInstances(options?.signal);
     if (!instances || instances.length === 0) {
@@ -63,7 +69,7 @@ export class PrometheusIntegration extends Integration implements ISystemHealthI
       queries.map(async ({ key, promql }) => {
         const result = await this.client.query(promql, options?.signal);
         queryResults.set(key, result ?? null);
-      })
+      }),
     );
 
     // Normalize results
@@ -74,21 +80,33 @@ export class PrometheusIntegration extends Integration implements ISystemHealthI
    * Get metrics for a specific server.
    * If instances and queryResults are provided, reuse them to avoid re-discovery and re-querying.
    */
-  async getServerMetricsAsync(server: string, options?: { signal?: AbortSignal; instances?: string[]; queryResults?: Map<string, unknown> }): Promise<ServerMetrics | null> {
+  async getServerMetricsAsync(
+    server: string,
+    options?: {
+      signal?: AbortSignal;
+      instances?: string[];
+      queryResults?: Map<string, unknown>;
+    },
+  ): Promise<ServerMetrics | null> {
     let instances = options?.instances;
     let queryResults = options?.queryResults;
 
     if (!instances || !queryResults) {
       // Fallback: run full discovery and query (for backward compatibility)
-      const allMetrics = await this.getSystemMetricsAsync(options?.signal ? { signal: options.signal } : undefined);
-      const serverData = allMetrics.find(m => m.server === server);
+      const allMetrics = await this.getSystemMetricsAsync(
+        options?.signal ? { signal: options.signal } : undefined,
+      );
+      const serverData = allMetrics.find((m) => m.server === server);
       if (!serverData) return null;
 
       return PrometheusNormalizer.toServerMetrics(serverData);
     }
 
     // Use pre-discovered data
-    const serverData = PrometheusNormalizer.normalize(queryResults, instances).find(m => m.server === server);
+    const serverData = PrometheusNormalizer.normalize(
+      queryResults,
+      instances,
+    ).find((m) => m.server === server);
     if (!serverData) return null;
 
     return PrometheusNormalizer.toServerMetrics(serverData);
@@ -98,7 +116,9 @@ export class PrometheusIntegration extends Integration implements ISystemHealthI
    * Discover instances and run all queries, returning both for reuse.
    * Used by getAllMetrics and can be passed to getServerMetricsAsync to avoid double work.
    */
-  async getDiscoveredDataAsync(options?: { signal?: AbortSignal }): Promise<{ instances: string[]; queryResults: Map<string, unknown> }> {
+  async getDiscoveredDataAsync(options?: {
+    signal?: AbortSignal;
+  }): Promise<{ instances: string[]; queryResults: Map<string, unknown> }> {
     const instances = await this.discovery.discoverInstances(options?.signal);
     if (!instances || instances.length === 0) {
       return { instances: [], queryResults: new Map() };
@@ -111,7 +131,7 @@ export class PrometheusIntegration extends Integration implements ISystemHealthI
       queries.map(async ({ key, promql }) => {
         const result = await this.client.query(promql, options?.signal);
         queryResults.set(key, result ?? null);
-      })
+      }),
     );
 
     return { instances, queryResults };

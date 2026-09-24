@@ -2,7 +2,11 @@ import { test, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import { initializeDatabase } from '@dashboard/db';
-import { purgeTaskRunsOlderThan, insertTaskRun, taskSnapshots } from '@dashboard/db';
+import {
+  purgeTaskRunsOlderThan,
+  insertTaskRun,
+  taskSnapshots,
+} from '@dashboard/db';
 import { createRunLogDB, createPurgeTask } from '.';
 
 const tempPath = () => `./data/test-purge-${randomUUID()}.sqlite`;

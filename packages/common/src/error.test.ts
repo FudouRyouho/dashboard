@@ -35,7 +35,9 @@ test('toError converts null to Error', () => {
 test('toError converts object to Error', () => {
   const result = toError({ foo: 'bar' });
   expect(result instanceof Error).toBeTruthy();
-  expect(result.message.includes('bar') || result.message.includes('foo')).toBeTruthy();
+  expect(
+    result.message.includes('bar') || result.message.includes('foo'),
+  ).toBeTruthy();
 });
 
 test('isAppError returns true for AppError', () => {

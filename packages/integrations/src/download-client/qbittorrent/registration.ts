@@ -1,5 +1,9 @@
 import { QbittorrentIntegration } from './qbittorrent-integration';
-import type { IntegrationInput, IntegrationFactory, IntegrationMetadata } from '../../registry';
+import type {
+  IntegrationInput,
+  IntegrationFactory,
+  IntegrationMetadata,
+} from '../../registry';
 
 const metadata: IntegrationMetadata = {
   kind: 'qbittorrent',

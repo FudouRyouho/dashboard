@@ -12,7 +12,10 @@ export function toStatus(
   // Validate that snapshot and lastRun belong to the same task
   if (snapshot && lastRun) {
     const snapshotWithTaskId = snapshot as SnapshotWithTaskId;
-    if (snapshotWithTaskId.taskId && snapshotWithTaskId.taskId !== lastRun.taskId) {
+    if (
+      snapshotWithTaskId.taskId &&
+      snapshotWithTaskId.taskId !== lastRun.taskId
+    ) {
       console.warn(
         `[toStatus] Task ID mismatch: snapshot.taskId=${snapshotWithTaskId.taskId} !== lastRun.taskId=${lastRun.taskId}. Treating as no lastRun.`,
       );

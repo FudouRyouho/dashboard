@@ -97,7 +97,7 @@ El sistema ejecuta tareas periódicas (calendar, mediaReleases, docker) que cons
 - **Latencia predecible**: Las queries responden en milisegundos desde memoria local, no dependen de la latencia de red de Sonarr/Radarr/Docker/Prometheus.
 - **Consistencia**: El cliente siempre ve el estado "confirmado" por la última ejecución exitosa de la tarea, junto con metadatos de cuándo fue y si hubo errores.
 - **Control de concurrencia**: Las mutaciones ejecutan directamente contra la API del servicio, permitiendo control fino (pausar un torrent específico, reiniciar un contenedor específico) sin esperar al siguiente ciclo de la tarea periódica.
-- **Separación de responsabilidades**: El scheduler se encarga de *observar* (polling), las mutaciones se encargan de *actuar* (comandos).
+- **Separación de responsabilidades**: El scheduler se encarga de _observar_ (polling), las mutaciones se encargan de _actuar_ (comandos).
 
 ### Implementación
 
@@ -135,6 +135,7 @@ Docker es una integración bidireccional natural: monitoreo de contenedores (rea
 ### La Decisión
 
 Crear `dockerRouter` completo con:
+
 - **Query**: `getContainers` — retorna array de `{ integration, stats: DockerDashboardStats }` leyendo de `ctx.store` (snapshot del task `docker`).
 - **Mutaciones**: `startAll`, `stopAll`, `restartAll`, `removeAll` — input `{ ids: string[] }`, llaman directamente a métodos de la integración Docker (`startContainerAsync`, etc.) con `toIntegrationTRPCError` para errores.
 
@@ -157,6 +158,7 @@ Crear `dockerRouter` completo con:
 ### Contexto
 
 Prometheus expone métricas vía PromQL. El router `systemHealth` provee dos endpoints:
+
 - `getAllMetrics`: métricas de todas las instancias descubiertas (11 queries PromQL en paralelo)
 - `getMetrics`: métricas de un servidor específico
 
@@ -178,12 +180,14 @@ Prometheus expone métricas vía PromQL. El router `systemHealth` provee dos end
 ### Contexto
 
 qBittorrent WebUI soporta autenticación via:
+
 - **apiKey** (header `X-Api-Key`, introducido en v4.5.0)
 - **username/password** (form login, legacy pero universal)
 
 ### La Decisión
 
 Soportar **exclusivamente** `username`+`password` en la integración qBittorrent:
+
 - Schema `upsertIntegrationInputSchema` REQUIERE `username` Y `password` (ambos string.min(1)).
 - `apiKey` está explícitamente prohibido (`z.never()`). No se acepta.
 - DB: columnas `username` y `password` requeridos, `apiKey` nullable pero no usado.

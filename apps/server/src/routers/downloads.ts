@@ -18,7 +18,9 @@ const torrentActionInput = z.object({
   fromDisk: z.boolean().optional().default(false),
 });
 
-function buildDownloadClientItemFromHash(torrentHash: string): DownloadClientItem {
+function buildDownloadClientItemFromHash(
+  torrentHash: string,
+): DownloadClientItem {
   return {
     type: 'torrent',
     id: torrentHash,
@@ -34,26 +36,31 @@ function buildDownloadClientItemFromHash(torrentHash: string): DownloadClientIte
   };
 }
 
-const downloadClientJobsWithIntegrationSchema = downloadClientJobsAndStatusSchema.extend({
-  integration: z.object({
-    id: z.string(),
-    name: z.string(),
-    kind: z.string(),
-  }),
-});
+const downloadClientJobsWithIntegrationSchema =
+  downloadClientJobsAndStatusSchema.extend({
+    integration: z.object({
+      id: z.string(),
+      name: z.string(),
+      kind: z.string(),
+    }),
+  });
 
 export const downloadsRouter = createTRPCRouter({
   getAllJobs: publicProcedure
-    .input(z.object({ limit: z.number().int().positive().max(500).optional().default(50) }))
+    .input(
+      z.object({
+        limit: z.number().int().positive().max(500).optional().default(50),
+      }),
+    )
     .output(z.array(downloadClientJobsWithIntegrationSchema))
     .query(async ({ ctx, input }) => {
       const downloadClients = ctx.integrations.filter(supportsDownloadClient);
 
       const results = await Promise.allSettled(
         downloadClients.map(async (integration) => {
-          const jobsAndStatus = await integration.getClientJobsAndStatusAsync(
-            { limit: input.limit }
-          );
+          const jobsAndStatus = await integration.getClientJobsAndStatusAsync({
+            limit: input.limit,
+          });
           return {
             integration: {
               id: integration.publicIntegration.id,
@@ -62,7 +69,7 @@ export const downloadsRouter = createTRPCRouter({
             },
             ...jobsAndStatus,
           };
-        })
+        }),
       );
 
       results
@@ -70,12 +77,14 @@ export const downloadsRouter = createTRPCRouter({
         .forEach((r) => {
           ctx.logger.error(
             { integrationId: 'unknown' },
-            `Download client failed: ${r.reason instanceof Error ? r.reason.message : String(r.reason)}`
+            `Download client failed: ${r.reason instanceof Error ? r.reason.message : String(r.reason)}`,
           );
         });
 
       return results
-        .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
+        .filter(
+          (r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled',
+        )
         .map((r) => r.value);
     }),
 
@@ -84,27 +93,35 @@ export const downloadsRouter = createTRPCRouter({
     .output(downloadClientJobsAndStatusSchema)
     .query(async ({ ctx, input }) => {
       const integration = ctx.integrations.find(
-        (i) => i.publicIntegration.id === input.integrationId
+        (i) => i.publicIntegration.id === input.integrationId,
       );
 
       if (!integration || !supportsDownloadClient(integration)) {
-        throw toIntegrationTRPCError(new Error('Integration not found or does not support download client'), 'Download operation failed');
+        throw toIntegrationTRPCError(
+          new Error(
+            'Integration not found or does not support download client',
+          ),
+          'Download operation failed',
+        );
       }
 
-      return integration.getClientJobsAndStatusAsync(
-        { limit: input.limit }
-      );
+      return integration.getClientJobsAndStatusAsync({ limit: input.limit });
     }),
 
   pauseQueue: publicProcedure
     .input(z.object({ integrationId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const integration = ctx.integrations.find(
-        (i) => i.publicIntegration.id === input.integrationId
+        (i) => i.publicIntegration.id === input.integrationId,
       );
 
       if (!integration || !supportsDownloadClient(integration)) {
-        throw toIntegrationTRPCError(new Error('Integration not found or does not support download client'), 'Download operation failed');
+        throw toIntegrationTRPCError(
+          new Error(
+            'Integration not found or does not support download client',
+          ),
+          'Download operation failed',
+        );
       }
 
       await integration.pauseQueueAsync();
@@ -115,11 +132,16 @@ export const downloadsRouter = createTRPCRouter({
     .input(torrentActionInput)
     .mutation(async ({ ctx, input }) => {
       const integration = ctx.integrations.find(
-        (i) => i.publicIntegration.id === input.integrationId
+        (i) => i.publicIntegration.id === input.integrationId,
       );
 
       if (!integration || !supportsDownloadClient(integration)) {
-        throw toIntegrationTRPCError(new Error('Integration not found or does not support download client'), 'Download operation failed');
+        throw toIntegrationTRPCError(
+          new Error(
+            'Integration not found or does not support download client',
+          ),
+          'Download operation failed',
+        );
       }
 
       const item = buildDownloadClientItemFromHash(input.torrentHash);
@@ -132,11 +154,16 @@ export const downloadsRouter = createTRPCRouter({
     .input(z.object({ integrationId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const integration = ctx.integrations.find(
-        (i) => i.publicIntegration.id === input.integrationId
+        (i) => i.publicIntegration.id === input.integrationId,
       );
 
       if (!integration || !supportsDownloadClient(integration)) {
-        throw toIntegrationTRPCError(new Error('Integration not found or does not support download client'), 'Download operation failed');
+        throw toIntegrationTRPCError(
+          new Error(
+            'Integration not found or does not support download client',
+          ),
+          'Download operation failed',
+        );
       }
 
       await integration.resumeQueueAsync();
@@ -147,11 +174,16 @@ export const downloadsRouter = createTRPCRouter({
     .input(torrentActionInput)
     .mutation(async ({ ctx, input }) => {
       const integration = ctx.integrations.find(
-        (i) => i.publicIntegration.id === input.integrationId
+        (i) => i.publicIntegration.id === input.integrationId,
       );
 
       if (!integration || !supportsDownloadClient(integration)) {
-        throw toIntegrationTRPCError(new Error('Integration not found or does not support download client'), 'Download operation failed');
+        throw toIntegrationTRPCError(
+          new Error(
+            'Integration not found or does not support download client',
+          ),
+          'Download operation failed',
+        );
       }
 
       const item = buildDownloadClientItemFromHash(input.torrentHash);
@@ -164,11 +196,16 @@ export const downloadsRouter = createTRPCRouter({
     .input(torrentActionInput)
     .mutation(async ({ ctx, input }) => {
       const integration = ctx.integrations.find(
-        (i) => i.publicIntegration.id === input.integrationId
+        (i) => i.publicIntegration.id === input.integrationId,
       );
 
       if (!integration || !supportsDownloadClient(integration)) {
-        throw toIntegrationTRPCError(new Error('Integration not found or does not support download client'), 'Download operation failed');
+        throw toIntegrationTRPCError(
+          new Error(
+            'Integration not found or does not support download client',
+          ),
+          'Download operation failed',
+        );
       }
 
       const item = buildDownloadClientItemFromHash(input.torrentHash);

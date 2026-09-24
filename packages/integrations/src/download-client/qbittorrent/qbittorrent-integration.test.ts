@@ -4,46 +4,87 @@ import { QbittorrentIntegration } from './qbittorrent-integration';
 import { http, HttpResponse } from '@dashboard/testing-utils/msw';
 
 // Simple inline handlers for testing
-const createHandlers = (mode: 'success' | 'empty' | 'error_401' | 'error_500' | 'malformed' = 'success') => [
+const createHandlers = (
+  mode:
+    'success' | 'empty' | 'error_401' | 'error_500' | 'malformed' = 'success',
+) => [
   http.get('http://localhost:8080/api/v2/app/version', ({ request }) => {
     const cookie = request.headers.get('cookie') ?? '';
     if (!cookie.includes('SID=')) return new Response('', { status: 403 });
-    return new Response('4.4.0', { status: 200, headers: { 'content-type': 'text/plain' } });
+    return new Response('4.4.0', {
+      status: 200,
+      headers: { 'content-type': 'text/plain' },
+    });
   }),
   http.post('http://localhost:8080/api/v2/auth/login', async ({ request }) => {
     const body = await request.text();
     const params = new URLSearchParams(body);
-    if (params.get('username') === 'test-user' && params.get('password') === 'test-pass') {
-      return new Response('Ok.', { status: 200, headers: { 'Set-Cookie': 'SID=test-sid; Path=/; HttpOnly' } });
+    if (
+      params.get('username') === 'test-user' &&
+      params.get('password') === 'test-pass'
+    ) {
+      return new Response('Ok.', {
+        status: 200,
+        headers: { 'Set-Cookie': 'SID=test-sid; Path=/; HttpOnly' },
+      });
     }
-    return new Response('Forbidden.', { status: 403, headers: { 'Set-Cookie': 'SID=; Path=/; HttpOnly' } });
+    return new Response('Forbidden.', {
+      status: 403,
+      headers: { 'Set-Cookie': 'SID=; Path=/; HttpOnly' },
+    });
   }),
   http.get('http://localhost:8080/api/v2/torrents/info', ({ request }) => {
     const cookie = request.headers.get('cookie') ?? '';
     if (!cookie.includes('SID=')) return new Response('', { status: 403 });
-    
+
     switch (mode) {
       case 'error_401':
         return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
       case 'error_500':
-        return HttpResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        return HttpResponse.json(
+          { error: 'Internal Server Error' },
+          { status: 500 },
+        );
       case 'malformed':
-        return new Response('{"invalid":', { status: 200, headers: { 'content-type': 'application/json' } });
+        return new Response('{"invalid":', {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
       case 'empty':
         return HttpResponse.json([]);
       case 'success':
       default:
-        return HttpResponse.json([{
-          hash: 'test-torrent-hash-1', name: 'Test Torrent 1', size: 1000000, progress: 0.5,
-          dlspeed: 1024, upspeed: 512, state: 'downloading', category: 'test',
-          added_on: Math.floor(Date.now() / 1000) - 3600, eta: 1800, uploaded: 100,
-          completion_on: 0, total_size: 1000000,
-        }]);
+        return HttpResponse.json([
+          {
+            hash: 'test-torrent-hash-1',
+            name: 'Test Torrent 1',
+            size: 1000000,
+            progress: 0.5,
+            dlspeed: 1024,
+            upspeed: 512,
+            state: 'downloading',
+            category: 'test',
+            added_on: Math.floor(Date.now() / 1000) - 3600,
+            eta: 1800,
+            uploaded: 100,
+            completion_on: 0,
+            total_size: 1000000,
+          },
+        ]);
     }
   }),
-  http.post('http://localhost:8080/api/v2/torrents/pause', () => new Response('', { status: 200 })),
-  http.post('http://localhost:8080/api/v2/torrents/resume', () => new Response('', { status: 200 })),
-  http.post('http://localhost:8080/api/v2/torrents/delete', () => new Response('', { status: 200 })),
+  http.post(
+    'http://localhost:8080/api/v2/torrents/pause',
+    () => new Response('', { status: 200 }),
+  ),
+  http.post(
+    'http://localhost:8080/api/v2/torrents/resume',
+    () => new Response('', { status: 200 }),
+  ),
+  http.post(
+    'http://localhost:8080/api/v2/torrents/delete',
+    () => new Response('', { status: 200 }),
+  ),
 ];
 
 const server = setupServer(...createHandlers());
@@ -53,14 +94,18 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe('QbittorrentIntegration (handlers HTTP)', () => {
-  const createIntegration = () => new QbittorrentIntegration({
-    kind: 'qbittorrent',
-    id: 'test-qbittorrent',
-    name: 'Test qBittorrent',
-    url: 'http://localhost:8080',
-    secrets: [{ kind: 'username', value: 'test-user' }, { kind: 'password', value: 'test-pass' }],
-    timeoutMs: 10000,
-  });
+  const createIntegration = () =>
+    new QbittorrentIntegration({
+      kind: 'qbittorrent',
+      id: 'test-qbittorrent',
+      name: 'Test qBittorrent',
+      url: 'http://localhost:8080',
+      secrets: [
+        { kind: 'username', value: 'test-user' },
+        { kind: 'password', value: 'test-pass' },
+      ],
+      timeoutMs: 10000,
+    });
 
   test('throws on invalid credentials (401/403)', async () => {
     server.use(...createHandlers('error_401'));
@@ -99,7 +144,14 @@ describe('QbittorrentIntegration (handlers HTTP)', () => {
     try {
       await integration.getClientJobsAndStatusAsync({ limit: 10 });
     } catch (e: any) {
-      console.log('malformed error:', e?.reason, e?.message, e?.name, e?.httpStatus, e?.cause);
+      console.log(
+        'malformed error:',
+        e?.reason,
+        e?.message,
+        e?.name,
+        e?.httpStatus,
+        e?.cause,
+      );
       expect(e).toBeInstanceOf(Error);
     }
   });
@@ -158,9 +210,13 @@ describe('QbittorrentIntegration (handlers HTTP)', () => {
       { dlspeed: 2048, upspeed: 1024, progress: 1.0 },
       { dlspeed: undefined, upspeed: 0, progress: 0 },
     ];
-    const rates = mockTorrents.reduce(({ down, up }, { dlspeed, upspeed }) => ({
-      down: down + (dlspeed ?? 0), up: up + (upspeed ?? 0),
-    }), { down: 0, up: 0 });
+    const rates = mockTorrents.reduce(
+      ({ down, up }, { dlspeed, upspeed }) => ({
+        down: down + (dlspeed ?? 0),
+        up: up + (upspeed ?? 0),
+      }),
+      { down: 0, up: 0 },
+    );
     expect(rates.down).toBe(3072);
     expect(rates.up).toBe(1536);
   });
@@ -172,25 +228,43 @@ describe('QbittorrentIntegration (handlers HTTP)', () => {
       { size: 3000, total_size: undefined, uploaded: 1500 },
       { size: undefined, total_size: undefined, uploaded: 0 },
     ];
-    const sizes = mockTorrents.map(t => t.size ?? t.total_size ?? 0);
+    const sizes = mockTorrents.map((t) => t.size ?? t.total_size ?? 0);
     expect(sizes).toEqual([1000, 2000, 3000, 0]);
   });
 
   test('paused state logic', () => {
-    const torrentsAllPaused = [{ state: 'pausedDL' }, { state: 'pausedUP' }, { state: 'stoppedDL' }];
+    const torrentsAllPaused = [
+      { state: 'pausedDL' },
+      { state: 'pausedUP' },
+      { state: 'stoppedDL' },
+    ];
     const paused = torrentsAllPaused.every(({ state }) => {
       switch (state) {
-        case 'pausedDL': case 'pausedUP': case 'stoppedDL': case 'stoppedUP': return true;
-        default: return false;
+        case 'pausedDL':
+        case 'pausedUP':
+        case 'stoppedDL':
+        case 'stoppedUP':
+          return true;
+        default:
+          return false;
       }
     });
     expect(paused).toBe(true);
 
-    const torrentsMixed = [{ state: 'pausedDL' }, { state: 'uploading' }, { state: 'pausedUP' }];
+    const torrentsMixed = [
+      { state: 'pausedDL' },
+      { state: 'uploading' },
+      { state: 'pausedUP' },
+    ];
     const pausedMixed = torrentsMixed.every(({ state }) => {
       switch (state) {
-        case 'pausedDL': case 'pausedUP': case 'stoppedDL': case 'stoppedUP': return true;
-        default: return false;
+        case 'pausedDL':
+        case 'pausedUP':
+        case 'stoppedDL':
+        case 'stoppedUP':
+          return true;
+        default:
+          return false;
       }
     });
     expect(pausedMixed).toBe(false);
@@ -218,24 +292,54 @@ describe('QbittorrentIntegration (handlers HTTP)', () => {
   test('pauseItemAsync calls API', async () => {
     const integration = createIntegration();
     await integration.pauseItemAsync({
-      type: 'torrent', id: 'test-torrent-hash-1', name: '', size: 0,
-      sent: 0, downSpeed: 0, upSpeed: 0, time: 0, added: 0, state: 'leeching', progress: 0,
+      type: 'torrent',
+      id: 'test-torrent-hash-1',
+      name: '',
+      size: 0,
+      sent: 0,
+      downSpeed: 0,
+      upSpeed: 0,
+      time: 0,
+      added: 0,
+      state: 'leeching',
+      progress: 0,
     });
   });
 
   test('resumeItemAsync calls API', async () => {
     const integration = createIntegration();
     await integration.resumeItemAsync({
-      type: 'torrent', id: 'test-torrent-hash-1', name: '', size: 0,
-      sent: 0, downSpeed: 0, upSpeed: 0, time: 0, added: 0, state: 'leeching', progress: 0,
+      type: 'torrent',
+      id: 'test-torrent-hash-1',
+      name: '',
+      size: 0,
+      sent: 0,
+      downSpeed: 0,
+      upSpeed: 0,
+      time: 0,
+      added: 0,
+      state: 'leeching',
+      progress: 0,
     });
   });
 
   test('deleteItemAsync calls API with fromDisk', async () => {
     const integration = createIntegration();
-    await integration.deleteItemAsync({
-      type: 'torrent', id: 'test-torrent-hash-1', name: '', size: 0,
-      sent: 0, downSpeed: 0, upSpeed: 0, time: 0, added: 0, state: 'leeching', progress: 0,
-    }, true);
+    await integration.deleteItemAsync(
+      {
+        type: 'torrent',
+        id: 'test-torrent-hash-1',
+        name: '',
+        size: 0,
+        sent: 0,
+        downSpeed: 0,
+        upSpeed: 0,
+        time: 0,
+        added: 0,
+        state: 'leeching',
+        progress: 0,
+      },
+      true,
+    );
   });
 });

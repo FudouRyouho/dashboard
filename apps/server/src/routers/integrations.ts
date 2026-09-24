@@ -9,14 +9,16 @@ import {
 const upsertIntegrationInput = upsertIntegrationInputSchema;
 
 export const integrationsRouter = createTRPCRouter({
-  list: publicProcedure.output(z.array(integrationOutputSchema)).query(async ({ ctx }) => {
-    const { getAllIntegrations } = await import('@dashboard/db');
-    const integrations = await getAllIntegrations(ctx.db);
-    return integrations.map((i) => ({
-      ...i,
-      kind: i.kind as IntegrationKind,
-    }));
-  }),
+  list: publicProcedure
+    .output(z.array(integrationOutputSchema))
+    .query(async ({ ctx }) => {
+      const { getAllIntegrations } = await import('@dashboard/db');
+      const integrations = await getAllIntegrations(ctx.db);
+      return integrations.map((i) => ({
+        ...i,
+        kind: i.kind as IntegrationKind,
+      }));
+    }),
 
   get: publicProcedure
     .input(z.object({ id: z.string() }))

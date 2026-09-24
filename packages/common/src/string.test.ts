@@ -9,9 +9,15 @@ import {
 import { removeTrailingSlash } from './url.js';
 
 test('joinPaths joins paths correctly', () => {
-  expect(joinPaths('http://example.com', 'api', 'v1')).toBe('http://example.com/api/v1');
-  expect(joinPaths('http://example.com/', '/api/', '/v1/')).toBe('http://example.com/api/v1');
-  expect(joinPaths('http://example.com', 'api', '')).toBe('http://example.com/api');
+  expect(joinPaths('http://example.com', 'api', 'v1')).toBe(
+    'http://example.com/api/v1',
+  );
+  expect(joinPaths('http://example.com/', '/api/', '/v1/')).toBe(
+    'http://example.com/api/v1',
+  );
+  expect(joinPaths('http://example.com', 'api', '')).toBe(
+    'http://example.com/api',
+  );
   expect(joinPaths('', 'api', 'v1')).toBe('api/v1');
 });
 
@@ -32,7 +38,9 @@ test('ensurePrefix adds prefix when missing', () => {
 
 test('ensurePrefix does not duplicate prefix', () => {
   expect(ensurePrefix('/path', '/')).toBe('/path');
-  expect(ensurePrefix('http://example.com', 'http://')).toBe('http://example.com');
+  expect(ensurePrefix('http://example.com', 'http://')).toBe(
+    'http://example.com',
+  );
 });
 
 test('truncate truncates long strings', () => {
@@ -52,7 +60,9 @@ test('formatBytes formats bytes correctly', () => {
 
 test('removeTrailingSlash removes trailing slashes', () => {
   expect(removeTrailingSlash('http://example.com/')).toBe('http://example.com');
-  expect(removeTrailingSlash('http://example.com///')).toBe('http://example.com');
+  expect(removeTrailingSlash('http://example.com///')).toBe(
+    'http://example.com',
+  );
   expect(removeTrailingSlash('http://example.com')).toBe('http://example.com');
   expect(removeTrailingSlash('')).toBe('');
 });

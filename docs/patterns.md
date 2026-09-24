@@ -21,8 +21,15 @@ Cada paquete de integración implementa un mecanismo de autorregistro utilizando
 ```typescript
 // Ejemplo conceptual en packages/integrations/src/sonarr/registration.ts
 const factory: IntegrationFactory = {
-  metadata: { kind: 'sonarr', defaultPort: 8989, displayName: 'Sonarr', capabilities: ['calendar'] },
-  create(input) { return new SonarrIntegration(input); }
+  metadata: {
+    kind: 'sonarr',
+    defaultPort: 8989,
+    displayName: 'Sonarr',
+    capabilities: ['calendar'],
+  },
+  create(input) {
+    return new SonarrIntegration(input);
+  },
 };
 registerIntegration(factory);
 ```
@@ -67,12 +74,12 @@ ResultStatus = {
 
 Mediante la función puramente funcional `dataViewOf(status)`, se combinan ambos ejes para derivar un veredicto claro para la UI:
 
-| `attempt` | `data` | `dataViewOf` | Significado |
-| --- | --- | --- | --- |
-| `null` | — | `never-queried` | La tarea aún no corrió nunca |
-| `outcome: success` | — | `fresh` | Todo en orden, dato reciente |
-| `outcome: failure` | Hay dato | `outdated` | La última llamada falló, pero mostramos el último dato conocido |
-| `outcome: failure` | `null` | `missing` | Falló y no hay datos previos disponibles |
+| `attempt`          | `data`   | `dataViewOf`    | Significado                                                     |
+| ------------------ | -------- | --------------- | --------------------------------------------------------------- |
+| `null`             | —        | `never-queried` | La tarea aún no corrió nunca                                    |
+| `outcome: success` | —        | `fresh`         | Todo en orden, dato reciente                                    |
+| `outcome: failure` | Hay dato | `outdated`      | La última llamada falló, pero mostramos el último dato conocido |
+| `outcome: failure` | `null`   | `missing`       | Falló y no hay datos previos disponibles                        |
 
 ### Por qué este modelo
 
@@ -88,10 +95,12 @@ Diferentes integraciones soportan distintas operaciones. Sonarr y Radarr tienen 
 
 ### La Solución
 
-Se utiliza **duck-typing tipado** mediante funciones *guards* (ej. `supportsCalendar`, `supportsMediaReleases`) definidas en `packages/integrations/src/base/`.
+Se utiliza **duck-typing tipado** mediante funciones _guards_ (ej. `supportsCalendar`, `supportsMediaReleases`) definidas en `packages/integrations/src/base/`.
 
 ```typescript
-export function supportsCalendar(integration: Integration): integration is Integration & ICalendarIntegration {
+export function supportsCalendar(
+  integration: Integration,
+): integration is Integration & ICalendarIntegration {
   return typeof (integration as any).getCalendarEventsAsync === 'function';
 }
 ```

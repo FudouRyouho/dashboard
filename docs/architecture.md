@@ -45,16 +45,16 @@ El monorepo está organizado en capas estrictas donde **las dependencias fluyen 
 
 ### Reglas de Importación
 
-| Paquete / App | Puede importar de | Por qué |
-| --- | --- | --- |
-| `@dashboard/common` | Ninguno (leaf) | Es una librería de utilidades puras sin conocimiento del dominio. |
-| `@dashboard/contracts` | `common` (opcional), `zod` | Define el lenguaje común (schemas y tipos) que cruza el límite servidor-cliente. No debe tener lógica de negocio ni dependencias pesadas. |
-| `@dashboard/definitions` | `contracts` (solo tipos) | Metadata estática de UI (íconos, nombres, colores). No importa `db` ni `integrations` para poder ser consumido limpiamente por el cliente web. |
-| `@dashboard/db` | `contracts` (tipos) | Capa de persistencia con SQLite + Drizzle. Expone conexión y queries sin conocer las integraciones concretas. |
-| `@dashboard/integrations` | `common`, `contracts` | Clases adaptadoras para servicios externos. Depende de contratos para validar sus respuestas mediante Zod antes de exponerlas. |
-| `@dashboard/tasks` | `db`, `contracts`, `common` | Motor de tareas programadas y persistencia de snapshots. Orquesta corridas sin conocer los detalles de las integraciones (opera mediante interfaces). |
-| `@dashboard/server` | Todos los paquetes | Ensambla la API tRPC, inicializa la base de datos, levanta el registry de integraciones y arranca el scheduler. |
-| `apps/clients/react` | `@dashboard/contracts`, `@dashboard/definitions` | El cliente web **nunca** importa `db`, `tasks` ni `integrations`. Solo consume tipos y metadatos de UI para mantenerse agnóstico del backend. |
+| Paquete / App             | Puede importar de                                | Por qué                                                                                                                                               |
+| ------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@dashboard/common`       | Ninguno (leaf)                                   | Es una librería de utilidades puras sin conocimiento del dominio.                                                                                     |
+| `@dashboard/contracts`    | `common` (opcional), `zod`                       | Define el lenguaje común (schemas y tipos) que cruza el límite servidor-cliente. No debe tener lógica de negocio ni dependencias pesadas.             |
+| `@dashboard/definitions`  | `contracts` (solo tipos)                         | Metadata estática de UI (íconos, nombres, colores). No importa `db` ni `integrations` para poder ser consumido limpiamente por el cliente web.        |
+| `@dashboard/db`           | `contracts` (tipos)                              | Capa de persistencia con SQLite + Drizzle. Expone conexión y queries sin conocer las integraciones concretas.                                         |
+| `@dashboard/integrations` | `common`, `contracts`                            | Clases adaptadoras para servicios externos. Depende de contratos para validar sus respuestas mediante Zod antes de exponerlas.                        |
+| `@dashboard/tasks`        | `db`, `contracts`, `common`                      | Motor de tareas programadas y persistencia de snapshots. Orquesta corridas sin conocer los detalles de las integraciones (opera mediante interfaces). |
+| `@dashboard/server`       | Todos los paquetes                               | Ensambla la API tRPC, inicializa la base de datos, levanta el registry de integraciones y arranca el scheduler.                                       |
+| `apps/clients/react`      | `@dashboard/contracts`, `@dashboard/definitions` | El cliente web **nunca** importa `db`, `tasks` ni `integrations`. Solo consume tipos y metadatos de UI para mantenerse agnóstico del backend.         |
 
 ---
 
@@ -92,11 +92,11 @@ En un dashboard tradicional, cuando el usuario abre la página, el servidor reci
 
 **Todos** los routers de lectura usan el mismo patrón snapshot+runlog, independientemente de la integración. No es una exclusividad de calendar ni mediaReleases:
 
-| Router | Consulta | Fuente de datos | Estado |
-| --- | --- | --- | --- |
-| `calendar` | `getEvents` | `SnapshotStore` + `RunLog.last(taskId)` | ✅ snapshot+runlog |
-| `mediaReleases` | `getLatest` | `SnapshotStore` + `RunLog.last(taskId)` | ✅ snapshot+runlog |
-| `docker` | `getContainers` | `SnapshotStore` (snapshot por integración) | ✅ snapshot |
+| Router          | Consulta        | Fuente de datos                            | Estado             |
+| --------------- | --------------- | ------------------------------------------ | ------------------ |
+| `calendar`      | `getEvents`     | `SnapshotStore` + `RunLog.last(taskId)`    | ✅ snapshot+runlog |
+| `mediaReleases` | `getLatest`     | `SnapshotStore` + `RunLog.last(taskId)`    | ✅ snapshot+runlog |
+| `docker`        | `getContainers` | `SnapshotStore` (snapshot por integración) | ✅ snapshot        |
 
 El flujo es idéntico: el router obtiene la clave de snapshot (`calendarSnapshot`, `mediaReleasesSnapshot`, `dockerSnapshot`), lee el store, consulta el último `RunLog` para calcular el estado (`toStatus`), y devuelve los datos filtrados/normalizados. La integración subyacente **nunca** es contactada desde el router.
 
@@ -104,10 +104,10 @@ El flujo es idéntico: el router obtiene la clave de snapshot (`calendarSnapshot
 
 Las mutaciones **siempre** realizan llamadas directas a la integración, sin pasar por snapshot ni runlog. No hay un store de escritura para operaciones mutantes:
 
-| Router | Mutaciones | Comportamiento |
-| --- | --- | --- |
+| Router      | Mutaciones                                                           | Comportamiento                   |
+| ----------- | -------------------------------------------------------------------- | -------------------------------- |
 | `downloads` | `pauseQueue`, `pauseItem`, `resumeQueue`, `resumeItem`, `deleteItem` | Llamada directa a la integración |
-| `docker` | `startAll`, `stopAll`, `restartAll`, `removeAll` | Llamada directa a la integración |
+| `docker`    | `startAll`, `stopAll`, `restartAll`, `removeAll`                     | Llamada directa a la integración |
 
 Incluso `downloads.getJobs` y `getAllJobs` (consultas) usan llamadas directas, porque los download clients no tienen task programada ni snapshot. Esto es consistente: **solo los datos refrescados por el task scheduler usan snapshot; el resto son llamadas directas**.
 

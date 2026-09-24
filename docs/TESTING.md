@@ -14,12 +14,12 @@ El repositorio utiliza **Vitest** como test runner con soporte TypeScript nativo
 
 ## Comandos
 
-| Comando | Descripción |
-| --- | --- |
-| `pnpm test` | Ejecuta todas las pruebas unitarias una vez en todos los paquetes y apps |
+| Comando              | Descripción                                                                      |
+| -------------------- | -------------------------------------------------------------------------------- |
+| `pnpm test`          | Ejecuta todas las pruebas unitarias una vez en todos los paquetes y apps         |
 | `pnpm test:coverage` | Ejecuta todas las pruebas con reporte de cobertura v8 y verificación de umbrales |
-| `pnpm test:watch` | Ejecuta pruebas en modo interactivo watch |
-| `pnpm typecheck` | Verifica tipos TypeScript en todo el monorepo sin generar JS |
+| `pnpm test:watch`    | Ejecuta pruebas en modo interactivo watch                                        |
+| `pnpm typecheck`     | Verifica tipos TypeScript en todo el monorepo sin generar JS                     |
 
 ---
 
@@ -35,7 +35,9 @@ import { removeTrailingSlash } from './url.js';
 
 describe('removeTrailingSlash', () => {
   test('removes trailing slash from URL', () => {
-    expect(removeTrailingSlash('http://example.com/')).toBe('http://example.com');
+    expect(removeTrailingSlash('http://example.com/')).toBe(
+      'http://example.com',
+    );
   });
 });
 ```
@@ -94,17 +96,21 @@ Todos los tests que ejerciten integraciones externas **DEBEN** usar `@dashboard/
 
 La infraestructura de testing se organiza en tres capas:
 
-| Capa | Qué es | Quién lo usa | Ejemplo |
-|-------|--------|--------------|---------|
-| **Interfaces base** | Interfaces TypeScript puras (zero deps) | Todos los packages | `TestIntegration<K>`, `TestDb`, `TestTRPCContext` |
-| **Factories** | Factories que devuelven `vi.fn()`-wrapped defaults | Tests de router, unit tests | `createTestIntegration()`, `createTestTRPCContext()` |
-| **Handlers HTTP** | Handlers HTTP reales con `msw/node` (opt-in por archivo) | Tests de cliente de integración | `qbittorrentHandlers`, `setupServer()` |
+| Capa                | Qué es                                                   | Quién lo usa                    | Ejemplo                                              |
+| ------------------- | -------------------------------------------------------- | ------------------------------- | ---------------------------------------------------- |
+| **Interfaces base** | Interfaces TypeScript puras (zero deps)                  | Todos los packages              | `TestIntegration<K>`, `TestDb`, `TestTRPCContext`    |
+| **Factories**       | Factories que devuelven `vi.fn()`-wrapped defaults       | Tests de router, unit tests     | `createTestIntegration()`, `createTestTRPCContext()` |
+| **Handlers HTTP**   | Handlers HTTP reales con `msw/node` (opt-in por archivo) | Tests de cliente de integración | `qbittorrentHandlers`, `setupServer()`               |
 
 ### Importación
 
 ```ts
 // Interfaces + factories + fixtures
-import { createTestIntegration, createTestTRPCContext, errorFixtures } from '@dashboard/testing-utils';
+import {
+  createTestIntegration,
+  createTestTRPCContext,
+  errorFixtures,
+} from '@dashboard/testing-utils';
 
 // Handlers HTTP (opt-in por archivo de test)
 import { setupServer } from 'msw/node';
@@ -116,7 +122,11 @@ import { qbittorrentHandlers } from '@dashboard/testing-utils/msw';
 ```ts
 import { describe, test, expect, vi } from 'vitest';
 import { dockerRouter } from './docker';
-import { createTestIntegration, createTestTRPCContext, errorFixtures } from '@dashboard/testing-utils';
+import {
+  createTestIntegration,
+  createTestTRPCContext,
+  errorFixtures,
+} from '@dashboard/testing-utils';
 
 describe('dockerRouter.startAll', () => {
   test('starts container successfully', async () => {
@@ -142,7 +152,11 @@ describe('dockerRouter.startAll', () => {
       name: 'Docker 304',
       url: 'http://test:2375',
       port: 2375,
-      startContainerAsync: vi.fn().mockRejectedValue(errorFixtures.integration.unreachable(new Error('Not Modified'))),
+      startContainerAsync: vi
+        .fn()
+        .mockRejectedValue(
+          errorFixtures.integration.unreachable(new Error('Not Modified')),
+        ),
     });
 
     const ctx = createTestTRPCContext({ integrations: [integration] });
@@ -167,13 +181,20 @@ const server = setupServer(
   http.post('http://localhost:8080/api/v2/auth/login', async ({ request }) => {
     const body = await request.text();
     const params = new URLSearchParams(body);
-    if (params.get('username') === 'test-user' && params.get('password') === 'test-pass') {
-      return new Response('Ok.', { status: 200, headers: { 'Set-Cookie': 'SID=test-sid; Path=/; HttpOnly' } });
+    if (
+      params.get('username') === 'test-user' &&
+      params.get('password') === 'test-pass'
+    ) {
+      return new Response('Ok.', {
+        status: 200,
+        headers: { 'Set-Cookie': 'SID=test-sid; Path=/; HttpOnly' },
+      });
     }
     return new Response('Forbidden.', { status: 403 });
   }),
   http.get('http://localhost:8080/api/v2/torrents/info', ({ request }) => {
-    if (!request.headers.get('cookie')?.includes('SID=')) return new Response('', { status: 403 });
+    if (!request.headers.get('cookie')?.includes('SID='))
+      return new Response('', { status: 403 });
     return HttpResponse.json([/* ...torrents */]);
   }),
 );
@@ -187,18 +208,18 @@ afterAll(() => server.close());
 
 Todo test de router o cliente de integración DEBE cubrir al menos los siguientes casos de error usando `errorFixtures`:
 
-| Caso | Fixture | Ejemplo de Assert |
-|------|---------|-------------------|
-| **401 Unauthorized** | `errorFixtures.integration.unauthorized()` | `rejects.toMatchObject({ reason: 'unauthorized' })` |
-| **403 Forbidden** | `errorFixtures.integration.forbidden()` | `rejects.toMatchObject({ reason: 'forbidden' })` |
-| **Timeout** | `errorFixtures.integration.timeout()` | `rejects.toMatchObject({ reason: 'timeout' })` |
-| **Unreachable** | `errorFixtures.integration.unreachable()` | `rejects.toMatchObject({ reason: 'unreachable' })` |
-| **Respuesta inválida** | `errorFixtures.integration.invalidResponse()` | `rejects.toMatchObject({ reason: 'invalid-response' })` |
-| Caso | Fixture | Ejemplo de Assert |
-|------|---------|-------------------|
-| **HTTP 304 (idempotente)** | `errorFixtures.http.notModified()` | No debe lanzar; éxito idempotente |
-| **Respuesta vacía** | response `[]` o `{}` | Debe devolver datos vacíos sin lanzar |
-| **JSON malformado** | `errorFixtures.http.malformedJson()` | `rejects.toThrow()` (o razón `invalid-response`) |
+| Caso                       | Fixture                                       | Ejemplo de Assert                                       |
+| -------------------------- | --------------------------------------------- | ------------------------------------------------------- |
+| **401 Unauthorized**       | `errorFixtures.integration.unauthorized()`    | `rejects.toMatchObject({ reason: 'unauthorized' })`     |
+| **403 Forbidden**          | `errorFixtures.integration.forbidden()`       | `rejects.toMatchObject({ reason: 'forbidden' })`        |
+| **Timeout**                | `errorFixtures.integration.timeout()`         | `rejects.toMatchObject({ reason: 'timeout' })`          |
+| **Unreachable**            | `errorFixtures.integration.unreachable()`     | `rejects.toMatchObject({ reason: 'unreachable' })`      |
+| **Respuesta inválida**     | `errorFixtures.integration.invalidResponse()` | `rejects.toMatchObject({ reason: 'invalid-response' })` |
+| Caso                       | Fixture                                       | Ejemplo de Assert                                       |
+| ------                     | ---------                                     | -------------------                                     |
+| **HTTP 304 (idempotente)** | `errorFixtures.http.notModified()`            | No debe lanzar; éxito idempotente                       |
+| **Respuesta vacía**        | response `[]` o `{}`                          | Debe devolver datos vacíos sin lanzar                   |
+| **JSON malformado**        | `errorFixtures.http.malformedJson()`          | `rejects.toThrow()` (o razón `invalid-response`)        |
 
 ### Reglas
 
@@ -221,6 +242,7 @@ Las siguientes suites de pruebas requieren un servidor backend en ejecución o i
 - `packages/integrations/src/prometheus/prometheus.e2e.test.ts`
 
 Para ejecutar pruebas de red/E2E localmente contra instancias reales:
+
 ```bash
 INTEGRATIONS_SERVER_E2E=1 pnpm test apps/server/src/server.e2e.test.ts
 ```
@@ -231,20 +253,19 @@ INTEGRATIONS_SERVER_E2E=1 pnpm test apps/server/src/server.e2e.test.ts
 
 La siguiente tabla resume la cobertura de pruebas por módulo, indicando qué pruebas existen, qué falta y prioridad de implementación.
 
-| Paquete / Módulo | Archivo(s) | Tipo de Prueba Requerida | Estado Actual | Prioridad / Notas |
-| :--- | :--- | :--- | :--- | :--- |
-| **`@dashboard/common`** | `url.ts`, `date.ts`, `error.ts`, `string.ts` | Pure unit | ✅ Implemented (100%) | Stable foundation |
-| **`@dashboard/contracts`** | Zod schemas (`validation.ts`, `data-view.ts`, `result.ts`, etc.) | Unit (valid/invalid) | ✅ Implemented (~75%) | Focus on improving schema validation coverage |
-| **`@dashboard/db`** | Connection, migrations, queries (`task-runs.ts`, `task-snapshots.ts`, `integrations.ts`, etc.) | SQLite integration | ✅ Implemented (~90%) | Excellent isolation with `withTempDb` helper |
-| **`@dashboard/definitions`** | Enums (`IntegrationKind.ts`, `WidgetKind.ts`) | Unit (type safety) | ⚠️ Pending (0%) | Low risk – pure TypeScript enums/constants |
-| **`@dashboard/integrations`** | Base class, error mapping (`integration.ts`, `integration-error.ts`) | Unit with fetch mocks | ✅ Implemented (~60%) | Core error classification solid; needs more unit coverage |
-| **`@dashboard/integrations`** | Specific clients (Prometheus, qBittorrent, Docker, Jellyfin, Sonarr, Radarr) | HTTP mocks + schemas | ⚠️ Partial (varied) | qBittorrent: medium (handlers HTTP); Prometheus: medium; Docker/Jellyfin/Sonarr/Radarr: low |
-| **`@dashboard/tasks`** | Scheduler, run-log, store, purge (`scheduler.ts`, `run-log.ts`, `store.ts`, `purge.ts`) | SQLite integration + async | ✅ Implemented (~95%) | Strong coverage in task lifecycle and persistence |
-| **`@dashboard/testing-utils`** | Infraestructura de testing (interfaces, factories, handlers HTTP, fixtures) | Test infrastructure | ✅ Implemented (100%) | See [Parametrización](#parametrización-de-tests-de-integración-obligatorio) |
-| **`apps/server`** | tRPC routers (`calendar.ts`, `downloads.ts`, `integrations.ts`, `media-releases.ts`, `docker.ts`, `systemHealth.ts`) | tRPC integration / Mock DB | ⚠️ Partial (~60%) | Routers principales migrados a factories; pendiente: `calendar`, `media-releases`, `policies` |
-| **`apps/server`** | Docker router (`docker.ts`) | tRPC integration / Mock DB | ✅ Implemented (~80%) | Factory pattern con `createTestIntegration`; edge cases 304/404/timeout cubiertos |
-| **`apps/server`** | Server bootstrapping (`server.ts`, `main.ts`, `config.ts`) | Startup / smoke | ⚠️ Pending (0%) | Low priority for unit; validated via integration/E2E |
-
+| Paquete / Módulo               | Archivo(s)                                                                                                           | Tipo de Prueba Requerida   | Estado Actual         | Prioridad / Notas                                                                             |
+| :----------------------------- | :------------------------------------------------------------------------------------------------------------------- | :------------------------- | :-------------------- | :-------------------------------------------------------------------------------------------- |
+| **`@dashboard/common`**        | `url.ts`, `date.ts`, `error.ts`, `string.ts`                                                                         | Pure unit                  | ✅ Implemented (100%) | Stable foundation                                                                             |
+| **`@dashboard/contracts`**     | Zod schemas (`validation.ts`, `data-view.ts`, `result.ts`, etc.)                                                     | Unit (valid/invalid)       | ✅ Implemented (~75%) | Focus on improving schema validation coverage                                                 |
+| **`@dashboard/db`**            | Connection, migrations, queries (`task-runs.ts`, `task-snapshots.ts`, `integrations.ts`, etc.)                       | SQLite integration         | ✅ Implemented (~90%) | Excellent isolation with `withTempDb` helper                                                  |
+| **`@dashboard/definitions`**   | Enums (`IntegrationKind.ts`, `WidgetKind.ts`)                                                                        | Unit (type safety)         | ⚠️ Pending (0%)       | Low risk – pure TypeScript enums/constants                                                    |
+| **`@dashboard/integrations`**  | Base class, error mapping (`integration.ts`, `integration-error.ts`)                                                 | Unit with fetch mocks      | ✅ Implemented (~60%) | Core error classification solid; needs more unit coverage                                     |
+| **`@dashboard/integrations`**  | Specific clients (Prometheus, qBittorrent, Docker, Jellyfin, Sonarr, Radarr)                                         | HTTP mocks + schemas       | ⚠️ Partial (varied)   | qBittorrent: medium (handlers HTTP); Prometheus: medium; Docker/Jellyfin/Sonarr/Radarr: low   |
+| **`@dashboard/tasks`**         | Scheduler, run-log, store, purge (`scheduler.ts`, `run-log.ts`, `store.ts`, `purge.ts`)                              | SQLite integration + async | ✅ Implemented (~95%) | Strong coverage in task lifecycle and persistence                                             |
+| **`@dashboard/testing-utils`** | Infraestructura de testing (interfaces, factories, handlers HTTP, fixtures)                                          | Test infrastructure        | ✅ Implemented (100%) | See [Parametrización](#parametrización-de-tests-de-integración-obligatorio)                   |
+| **`apps/server`**              | tRPC routers (`calendar.ts`, `downloads.ts`, `integrations.ts`, `media-releases.ts`, `docker.ts`, `systemHealth.ts`) | tRPC integration / Mock DB | ⚠️ Partial (~60%)     | Routers principales migrados a factories; pendiente: `calendar`, `media-releases`, `policies` |
+| **`apps/server`**              | Docker router (`docker.ts`)                                                                                          | tRPC integration / Mock DB | ✅ Implemented (~80%) | Factory pattern con `createTestIntegration`; edge cases 304/404/timeout cubiertos             |
+| **`apps/server`**              | Server bootstrapping (`server.ts`, `main.ts`, `config.ts`)                                                           | Startup / smoke            | ⚠️ Pending (0%)       | Low priority for unit; validated via integration/E2E                                          |
 
 ---
 
@@ -255,10 +276,12 @@ Los patrones arquitectónicos descritos en [patterns.md] deben probarse siguiend
 ### Patrón Snapshot + RunLog
 
 El patrón Snapshot + RunLog (sección 2 de [patterns.md]) se implementa mediante:
+
 - **SnapshotStore**: Persistencia del último payload válido para recuperación ante fallos
 - **RunLog**: Registro cronológico de ejecuciones con estado, duración y razones de error
 
 Estos componentes deben probarse para validar que:
+
 - El snapshot anterior se mantiene intacto tras un fallo
 - El RunLog refleja correctamente el historial de intentos
 - La UI muestra el estado apropiado (`fresh`, `outdated`, `missing`) según [docs/TESTING.md]
@@ -266,6 +289,7 @@ Estos componentes deben probarse para validar que:
 ### Modelo ResultStatus
 
 El modelo de estado de dos ejes (dato + intento) debe probarse para garantizar que:
+
 - Los estados `fresh` y `outdated` se calculan correctamente
 - Los casos borde (fallo con datos previos, fallo sin datos previos) se manejan adecuadamente
 - La función `dataViewOf` combina ambos ejes para generar un veredicto claro para la UI

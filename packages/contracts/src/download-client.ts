@@ -2,11 +2,7 @@ import { z } from 'zod';
 
 /** Estados canónicos normalizados (5 estados) */
 export type DownloadClientItemState =
-  | 'leeching'
-  | 'seeding'
-  | 'paused'
-  | 'stalled'
-  | 'unknown';
+  'leeching' | 'seeding' | 'paused' | 'stalled' | 'unknown';
 
 /** Item individual de torrent */
 export const downloadClientItemSchema = z.object({
@@ -42,7 +38,9 @@ export const downloadClientJobsAndStatusSchema = z.object({
 
 export type DownloadClientItem = z.infer<typeof downloadClientItemSchema>;
 export type DownloadClientStatus = z.infer<typeof downloadClientStatusSchema>;
-export type DownloadClientJobsAndStatus = z.infer<typeof downloadClientJobsAndStatusSchema>;
+export type DownloadClientJobsAndStatus = z.infer<
+  typeof downloadClientJobsAndStatusSchema
+>;
 
 export interface GetClientJobsAndStatusInput {
   limit?: number;

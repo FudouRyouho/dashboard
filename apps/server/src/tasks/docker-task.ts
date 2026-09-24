@@ -4,10 +4,7 @@ import {
   type TaskPolicy,
 } from '@dashboard/tasks';
 import type { DockerDashboardStats } from '@dashboard/integrations';
-import type {
-  IDockerIntegration,
-  Integration,
-} from '@dashboard/integrations';
+import type { IDockerIntegration, Integration } from '@dashboard/integrations';
 import { dockerSnapshot } from './task-ids';
 
 const DOCKER_DEFAULTS = {

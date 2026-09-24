@@ -17,10 +17,7 @@ import {
   integrationPublicSchema,
 } from './integrations';
 
-import {
-  resultStatusSchema,
-  type ResultStatus,
-} from './result';
+import { resultStatusSchema, type ResultStatus } from './result';
 
 import type { IntegrationKind } from './kinds';
 
@@ -45,7 +42,9 @@ export const safeValidateMediaReleaseEvent = (data: unknown) => {
   return mediaReleaseSchema.safeParse(data);
 };
 
-export const validateMediaReleasesResponse = (data: unknown): MediaReleasesResponse => {
+export const validateMediaReleasesResponse = (
+  data: unknown,
+): MediaReleasesResponse => {
   return mediaReleasesResponseSchema.parse(data);
 };
 
@@ -78,7 +77,9 @@ export const isCalendarEvent = (data: unknown): data is CalendarEvent => {
   return calendarEventSchema.safeParse(data).success;
 };
 
-export const isMediaReleaseEvent = (data: unknown): data is MediaReleaseEvent => {
+export const isMediaReleaseEvent = (
+  data: unknown,
+): data is MediaReleaseEvent => {
   return mediaReleaseSchema.safeParse(data).success;
 };
 
@@ -86,10 +87,16 @@ export const isResultStatus = (data: unknown): data is ResultStatus => {
   return resultStatusSchema.safeParse(data).success;
 };
 
-export const isDataView = (data: unknown): data is 'never-queried' | 'fresh' | 'outdated' | 'missing' => {
-  return ['never-queried', 'fresh', 'outdated', 'missing'].includes(data as string);
+export const isDataView = (
+  data: unknown,
+): data is 'never-queried' | 'fresh' | 'outdated' | 'missing' => {
+  return ['never-queried', 'fresh', 'outdated', 'missing'].includes(
+    data as string,
+  );
 };
 
 export const isIntegrationKind = (data: unknown): data is IntegrationKind => {
-  return ['sonarr', 'radarr', 'jellyfin', 'docker', 'prometheus'].includes(data as string);
+  return ['sonarr', 'radarr', 'jellyfin', 'docker', 'prometheus'].includes(
+    data as string,
+  );
 };

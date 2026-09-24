@@ -1,8 +1,4 @@
-import {
-  PrometheusNormalized,
-  MetricSeries,
-  ServerMetrics,
-} from './types';
+import { PrometheusNormalized, MetricSeries, ServerMetrics } from './types';
 import {
   SYSTEM_MOUNTPOINTS,
   NON_SYSTEM_MOUNT_EXCLUDE,
@@ -28,7 +24,7 @@ export class PrometheusNormalizer {
    */
   static normalize(
     queryResults: Map<string, unknown>,
-    instances: string[]
+    instances: string[],
   ): PrometheusNormalized[] {
     const normalized: PrometheusNormalized[] = [];
 
@@ -47,7 +43,7 @@ export class PrometheusNormalizer {
    */
   private static normalizeInstance(
     instance: string,
-    queryResults: Map<string, unknown>
+    queryResults: Map<string, unknown>,
   ): PrometheusNormalized | null {
     const metrics: MetricSeries[] = [];
 
@@ -63,7 +59,11 @@ export class PrometheusNormalizer {
     }
 
     // CPU Temperature
-    const cpuTemp = this.extractMetric(queryResults, 'cpuTemperature', instance);
+    const cpuTemp = this.extractMetric(
+      queryResults,
+      'cpuTemperature',
+      instance,
+    );
     if (cpuTemp) {
       metrics.push({
         name: 'cpu_temperature',
@@ -75,13 +75,20 @@ export class PrometheusNormalizer {
 
     // Memory
     const memTotal = this.extractMetric(queryResults, 'memoryTotal', instance);
-    const memAvail = this.extractMetric(queryResults, 'memoryAvailable', instance);
+    const memAvail = this.extractMetric(
+      queryResults,
+      'memoryAvailable',
+      instance,
+    );
     if (memTotal || memAvail) {
       metrics.push({
         name: 'memory',
         labels: { instance },
         values: [memTotal?.values[0] ?? null, memAvail?.values[0] ?? null],
-        timestamps: [memTotal?.timestamps[0] ?? null, memAvail?.timestamps[0] ?? null],
+        timestamps: [
+          memTotal?.timestamps[0] ?? null,
+          memAvail?.timestamps[0] ?? null,
+        ],
       });
     }
 
@@ -93,7 +100,10 @@ export class PrometheusNormalizer {
         name: 'network',
         labels: { instance },
         values: [netRx?.values[0] ?? null, netTx?.values[0] ?? null],
-        timestamps: [netRx?.timestamps[0] ?? null, netTx?.timestamps[0] ?? null],
+        timestamps: [
+          netRx?.timestamps[0] ?? null,
+          netTx?.timestamps[0] ?? null,
+        ],
       });
     }
 
@@ -121,17 +131,30 @@ export class PrometheusNormalizer {
   private static extractMetric(
     queryResults: Map<string, unknown>,
     queryKey: string,
-    instance: string
-  ): { values: number[]; timestamps: number[]; labels: Record<string, string> } | null {
+    instance: string,
+  ): {
+    values: number[];
+    timestamps: number[];
+    labels: Record<string, string>;
+  } | null {
     const response = queryResults.get(queryKey);
     if (!response || typeof response !== 'object') return null;
 
-    const data = response as { data?: { result?: Array<{ metric: Record<string, string>; value: [number, string] }> } };
+    const data = response as {
+      data?: {
+        result?: Array<{
+          metric: Record<string, string>;
+          value: [number, string];
+        }>;
+      };
+    };
     const results = data.data?.result;
     if (!results || !Array.isArray(results)) return null;
 
     // Filter results for this instance
-    const instanceResults = results.filter(r => r.metric.instance === instance);
+    const instanceResults = results.filter(
+      (r) => r.metric.instance === instance,
+    );
     if (instanceResults.length === 0) return null;
 
     // For simplicity, take the first matching result
@@ -154,12 +177,20 @@ export class PrometheusNormalizer {
    */
   private static isSystemMount(mountpoint: string): boolean {
     // Check if it's in the system mountpoints list
-    if (SYSTEM_MOUNTPOINTS.includes(mountpoint as typeof SYSTEM_MOUNTPOINTS[number])) {
+    if (
+      SYSTEM_MOUNTPOINTS.includes(
+        mountpoint as (typeof SYSTEM_MOUNTPOINTS)[number],
+      )
+    ) {
       return true;
     }
 
     // Check if it's explicitly excluded
-    if (NON_SYSTEM_MOUNT_EXCLUDE.some((exclude: string) => mountpoint.startsWith(exclude))) {
+    if (
+      NON_SYSTEM_MOUNT_EXCLUDE.some((exclude: string) =>
+        mountpoint.startsWith(exclude),
+      )
+    ) {
       return false;
     }
 
@@ -172,7 +203,7 @@ export class PrometheusNormalizer {
    */
   private static normalizeDisks(
     queryResults: Map<string, unknown>,
-    instance: string
+    instance: string,
   ): MetricSeries[] {
     type DiskData = {
       size?: number;
@@ -183,10 +214,46 @@ export class PrometheusNormalizer {
       timestamp: number;
     };
 
-    const sizeResponse = queryResults.get('diskSize') as { data?: { result?: Array<{ metric: Record<string, string>; value: [number, string] }> } } | undefined;
-    const availResponse = queryResults.get('diskAvail') as { data?: { result?: Array<{ metric: Record<string, string>; value: [number, string] }> } } | undefined;
-    const readResponse = queryResults.get('diskRead') as { data?: { result?: Array<{ metric: Record<string, string>; value: [number, string] }> } } | undefined;
-    const writeResponse = queryResults.get('diskWrite') as { data?: { result?: Array<{ metric: Record<string, string>; value: [number, string] }> } } | undefined;
+    const sizeResponse = queryResults.get('diskSize') as
+      | {
+          data?: {
+            result?: Array<{
+              metric: Record<string, string>;
+              value: [number, string];
+            }>;
+          };
+        }
+      | undefined;
+    const availResponse = queryResults.get('diskAvail') as
+      | {
+          data?: {
+            result?: Array<{
+              metric: Record<string, string>;
+              value: [number, string];
+            }>;
+          };
+        }
+      | undefined;
+    const readResponse = queryResults.get('diskRead') as
+      | {
+          data?: {
+            result?: Array<{
+              metric: Record<string, string>;
+              value: [number, string];
+            }>;
+          };
+        }
+      | undefined;
+    const writeResponse = queryResults.get('diskWrite') as
+      | {
+          data?: {
+            result?: Array<{
+              metric: Record<string, string>;
+              value: [number, string];
+            }>;
+          };
+        }
+      | undefined;
 
     if (!sizeResponse?.data?.result) return [];
 
@@ -200,7 +267,10 @@ export class PrometheusNormalizer {
 
       const value = parseFloat(result.value[1]);
       if (!isNaN(value)) {
-        const existing = mountpoints.get(mountpoint) || { labels: result.metric, timestamp: result.value[0] };
+        const existing = mountpoints.get(mountpoint) || {
+          labels: result.metric,
+          timestamp: result.value[0],
+        };
         existing.size = value;
         existing.labels = { ...existing.labels, ...result.metric };
         existing.timestamp = result.value[0];
@@ -270,21 +340,35 @@ export class PrometheusNormalizer {
 
       // Exclude virtual filesystems
       const fstype = data.labels.fstype || '';
-      if (VIRTUAL_FSTYPES.includes(fstype as typeof VIRTUAL_FSTYPES[number])) continue;
+      if (VIRTUAL_FSTYPES.includes(fstype as (typeof VIRTUAL_FSTYPES)[number]))
+        continue;
 
       const totalBytes: number | null = data.size ?? null;
       const availableBytes: number | null = data.avail ?? null;
       const readBytes: number | null = data.read ?? null;
       const writeBytes: number | null = data.write ?? null;
-      const usagePercent: number | null = (totalBytes !== null && availableBytes !== null && totalBytes > 0)
-        ? ((totalBytes - availableBytes) / totalBytes) * 100
-        : null;
+      const usagePercent: number | null =
+        totalBytes !== null && availableBytes !== null && totalBytes > 0
+          ? ((totalBytes - availableBytes) / totalBytes) * 100
+          : null;
 
       metrics.push({
         name: 'disk',
         labels: { instance, mountpoint, fstype },
-        values: [totalBytes, availableBytes, usagePercent, readBytes, writeBytes],
-        timestamps: [data.timestamp, data.timestamp, data.timestamp, data.timestamp, data.timestamp],
+        values: [
+          totalBytes,
+          availableBytes,
+          usagePercent,
+          readBytes,
+          writeBytes,
+        ],
+        timestamps: [
+          data.timestamp,
+          data.timestamp,
+          data.timestamp,
+          data.timestamp,
+          data.timestamp,
+        ],
         isSystemMount,
       });
     }
@@ -297,9 +381,18 @@ export class PrometheusNormalizer {
    */
   private static normalizeSensors(
     queryResults: Map<string, unknown>,
-    instance: string
+    instance: string,
   ): MetricSeries[] {
-    const tempResponse = queryResults.get('cpuTemperature') as { data?: { result?: Array<{ metric: Record<string, string>; value: [number, string] }> } } | undefined;
+    const tempResponse = queryResults.get('cpuTemperature') as
+      | {
+          data?: {
+            result?: Array<{
+              metric: Record<string, string>;
+              value: [number, string];
+            }>;
+          };
+        }
+      | undefined;
 
     if (!tempResponse?.data?.result) return [];
 
@@ -334,11 +427,13 @@ export class PrometheusNormalizer {
     const server = normalized.server;
 
     // Find metrics by name
-    const cpuUsage = normalized.metrics.find(m => m.name === 'cpu_usage');
-    const cpuTemp = normalized.metrics.find(m => m.name === 'cpu_temperature');
-    const memory = normalized.metrics.find(m => m.name === 'memory');
-    const disks = normalized.metrics.filter(m => m.name === 'disk');
-    const sensors = normalized.metrics.filter(m => m.name === 'temperature');
+    const cpuUsage = normalized.metrics.find((m) => m.name === 'cpu_usage');
+    const cpuTemp = normalized.metrics.find(
+      (m) => m.name === 'cpu_temperature',
+    );
+    const memory = normalized.metrics.find((m) => m.name === 'memory');
+    const disks = normalized.metrics.filter((m) => m.name === 'disk');
+    const sensors = normalized.metrics.filter((m) => m.name === 'temperature');
 
     // CPU
     const usagePercent: number | null = cpuUsage?.values[0] ?? null;
@@ -347,12 +442,13 @@ export class PrometheusNormalizer {
     // Memory
     const totalBytes: number | null = memory?.values[0] ?? null;
     const availableBytes: number | null = memory?.values[1] ?? null;
-    const memoryUsagePercent: number | null = (totalBytes !== null && availableBytes !== null && totalBytes > 0)
-      ? ((totalBytes - availableBytes) / totalBytes) * 100
-      : null;
+    const memoryUsagePercent: number | null =
+      totalBytes !== null && availableBytes !== null && totalBytes > 0
+        ? ((totalBytes - availableBytes) / totalBytes) * 100
+        : null;
 
     // Disks
-    const diskData = disks.map(d => ({
+    const diskData = disks.map((d) => ({
       mountpoint: d.labels.mountpoint || '',
       totalBytes: d.values[0] ?? null,
       availableBytes: d.values[1] ?? null,
@@ -364,22 +460,28 @@ export class PrometheusNormalizer {
     }));
 
     // Sensors
-    const sensorData = sensors.map(s => ({
+    const sensorData = sensors.map((s) => ({
       sensorId: s.labels.sensorId || '',
       chip: s.labels.chip || '',
       tempCelsius: s.values[0] ?? null,
     }));
 
     // Network - group by device label
-    const netMetrics = normalized.metrics.filter(m => m.name === 'network');
-    const networkMap = new Map<string, { rxBytesPerSec: number | null; txBytesPerSec: number | null }>();
+    const netMetrics = normalized.metrics.filter((m) => m.name === 'network');
+    const networkMap = new Map<
+      string,
+      { rxBytesPerSec: number | null; txBytesPerSec: number | null }
+    >();
     for (const m of netMetrics) {
       const device = m.labels.device || 'unknown';
       const rx = m.values[0] ?? null;
       const tx = m.values[1] ?? null;
       networkMap.set(device, { rxBytesPerSec: rx, txBytesPerSec: tx });
     }
-    const network = Array.from(networkMap.entries()).map(([device, v]) => ({ device, ...v }));
+    const network = Array.from(networkMap.entries()).map(([device, v]) => ({
+      device,
+      ...v,
+    }));
 
     return {
       server,

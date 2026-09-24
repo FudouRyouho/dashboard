@@ -1,6 +1,9 @@
 import { test, expect } from 'vitest';
 import { z } from 'zod';
-import { IntegrationError, classifyIntegrationError } from './integration-error.js';
+import {
+  IntegrationError,
+  classifyIntegrationError,
+} from './integration-error.js';
 
 test('classifyIntegrationError returns IntegrationError reason and httpStatus', () => {
   const err = new IntegrationError('unauthorized', 'Access denied', 403);
@@ -31,7 +34,9 @@ test('classifyIntegrationError returns timeout for AbortError', () => {
 });
 
 test('classifyIntegrationError returns unreachable for ECONNREFUSED', () => {
-  const err = new Error('Connection refused') as Error & { cause?: { code?: string } };
+  const err = new Error('Connection refused') as Error & {
+    cause?: { code?: string };
+  };
   err.cause = { code: 'ECONNREFUSED' };
   const result = classifyIntegrationError(err);
   expect(result.reason).toBe('unreachable');
@@ -45,28 +50,36 @@ test('classifyIntegrationError returns unreachable for ENOTFOUND', () => {
 });
 
 test('classifyIntegrationError returns unreachable for EHOSTUNREACH', () => {
-  const err = new Error('Host unreachable') as Error & { cause?: { code?: string } };
+  const err = new Error('Host unreachable') as Error & {
+    cause?: { code?: string };
+  };
   err.cause = { code: 'EHOSTUNREACH' };
   const result = classifyIntegrationError(err);
   expect(result.reason).toBe('unreachable');
 });
 
 test('classifyIntegrationError returns unreachable for ENETUNREACH', () => {
-  const err = new Error('Network unreachable') as Error & { cause?: { code?: string } };
+  const err = new Error('Network unreachable') as Error & {
+    cause?: { code?: string };
+  };
   err.cause = { code: 'ENETUNREACH' };
   const result = classifyIntegrationError(err);
   expect(result.reason).toBe('unreachable');
 });
 
 test('classifyIntegrationError returns unreachable for ECONNRESET', () => {
-  const err = new Error('Connection reset') as Error & { cause?: { code?: string } };
+  const err = new Error('Connection reset') as Error & {
+    cause?: { code?: string };
+  };
   err.cause = { code: 'ECONNRESET' };
   const result = classifyIntegrationError(err);
   expect(result.reason).toBe('unreachable');
 });
 
 test('classifyIntegrationError returns unreachable for EAI_AGAIN', () => {
-  const err = new Error('DNS lookup failed') as Error & { cause?: { code?: string } };
+  const err = new Error('DNS lookup failed') as Error & {
+    cause?: { code?: string };
+  };
   err.cause = { code: 'EAI_AGAIN' };
   const result = classifyIntegrationError(err);
   expect(result.reason).toBe('unreachable');

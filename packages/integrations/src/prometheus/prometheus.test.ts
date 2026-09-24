@@ -10,10 +10,11 @@ const originalFetch = global.fetch;
 
 // Helper to mock fetch
 function mockFetch(response: unknown) {
-  global.fetch = async () => ({
-    ok: true,
-    json: async () => response,
-  }) as Response;
+  global.fetch = async () =>
+    ({
+      ok: true,
+      json: async () => response,
+    }) as Response;
 }
 
 // Helper to mock fetch error
@@ -286,7 +287,7 @@ describe('Prometheus Integration - Normalizer', () => {
 
     const firstResult = result[0];
     expect(firstResult).toBeTruthy();
-    const diskMetrics = firstResult!.metrics.find(m => m.name === 'disk');
+    const diskMetrics = firstResult!.metrics.find((m) => m.name === 'disk');
     expect(diskMetrics!).toBeTruthy();
     // Check values array: [totalBytes, availableBytes, usagePercent, readBytes, writeBytes]
     // Usage percent for / should be ~50% (50GB used out of 100GB)
@@ -332,8 +333,12 @@ describe('Prometheus Integration - Queries', () => {
   test('should have [5m] rate window in queries', () => {
     const queries = getAllQueries();
     for (const query of queries) {
-      if (query.key.includes('Read') || query.key.includes('Write') ||
-          query.key.includes('Rx') || query.key.includes('Tx')) {
+      if (
+        query.key.includes('Read') ||
+        query.key.includes('Write') ||
+        query.key.includes('Rx') ||
+        query.key.includes('Tx')
+      ) {
         expect(query.promql.includes('[5m]')).toBeTruthy();
       }
     }
@@ -348,16 +353,19 @@ describe('Prometheus Integration - Queries', () => {
 describe('Prometheus Integration - Falsifiers', () => {
   test('D1: server is used as grouping label', () => {
     const queries = getAllQueries();
-    const hasInstanceGrouping = queries.some(q =>
-      q.groupingLabels.includes('instance')
+    const hasInstanceGrouping = queries.some((q) =>
+      q.groupingLabels.includes('instance'),
     );
-    expect(hasInstanceGrouping, 'At least one query should group by instance').toBeTruthy();
+    expect(
+      hasInstanceGrouping,
+      'At least one query should group by instance',
+    ).toBeTruthy();
   });
 
   test('D2: label_values is used in client', () => {
     const clientSource = readFileSync(
       'packages/integrations/src/prometheus/client.ts',
-      'utf-8'
+      'utf-8',
     );
     expect(clientSource.includes('labelValues')).toBeTruthy();
     expect(clientSource.includes('label_values')).toBeTruthy();
@@ -366,17 +374,20 @@ describe('Prometheus Integration - Falsifiers', () => {
   test('D3: [5m] rate window is present', () => {
     const queriesSource = readFileSync(
       'packages/integrations/src/prometheus/promql-queries.ts',
-      'utf-8'
+      'utf-8',
     );
     const matches = queriesSource.match(/\[5m\]/g);
     expect(matches, 'Should have [5m] rate windows').toBeTruthy();
-    expect(matches!.length >= 5, 'Should have at least 5 [5m] references').toBeTruthy();
+    expect(
+      matches!.length >= 5,
+      'Should have at least 5 [5m] references',
+    ).toBeTruthy();
   });
 
   test('D4: prometheus is in integrationKinds', () => {
     const kindsSource = readFileSync(
       'packages/contracts/src/kinds.ts',
-      'utf-8'
+      'utf-8',
     );
     expect(kindsSource.includes("'prometheus'")).toBeTruthy();
     expect(kindsSource.includes('integrationKinds')).toBeTruthy();
