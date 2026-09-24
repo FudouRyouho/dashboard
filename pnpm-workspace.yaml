@@ -6,6 +6,7 @@ packages:
 allowBuilds:
   better-sqlite3: false
   esbuild: true
+  msw: set this to true or false
 
 catalog:
   '@types/node': '24.13.3'

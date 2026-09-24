@@ -21,6 +21,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@dashboard/testing-utils": "workspace:*",
     "@trpc/client": "catalog:",
     "@types/node": "catalog:",
     "dotenv": "catalog:",
