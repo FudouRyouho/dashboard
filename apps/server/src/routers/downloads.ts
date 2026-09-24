@@ -65,6 +65,15 @@ export const downloadsRouter = createTRPCRouter({
         })
       );
 
+      results
+        .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+        .forEach((r) => {
+          ctx.logger.error(
+            { integrationId: 'unknown' },
+            `Download client failed: ${r.reason instanceof Error ? r.reason.message : String(r.reason)}`
+          );
+        });
+
       return results
         .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
         .map((r) => r.value);

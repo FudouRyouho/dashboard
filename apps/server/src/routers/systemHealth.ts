@@ -41,7 +41,11 @@ export const systemHealthRouter = createTRPCRouter({
               },
               metrics: metrics as unknown[],
             };
-          } catch {
+          } catch (err) {
+            ctx.logger.error(
+              { integrationId: integration.publicIntegration.id },
+              `System health integration failed: ${err instanceof Error ? err.message : String(err)}`
+            );
             return {
               integration: {
                 id: integration.publicIntegration.id,
@@ -56,7 +60,7 @@ export const systemHealthRouter = createTRPCRouter({
 
       return results
         .map((r) => (r.status === 'fulfilled' ? r.value : null))
-        .filter((r): r is { integration: { id: string; name: string; kind: string }; metrics: unknown[] } => 
+        .filter((r): r is { integration: { id: string; name: string; kind: string }; metrics: unknown[] } =>
           r !== null && typeof r.integration.id === 'string' && r.integration.id !== ''
         );
     }),
@@ -95,8 +99,11 @@ export const systemHealthRouter = createTRPCRouter({
           instances,
           queryResults,
         });
-      } catch {
-        // Handle errors gracefully
+      } catch (err) {
+        ctx.logger.error(
+          { integrationId: integration.publicIntegration.id, server: input.server },
+          `System health getMetrics failed: ${err instanceof Error ? err.message : String(err)}`
+        );
       }
 
       return {
