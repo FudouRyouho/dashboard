@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 interface PrometheusHandlerConfig {
-  id: string; url: string; port: number; username?: string; password?: string;
+  id: string; url: string; port: number;
   responses?: { query?: 'success' | 'error_401' | 'error_500' | 'malformed' | 'empty'; labelValues?: 'success' | 'error_500' | 'empty'; };
 }
 

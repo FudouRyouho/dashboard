@@ -44,7 +44,7 @@ export class IntegrationError extends Error {
       );
     }
 
-    return new IntegrationError('unreachable', 'Integration service is unreachable', undefined, { cause: error }); // Final fallback: same as classifyIntegrationError
+    return new IntegrationError('unknown', 'Integration request failed', undefined, { cause: error });
   }
 }
 
