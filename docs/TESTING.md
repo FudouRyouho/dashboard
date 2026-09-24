@@ -82,6 +82,132 @@ test('SonarrIntegration fetches calendar', async () => {
 });
 ```
 
+Para flujos de auth complejos (ej. qBittorrent con cookie-based auth), se prefiere **MSW** (`msw/node`) con handlers inline en el test file sobre el mock de `global.fetch`. Ver sección [Parametrización de Tests de Integración](#parametrización-de-tests-de-integración-obligatorio).
+
+---
+
+## Parametrización de Tests de Integración (Obligatorio)
+
+Todos los tests que ejerciten integraciones externas **DEBEN** usar `@dashboard/testing-utils` y aceptar parámetros de runtime (`{url, port, credentials}`) mediante factories. Nunca hardcodear URLs, puertos, o credenciales del entorno real en tests.
+
+### Arquitectura de Infraestructura de Testing
+
+La infraestructura de testing se organiza en tres capas:
+
+| Capa | Qué es | Quién lo usa | Ejemplo |
+|-------|--------|--------------|---------|
+| **Interfaces base** | Interfaces TypeScript puras (zero deps) | Todos los packages | `TestIntegration<K>`, `TestDb`, `TestTRPCContext` |
+| **Factories** | Factories que devuelven `vi.fn()`-wrapped defaults | Tests de router, unit tests | `createTestIntegration()`, `createTestTRPCContext()` |
+| **Handlers HTTP** | Handlers HTTP reales con `msw/node` (opt-in por archivo) | Tests de cliente de integración | `qbittorrentHandlers`, `setupServer()` |
+
+### Importación
+
+```ts
+// Interfaces + factories + fixtures
+import { createTestIntegration, createTestTRPCContext, errorFixtures } from '@dashboard/testing-utils';
+
+// Handlers HTTP (opt-in por archivo de test)
+import { setupServer } from 'msw/node';
+import { qbittorrentHandlers } from '@dashboard/testing-utils/msw';
+```
+
+### Patrón Obligatorio — Tests de Router
+
+```ts
+import { describe, test, expect, vi } from 'vitest';
+import { dockerRouter } from './docker';
+import { createTestIntegration, createTestTRPCContext, errorFixtures } from '@dashboard/testing-utils';
+
+describe('dockerRouter.startAll', () => {
+  test('starts container successfully', async () => {
+    // Parámetros inyectados vía factory — nunca hardcodear runtime
+    const integration = createTestIntegration('docker', {
+      id: 'docker-1',
+      name: 'Docker Host 1',
+      url: 'http://test:2375',
+      port: 2375,
+      startContainerAsync: vi.fn().mockResolvedValue(undefined),
+    });
+
+    const ctx = createTestTRPCContext({ integrations: [integration] });
+    const caller = dockerRouter.createCaller(ctx);
+
+    await caller.startAll({ ids: ['container-1'] });
+    expect(integration.startContainerAsync).toHaveBeenCalledWith('container-1');
+  });
+
+  test('handles HTTP 304 as idempotent success', async () => {
+    const integration = createTestIntegration('docker', {
+      id: 'docker-304',
+      name: 'Docker 304',
+      url: 'http://test:2375',
+      port: 2375,
+      startContainerAsync: vi.fn().mockRejectedValue(errorFixtures.integration.unreachable(new Error('Not Modified'))),
+    });
+
+    const ctx = createTestTRPCContext({ integrations: [integration] });
+    const caller = dockerRouter.createCaller(ctx);
+
+    await expect(caller.startAll({ ids: ['c1'] })).resolves.toBeUndefined();
+  });
+});
+```
+
+### Patrón Obligatorio — Tests de Cliente
+
+Para integraciones con flujos de auth complejos (cookie-based login, tokens), usa MSW con handlers inline:
+
+```ts
+import { describe, test, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
+import { QbittorrentIntegration } from './qbittorrent-integration';
+
+const server = setupServer(
+  http.post('http://localhost:8080/api/v2/auth/login', async ({ request }) => {
+    const body = await request.text();
+    const params = new URLSearchParams(body);
+    if (params.get('username') === 'test-user' && params.get('password') === 'test-pass') {
+      return new Response('Ok.', { status: 200, headers: { 'Set-Cookie': 'SID=test-sid; Path=/; HttpOnly' } });
+    }
+    return new Response('Forbidden.', { status: 403 });
+  }),
+  http.get('http://localhost:8080/api/v2/torrents/info', ({ request }) => {
+    if (!request.headers.get('cookie')?.includes('SID=')) return new Response('', { status: 403 });
+    return HttpResponse.json([/* ...torrents */]);
+  }),
+);
+
+beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+```
+
+### Cobertura de Edge Cases Requerida
+
+Todo test de router o cliente de integración DEBE cubrir al menos los siguientes casos de error usando `errorFixtures`:
+
+| Caso | Fixture | Ejemplo de Assert |
+|------|---------|-------------------|
+| **401 Unauthorized** | `errorFixtures.integration.unauthorized()` | `rejects.toMatchObject({ reason: 'unauthorized' })` |
+| **403 Forbidden** | `errorFixtures.integration.forbidden()` | `rejects.toMatchObject({ reason: 'forbidden' })` |
+| **Timeout** | `errorFixtures.integration.timeout()` | `rejects.toMatchObject({ reason: 'timeout' })` |
+| **Unreachable** | `errorFixtures.integration.unreachable()` | `rejects.toMatchObject({ reason: 'unreachable' })` |
+| **Respuesta inválida** | `errorFixtures.integration.invalidResponse()` | `rejects.toMatchObject({ reason: 'invalid-response' })` |
+| Caso | Fixture | Ejemplo de Assert |
+|------|---------|-------------------|
+| **HTTP 304 (idempotente)** | `errorFixtures.http.notModified()` | No debe lanzar; éxito idempotente |
+| **Respuesta vacía** | response `[]` o `{}` | Debe devolver datos vacíos sin lanzar |
+| **JSON malformado** | `errorFixtures.http.malformedJson()` | `rejects.toThrow()` (o razón `invalid-response`) |
+
+### Reglas
+
+1. **No hardcodear datos de runtime** — URLs, puertos, credenciales se inyectan vía factory params o config de MSW.
+2. **Soportar DB vacía** — Los tests de router usan `createMockDb()`; no dependen de seeds ni migraciones.
+3. **Usar `errorFixtures`** — Nunca inventar shapes de error ad-hoc; usa los fixtures canónicos.
+4. **Handlers HTTP es opt-in** — Solo se usa donde se testea HTTP real del cliente (no en routers).
+5. **Validar shape de error con Zod** — `validateTrpcError()` para errores TRPC cuando se requiere validación fuerte.
+
 ---
 
 ## Pruebas de Red y E2E (Excluidas de CI)
@@ -112,15 +238,13 @@ La siguiente tabla resume la cobertura de pruebas por módulo, indicando qué pr
 | **`@dashboard/db`** | Connection, migrations, queries (`task-runs.ts`, `task-snapshots.ts`, `integrations.ts`, etc.) | SQLite integration | ✅ Implemented (~90%) | Excellent isolation with `withTempDb` helper |
 | **`@dashboard/definitions`** | Enums (`IntegrationKind.ts`, `WidgetKind.ts`) | Unit (type safety) | ⚠️ Pending (0%) | Low risk – pure TypeScript enums/constants |
 | **`@dashboard/integrations`** | Base class, error mapping (`integration.ts`, `integration-error.ts`) | Unit with fetch mocks | ✅ Implemented (~60%) | Core error classification solid; needs more unit coverage |
-| **`@dashboard/integrations`** | Specific clients (Prometheus, qBittorrent, Docker, Jellyfin, Sonarr, Radarr) | HTTP mocks + schemas | ⚠️ Partial (varied) | Prometheus & qBittorrent: medium; Docker/Jellyfin/Sonarr/Radarr: low |
+| **`@dashboard/integrations`** | Specific clients (Prometheus, qBittorrent, Docker, Jellyfin, Sonarr, Radarr) | HTTP mocks + schemas | ⚠️ Partial (varied) | qBittorrent: medium (handlers HTTP); Prometheus: medium; Docker/Jellyfin/Sonarr/Radarr: low |
 | **`@dashboard/tasks`** | Scheduler, run-log, store, purge (`scheduler.ts`, `run-log.ts`, `store.ts`, `purge.ts`) | SQLite integration + async | ✅ Implemented (~95%) | Strong coverage in task lifecycle and persistence |
-| **`apps/server`** | tRPC routers (`calendar.ts`, `downloads.ts`, `integrations.ts`, `media-releases.ts`, etc.) | tRPC integration / Mock DB | ⚠️ Pending (0%) | **Critical**: Needs tests covering error paths and integration failure handling |
-| **`apps/server`** | Docker router (`docker.ts`) | tRPC integration / Mock DB | ⚠️ Pending (0%) | **New**: Docker router added in Phase 2 — no tests yet; needs `getContainers` query and `startAll`/`stopAll`/`restartAll`/`removeAll` mutation coverage |
+| **`@dashboard/testing-utils`** | Infraestructura de testing (interfaces, factories, handlers HTTP, fixtures) | Test infrastructure | ✅ Implemented (100%) | See [Parametrización](#parametrización-de-tests-de-integración-obligatorio) |
+| **`apps/server`** | tRPC routers (`calendar.ts`, `downloads.ts`, `integrations.ts`, `media-releases.ts`, `docker.ts`, `systemHealth.ts`) | tRPC integration / Mock DB | ⚠️ Partial (~60%) | Routers principales migrados a factories; pendiente: `calendar`, `media-releases`, `policies` |
+| **`apps/server`** | Docker router (`docker.ts`) | tRPC integration / Mock DB | ✅ Implemented (~80%) | Factory pattern con `createTestIntegration`; edge cases 304/404/timeout cubiertos |
 | **`apps/server`** | Server bootstrapping (`server.ts`, `main.ts`, `config.ts`) | Startup / smoke | ⚠️ Pending (0%) | Low priority for unit; validated via integration/E2E |
 
-### Notas de Estado
-
-- **Docker Router**: Nuevo en Fase 2. Aún sin pruebas.
 
 ---
 
