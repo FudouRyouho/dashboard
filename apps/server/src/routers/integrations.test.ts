@@ -1,9 +1,9 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { integrationsRouter } from './integrations';
-import type { TRPCContext } from '../trpc';
-
+import {
+  createTestTRPCContext,
+} from '@dashboard/testing-utils';
 let selectCallCount = 0;
-
 function createMockDb() {
   const baseChain = {
     from: vi.fn().mockReturnThis(),
@@ -24,7 +24,6 @@ function createMockDb() {
     get: vi.fn().mockResolvedValue(undefined),
     run: vi.fn().mockResolvedValue({ changes: 1 }),
   };
-
   return {
     select: vi.fn(() => {
       selectCallCount++;
@@ -54,14 +53,11 @@ function createMockDb() {
   };
 }
 
-function createMockCtx(integrations: any[]): TRPCContext {
-  return {
+function createMockCtx(integrations: any[]) {
+  return createTestTRPCContext({
     integrations,
-    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
-    store: { get: vi.fn(), set: vi.fn() },
-    runLog: { record: vi.fn(), last: vi.fn(), forTask: vi.fn(), list: vi.fn() },
     db: createMockDb() as any,
-  };
+  });
 }
 
 describe('integrationsRouter', () => {
@@ -226,6 +222,36 @@ describe('integrationsRouter', () => {
       const ctx = createMockCtx([]);
       const caller = integrationsRouter.createCaller(ctx);
       await expect(caller.delete({ id: 'test-id' })).resolves.toBeUndefined();
+    });
+  });
+
+  describe('Edge cases (QA validation)', () => {
+    test('rejects docker upsert with username field (strict schema)', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      await expect(
+        caller.upsert({
+          id: 'docker-1',
+          kind: 'docker' as const,
+          name: 'Docker',
+          url: 'http://localhost:2375',
+          username: 'invalid-field',
+        } as any),
+      ).rejects.toThrow();
+    });
+
+    test('rejects prometheus upsert with password field (strict schema)', async () => {
+      const ctx = createMockCtx([]);
+      const caller = integrationsRouter.createCaller(ctx);
+      await expect(
+        caller.upsert({
+          id: 'prometheus-1',
+          kind: 'prometheus' as const,
+          name: 'Prometheus',
+          url: 'http://localhost:9090',
+          password: 'invalid-field',
+        } as any),
+      ).rejects.toThrow();
     });
   });
 });
