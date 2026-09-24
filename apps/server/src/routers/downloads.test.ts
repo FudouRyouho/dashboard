@@ -60,6 +60,7 @@ describe('downloadsRouter', () => {
 
       const result = await caller.pauseQueue({ integrationId: 'qbittorrent-1' });
       expect(result).toEqual({ success: true });
+      expect(integration.pauseQueueAsync).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -74,6 +75,10 @@ describe('downloadsRouter', () => {
 
       const result = await caller.pauseItem({ integrationId: 'qbittorrent-1', torrentHash: 'abc123' });
       expect(result).toEqual({ success: true });
+      expect(integration.pauseItemAsync).toHaveBeenCalledTimes(1);
+      expect(integration.pauseItemAsync).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'abc123', type: 'torrent' })
+      );
     });
   });
 
@@ -88,6 +93,7 @@ describe('downloadsRouter', () => {
 
       const result = await caller.resumeQueue({ integrationId: 'qbittorrent-1' });
       expect(result).toEqual({ success: true });
+      expect(integration.resumeQueueAsync).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -102,6 +108,10 @@ describe('downloadsRouter', () => {
 
       const result = await caller.resumeItem({ integrationId: 'qbittorrent-1', torrentHash: 'abc123' });
       expect(result).toEqual({ success: true });
+      expect(integration.resumeItemAsync).toHaveBeenCalledTimes(1);
+      expect(integration.resumeItemAsync).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'abc123', type: 'torrent' })
+      );
     });
   });
 
@@ -116,6 +126,11 @@ describe('downloadsRouter', () => {
 
       const result = await caller.deleteItem({ integrationId: 'qbittorrent-1', torrentHash: 'abc123' });
       expect(result).toEqual({ success: true });
+      expect(integration.deleteItemAsync).toHaveBeenCalledTimes(1);
+      expect(integration.deleteItemAsync).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'abc123', type: 'torrent' }),
+        false
+      );
     });
 
     test('deletes item with fromDisk option', async () => {
@@ -127,6 +142,11 @@ describe('downloadsRouter', () => {
       const caller = downloadsRouter.createCaller(ctx);
 
       await caller.deleteItem({ integrationId: 'qbittorrent-1', torrentHash: 'abc123', fromDisk: true });
+      expect(integration.deleteItemAsync).toHaveBeenCalledTimes(1);
+      expect(integration.deleteItemAsync).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'abc123', type: 'torrent' }),
+        true
+      );
     });
   });
 
