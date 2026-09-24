@@ -12,6 +12,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@dashboard/testing-utils": "workspace:*",
     "typescript": "catalog:"
   }
 }

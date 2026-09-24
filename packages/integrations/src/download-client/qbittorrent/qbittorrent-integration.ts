@@ -35,7 +35,13 @@ export class QbittorrentIntegration extends Integration implements IDownloadClie
     const client = await this.getClientAsync();
     const limit = input.limit ?? 50;
     
-    const torrents = await client.listTorrents({ limit });
+    let torrents;
+    try {
+      torrents = await client.listTorrents({ limit });
+    } catch (error) {
+      if (error instanceof IntegrationError) throw error;
+      throw IntegrationError.fromTransport(error);
+    }
     
     const rates = torrents.reduce(
       ({ down, up }, { dlspeed, upspeed }) => ({
