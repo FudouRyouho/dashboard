@@ -54,6 +54,7 @@ module.exports = defineConfig({
       '@dashboard/definitions': path.resolve(__dirname, 'packages/definitions/src'),
       '@dashboard/integrations': path.resolve(__dirname, 'packages/integrations/src'),
       '@dashboard/tasks': path.resolve(__dirname, 'packages/tasks/src'),
+      '@dashboard/testing-utils': path.resolve(__dirname, 'packages/testing-utils/src'),
     },
   },
 });
