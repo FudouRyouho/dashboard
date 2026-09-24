@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll, afterEach } from 'vitest';
-import { setupServer } from 'msw/node';
+import { setupServer } from '@dashboard/testing-utils/msw';
 import { QbittorrentIntegration } from './qbittorrent-integration';
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse } from '@dashboard/testing-utils/msw';
 
 // Simple inline handlers for testing
 const createHandlers = (mode: 'success' | 'empty' | 'error_401' | 'error_500' | 'malformed' = 'success') => [
