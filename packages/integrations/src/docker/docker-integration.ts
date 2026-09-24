@@ -28,7 +28,7 @@ export class DockerIntegration
   async getDashboardStatsAsync(options?: {
     signal?: AbortSignal;
   }): Promise<DockerDashboardStats> {
-    const [containers, images, networks, volumes] = await Promise.all([
+    const results = await Promise.allSettled([
       this.fetchDocker<z.infer<typeof dockerContainerSchema>[]>(
         '/containers/json?all=true',
         { signal: options?.signal },
@@ -41,6 +41,24 @@ export class DockerIntegration
         signal: options?.signal,
       }),
     ]);
+
+    const containers = results[0].status === 'fulfilled' ? results[0].value : [];
+    const images = results[1].status === 'fulfilled' ? results[1].value : [];
+    const networks = results[2].status === 'fulfilled' ? results[2].value : [];
+    const volumes = results[3].status === 'fulfilled' ? results[3].value : [];
+
+    if (results[0].status === 'rejected') {
+      console.warn('Docker containers fetch failed:', results[0].reason);
+    }
+    if (results[1].status === 'rejected') {
+      console.warn('Docker images fetch failed:', results[1].reason);
+    }
+    if (results[2].status === 'rejected') {
+      console.warn('Docker networks fetch failed:', results[2].reason);
+    }
+    if (results[3].status === 'rejected') {
+      console.warn('Docker volumes fetch failed:', results[3].reason);
+    }
 
     let running = 0;
     let stopped = 0;
