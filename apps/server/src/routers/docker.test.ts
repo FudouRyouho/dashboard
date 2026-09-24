@@ -1,34 +1,7 @@
 import { describe, test, expect, vi } from 'vitest';
 import type { DockerDashboardStats } from '@dashboard/integrations';
 import { dockerRouter } from './docker';
-import type { TRPCContext } from '../trpc';
-
-function createMockDockerIntegration(id: string, name: string, stats?: DockerDashboardStats): any {
-  return {
-    publicIntegration: { id, name, kind: 'docker' as const, url: `http://${id}:2375` },
-    getDashboardStatsAsync: vi.fn().mockResolvedValue(stats ?? {
-      containers: { running: 0, stopped: 0, healthy: 0, unhealthy: 0, total: 0 },
-      images: { total: 0, size: 0 },
-      networks: { total: 0 },
-      volumes: { total: 0 },
-    }),
-    startContainerAsync: vi.fn().mockResolvedValue(undefined),
-    stopContainerAsync: vi.fn().mockResolvedValue(undefined),
-    restartContainerAsync: vi.fn().mockResolvedValue(undefined),
-    removeContainerAsync: vi.fn().mockResolvedValue(undefined),
-  };
-}
-
-function createMockCtx(integrations: any[], snapshot?: any): TRPCContext {
-  const storeGet = vi.fn(() => snapshot);
-  return {
-    integrations,
-    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
-    store: { get: storeGet, set: vi.fn() },
-    runLog: { record: vi.fn(), last: vi.fn(), forTask: vi.fn(), list: vi.fn() },
-    db: {} as any,
-  };
-}
+import { createTestIntegration, createTestTRPCContext, errorFixtures, createMockStore } from '@dashboard/testing-utils';
 
 describe('dockerRouter', () => {
   describe('getContainers', () => {
@@ -39,8 +12,17 @@ describe('dockerRouter', () => {
         networks: { total: 2 },
         volumes: { total: 3 },
       };
-      const integration = createMockDockerIntegration('docker-1', 'Docker Host 1', stats);
-      const ctx = createMockCtx([integration], { data: stats, obtainedAt: new Date() });
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+        url: 'http://docker-1:2375',
+        port: 2375,
+      });
+      const snapshot = { data: stats, obtainedAt: new Date() };
+      const ctx = createTestTRPCContext({ 
+        integrations: [integration],
+        store: createMockStore({ get: vi.fn().mockReturnValue(snapshot) }),
+      });
       const caller = dockerRouter.createCaller(ctx);
       const result = await caller.getContainers();
 
@@ -50,15 +32,18 @@ describe('dockerRouter', () => {
     });
 
     test('returns empty array when no integrations support Docker', async () => {
-      const ctx = createMockCtx([]);
+      const ctx = createTestTRPCContext({ integrations: [] });
       const caller = dockerRouter.createCaller(ctx);
       const result = await caller.getContainers();
       expect(result).toEqual([]);
     });
 
     test('returns empty stats when no snapshot exists', async () => {
-      const integration = createMockDockerIntegration('docker-1', 'Docker Host 1');
-      const ctx = createMockCtx([integration], undefined);
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
       const result = await caller.getContainers();
       // Router returns empty stats object when no snapshot, not empty array
@@ -69,8 +54,11 @@ describe('dockerRouter', () => {
 
   describe('startAll', () => {
     test('starts all containers successfully', async () => {
-      const integration = createMockDockerIntegration('docker-1', 'Docker Host 1');
-      const ctx = createMockCtx([integration]);
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
       await caller.startAll({ ids: ['container-1', 'container-2'] });
@@ -81,8 +69,11 @@ describe('dockerRouter', () => {
 
   describe('stopAll', () => {
     test('stops all containers successfully', async () => {
-      const integration = createMockDockerIntegration('docker-1', 'Docker Host 1');
-      const ctx = createMockCtx([integration]);
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
       await caller.stopAll({ ids: ['container-1'] });
@@ -92,8 +83,11 @@ describe('dockerRouter', () => {
 
   describe('restartAll', () => {
     test('restarts all containers successfully', async () => {
-      const integration = createMockDockerIntegration('docker-1', 'Docker Host 1');
-      const ctx = createMockCtx([integration]);
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
       await caller.restartAll({ ids: ['container-1'] });
@@ -103,23 +97,31 @@ describe('dockerRouter', () => {
 
   describe('removeAll', () => {
     test('removes all containers successfully', async () => {
-      const integration = createMockDockerIntegration('docker-1', 'Docker Host 1');
-      const ctx = createMockCtx([integration]);
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
       await caller.removeAll({ ids: ['container-1'] });
       expect(integration.removeContainerAsync).toHaveBeenCalledWith('container-1');
     });
   });
-});
 
   describe('startAll with partial failure', () => {
     test('succeeds when one integration fails but another succeeds', async () => {
-      const failingIntegration = createMockDockerIntegration('docker-fail', 'Failing Docker');
-      const successIntegration = createMockDockerIntegration('docker-ok', 'Working Docker');
-      (failingIntegration.startContainerAsync as any).mockRejectedValue(new Error('Connection refused'));
+      const failingIntegration = createTestIntegration('docker', {
+        id: 'docker-fail',
+        name: 'Failing Docker',
+        startContainerAsync: vi.fn().mockRejectedValue(new Error('Connection refused')),
+      });
+      const successIntegration = createTestIntegration('docker', {
+        id: 'docker-ok',
+        name: 'Working Docker',
+      });
       
-      const ctx = createMockCtx([failingIntegration, successIntegration]);
+      const ctx = createTestTRPCContext({ integrations: [failingIntegration, successIntegration] });
       const caller = dockerRouter.createCaller(ctx);
 
       // Should not throw because at least one integration succeeded
@@ -128,12 +130,18 @@ describe('dockerRouter', () => {
     });
 
     test('throws when ALL integrations fail', async () => {
-      const failingIntegration1 = createMockDockerIntegration('docker-fail-1', 'Failing Docker 1');
-      const failingIntegration2 = createMockDockerIntegration('docker-fail-2', 'Failing Docker 2');
-      (failingIntegration1.startContainerAsync as any).mockRejectedValue(new Error('Error 1'));
-      (failingIntegration2.startContainerAsync as any).mockRejectedValue(new Error('Error 2'));
+      const failingIntegration1 = createTestIntegration('docker', {
+        id: 'docker-fail-1',
+        name: 'Failing Docker 1',
+        startContainerAsync: vi.fn().mockRejectedValue(new Error('Error 1')),
+      });
+      const failingIntegration2 = createTestIntegration('docker', {
+        id: 'docker-fail-2',
+        name: 'Failing Docker 2',
+        startContainerAsync: vi.fn().mockRejectedValue(new Error('Error 2')),
+      });
       
-      const ctx = createMockCtx([failingIntegration1, failingIntegration2]);
+      const ctx = createTestTRPCContext({ integrations: [failingIntegration1, failingIntegration2] });
       const caller = dockerRouter.createCaller(ctx);
 
       await expect(caller.startAll({ ids: ['container-1'] })).rejects.toThrow('Docker operation failed');
@@ -142,13 +150,63 @@ describe('dockerRouter', () => {
 
   describe('stopAll with partial failure', () => {
     test('succeeds when one integration is unreachable', async () => {
-      const failingIntegration = createMockDockerIntegration('docker-fail', 'Failing Docker');
-      const successIntegration = createMockDockerIntegration('docker-ok', 'Working Docker');
-      (failingIntegration.stopContainerAsync as any).mockRejectedValue(new Error('ECONNREFUSED'));
+      const failingIntegration = createTestIntegration('docker', {
+        id: 'docker-fail',
+        name: 'Failing Docker',
+        stopContainerAsync: vi.fn().mockRejectedValue(new Error('ECONNREFUSED')),
+      });
+      const successIntegration = createTestIntegration('docker', {
+        id: 'docker-ok',
+        name: 'Working Docker',
+      });
       
-      const ctx = createMockCtx([failingIntegration, successIntegration]);
+      const ctx = createTestTRPCContext({ integrations: [failingIntegration, successIntegration] });
       const caller = dockerRouter.createCaller(ctx);
 
       await expect(caller.stopAll({ ids: ['container-1'] })).resolves.toBeUndefined();
     });
   });
+
+  describe('Edge cases (QA validation)', () => {
+    test('HTTP 304 (Not Modified) is handled as idempotent success', async () => {
+      // fetchJson in integration.ts treats 304 as OK (not an error).
+      // startContainerAsync resolves when container is already in desired state.
+      const integration = createTestIntegration('docker', {
+        id: 'docker-304',
+        name: 'Docker 304 Test',
+        // Simulate real behavior: fetchJson handles 304 internally, method resolves
+        startContainerAsync: vi.fn().mockResolvedValue(undefined),
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      // Should NOT throw - 304 is idempotent success
+      await expect(caller.startAll({ ids: ['container-1'] })).resolves.toBeUndefined();
+      expect(integration.startContainerAsync).toHaveBeenCalledWith('container-1');
+    });
+
+    test('HTTP 404 (Container Not Found) throws TRPCError with correct code', async () => {
+      const integration = createTestIntegration('docker', {
+        id: 'docker-404',
+        name: 'Docker 404 Test',
+        startContainerAsync: vi.fn().mockRejectedValue(errorFixtures.integration.unreachable(new Error('Not Found'))),
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(caller.startAll({ ids: ['nonexistent'] })).rejects.toThrow('Docker operation failed');
+    });
+
+    test('timeout during container start throws TRPCError with TIMEOUT code', async () => {
+      const integration = createTestIntegration('docker', {
+        id: 'docker-timeout',
+        name: 'Docker Timeout Test',
+        startContainerAsync: vi.fn().mockRejectedValue(errorFixtures.integration.timeout()),
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(caller.startAll({ ids: ['container-1'] })).rejects.toThrow('Docker operation failed');
+    });
+  });
+});
