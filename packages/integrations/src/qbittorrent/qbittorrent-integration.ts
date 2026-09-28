@@ -1,7 +1,7 @@
 import { QBittorrent } from '@ctrl/qbittorrent';
-import { Integration } from '../../base/integration';
-import { IntegrationError } from '../../base/integration-error';
-import { IDownloadClientIntegration } from '../../base/download-client';
+import { Integration } from '../base/integration';
+import { IntegrationError } from '../base/integration-error';
+import { IDownloadClientIntegration } from '../base/download-client';
 import type {
   DownloadClientItem,
   DownloadClientJobsAndStatus,

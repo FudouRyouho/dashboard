@@ -3,7 +3,7 @@ import type {
   IntegrationInput,
   IntegrationFactory,
   IntegrationMetadata,
-} from '../../registry';
+} from '../registry';
 
 const metadata: IntegrationMetadata = {
   kind: 'qbittorrent',
@@ -20,5 +20,5 @@ const factory: IntegrationFactory = {
   },
 };
 
-import { registerIntegration } from '../../registry';
+import { registerIntegration } from '../registry';
 registerIntegration(factory);
