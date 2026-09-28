@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-/** Estados canónicos normalizados (5 estados) */
+/** Normalized canonical states (5 states) */
 export type DownloadClientItemState =
   'leeching' | 'seeding' | 'paused' | 'stalled' | 'unknown';
 

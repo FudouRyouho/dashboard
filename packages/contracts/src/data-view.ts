@@ -11,9 +11,7 @@ import type { ResultStatus } from './result';
 export type DataView = 'never-queried' | 'fresh' | 'outdated' | 'missing';
 
 /**
- * Calculate data view status from result status
- * @param status Result status (contains data and attempt info)
- * @returns Data view status
+ * Translates a ResultStatus (attempt outcome + data presence) into a DataView lifecycle state.
  */
 export function dataViewOf(status: ResultStatus): DataView {
   if (status.attempt === null) return 'never-queried';

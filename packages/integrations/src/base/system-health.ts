@@ -2,7 +2,7 @@ import { Integration } from './integration';
 import { PrometheusNormalized, ServerMetrics } from '../prometheus/types';
 
 /**
- * D4: Capability interface for system health metrics.
+ * Capability interface for system health metrics.
  */
 export interface ISystemHealthIntegration {
   getSystemMetricsAsync(options?: {

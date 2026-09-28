@@ -7,7 +7,7 @@ import {
 } from './schemas/prometheus-response';
 
 /**
- * D2: Prometheus HTTP client with Basic Auth and label_values discovery.
+Prometheus HTTP client with Basic Auth and label_values discovery.
  *
  * Supports:
  * - Basic auth via username/password secrets

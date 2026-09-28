@@ -13,9 +13,7 @@ export class AppError extends Error {
 }
 
 /**
- * Convert unknown value to Error if not already an Error
- * @param unknown Unknown value
- * @returns Error instance
+ * Converts unknown to Error; non-Error values produce a descriptive message (null/undefined/object/primitive).
  */
 export const toError = (unknown: unknown): Error =>
   unknown instanceof Error

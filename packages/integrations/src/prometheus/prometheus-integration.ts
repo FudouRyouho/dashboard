@@ -7,7 +7,7 @@ import { PrometheusNormalized, ServerMetrics } from './types';
 import { ISystemHealthIntegration } from '../base/system-health';
 
 /**
- * D4 + D5: Prometheus Integration implementation.
+ * Prometheus Integration implementation.
  *
  * Uses IntegrationInput base + secrets for auth.
  * Implements ISystemHealthIntegration capability.

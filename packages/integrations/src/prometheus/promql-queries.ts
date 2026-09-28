@@ -1,7 +1,7 @@
 import { NODE_EXPORTER_METRICS } from './constants';
 
 /**
- * D3: PromQL queries for system metrics.
+PromQL queries for system metrics.
  *
  * Key principles:
  * - Single query per metric base (not per entity)

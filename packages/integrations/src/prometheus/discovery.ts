@@ -6,7 +6,7 @@ import {
 } from './constants';
 
 /**
- * D2: Discovery service for Prometheus metrics.
+Discovery service for Prometheus metrics.
  *
  * Discovers:
  * - Available instances (servers)

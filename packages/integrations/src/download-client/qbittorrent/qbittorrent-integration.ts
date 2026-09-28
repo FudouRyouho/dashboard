@@ -135,7 +135,7 @@ export class QbittorrentIntegration
   }
 
   private mapTorrentState(state: string): DownloadClientItem['state'] {
-    // Mapeado basado en Homarr, adaptado a nuestros 5 estados canónicos
+    // Mapping based on Homarr, adapted to our 5 canonical states
     switch (state) {
       case 'allocating':
       case 'checkingDL':

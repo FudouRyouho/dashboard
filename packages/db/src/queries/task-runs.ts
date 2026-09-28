@@ -41,9 +41,7 @@ function rowToTaskRun(row: {
 }
 
 /**
- * Insert a task run record
- * @param db Database connection
- * @param run Task execution data
+ * Insert a task run record.
  */
 export function insertTaskRun(db: DB, run: InsertTaskRunInput): void {
   db.insert(taskRuns)
@@ -59,11 +57,8 @@ export function insertTaskRun(db: DB, run: InsertTaskRunInput): void {
 }
 
 /**
- * Query task run records, ordered by start time descending
- * @param db Database connection
- * @param taskId Task ID
- * @param range Optional time range
- * @returns List of run records
+ * Query task run records for a task, ordered by start time descending.
+ * @param range Optional time window; if omitted, returns all records.
  */
 export function listTaskRuns(
   db: DB,
@@ -85,10 +80,7 @@ export function listTaskRuns(
 }
 
 /**
- * Get the latest task run record
- * @param db Database connection
- * @param taskId Task ID
- * @returns Latest run record or undefined
+ * Get the latest task run record for a task.
  */
 export function lastTaskRun(db: DB, taskId: string): TaskRunRow | undefined {
   const rows = listTaskRuns(db, taskId);
@@ -96,10 +88,7 @@ export function lastTaskRun(db: DB, taskId: string): TaskRunRow | undefined {
 }
 
 /**
- * Purge task run records older than cutoff
- * @param db Database connection
- * @param cutoff Cutoff date
- * @returns Number of deleted records
+ * Purge task run records older than cutoff.
  */
 export function purgeTaskRunsOlderThan(
   db: DB,

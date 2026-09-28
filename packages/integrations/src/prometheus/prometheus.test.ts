@@ -351,7 +351,7 @@ describe('Prometheus Integration - Queries', () => {
 });
 
 describe('Prometheus Integration - Falsifiers', () => {
-  test('D1: server is used as grouping label', () => {
+  test('server is used as grouping label', () => {
     const queries = getAllQueries();
     const hasInstanceGrouping = queries.some((q) =>
       q.groupingLabels.includes('instance'),
@@ -362,7 +362,7 @@ describe('Prometheus Integration - Falsifiers', () => {
     ).toBeTruthy();
   });
 
-  test('D2: label_values is used in client', () => {
+  test('label_values is used in client', () => {
     const clientSource = readFileSync(
       'packages/integrations/src/prometheus/client.ts',
       'utf-8',
@@ -371,7 +371,7 @@ describe('Prometheus Integration - Falsifiers', () => {
     expect(clientSource.includes('label_values')).toBeTruthy();
   });
 
-  test('D3: [5m] rate window is present', () => {
+  test('[5m] rate window is present', () => {
     const queriesSource = readFileSync(
       'packages/integrations/src/prometheus/promql-queries.ts',
       'utf-8',
@@ -384,7 +384,7 @@ describe('Prometheus Integration - Falsifiers', () => {
     ).toBeTruthy();
   });
 
-  test('D4: prometheus is in integrationKinds', () => {
+  test('prometheus is in integrationKinds', () => {
     const kindsSource = readFileSync(
       'packages/contracts/src/kinds.ts',
       'utf-8',
@@ -393,7 +393,7 @@ describe('Prometheus Integration - Falsifiers', () => {
     expect(kindsSource.includes('integrationKinds')).toBeTruthy();
   });
 
-  test('D5: no ErrorCode or ErrorType in prometheus code', () => {
+  test('no ErrorCode or ErrorType in prometheus code', () => {
     const files = [
       'packages/integrations/src/prometheus/client.ts',
       'packages/integrations/src/prometheus/normalizer.ts',

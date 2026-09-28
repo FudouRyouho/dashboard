@@ -6,7 +6,7 @@ import {
 } from './constants';
 
 /**
- * D1, D3, D5: Normalizer - transforms raw Prometheus responses into structured data.
+ * Normalizer - transforms raw Prometheus responses into structured data.
  *
  * Key principles:
  * - Group by server (instance label)

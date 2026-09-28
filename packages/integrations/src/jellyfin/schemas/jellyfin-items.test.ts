@@ -35,19 +35,19 @@ test('los 9 Episodes tienen SeriesName, SeasonId, IndexNumber, ParentIndexNumber
   const episodes = parsed.filter((item) => item.Type === 'Episode');
   expect(episodes.length).toBe(9);
   for (const ep of episodes) {
-    expect(ep.SeriesName, 'SeriesName presente').toBeTruthy();
-    expect(ep.SeasonId, 'SeasonId presente').toBeTruthy();
-    expect(ep.IndexNumber !== undefined, 'IndexNumber presente').toBeTruthy();
+    expect(ep.SeriesName, 'SeriesName present').toBeTruthy();
+    expect(ep.SeasonId, 'SeasonId present').toBeTruthy();
+    expect(ep.IndexNumber !== undefined, 'IndexNumber present').toBeTruthy();
     expect(
       ep.ParentIndexNumber !== undefined,
-      'ParentIndexNumber presente',
+      'ParentIndexNumber present',
     ).toBeTruthy();
   }
 });
 
-test('la 1 Movie tiene VideoType', () => {
+test('the 1 Movie has VideoType', () => {
   const parsed = jellyfinItemsResponseSchema.parse(rawData);
   const movies = parsed.filter((item) => item.Type === 'Movie');
   expect(movies.length).toBe(1);
-  expect(movies[0]?.VideoType, 'VideoType presente').toBeTruthy();
+  expect(movies[0]?.VideoType, 'VideoType present').toBeTruthy();
 });
