@@ -11,6 +11,7 @@ export interface IntegrationInput {
   externalUrl?: string;
   secrets: { kind: string; value: string }[];
   timeoutMs?: number;
+  logger?: (msg: string, meta?: Record<string, unknown>) => void;
 }
 
 type QueryParams = Record<
@@ -32,6 +33,7 @@ export abstract class Integration {
   protected readonly baseUrl: string;
   protected readonly externalBaseUrl: string;
   protected readonly timeoutMs: number;
+  private readonly _logger?: (msg: string, meta?: Record<string, unknown>) => void;
 
   constructor(protected integration: IntegrationInput) {
     const urlObj = new URL(integration.url);
@@ -44,6 +46,13 @@ export abstract class Integration {
       ? removeTrailingSlash(integration.externalUrl)
       : this.baseUrl;
     this.timeoutMs = integration.timeoutMs ?? 10_000;
+    this._logger = integration.logger;
+  }
+
+  protected log(msg: string, meta?: Record<string, unknown>): void {
+    if (this._logger) {
+      this._logger(msg, meta);
+    }
   }
 
   public get publicIntegration() {

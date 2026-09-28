@@ -22,7 +22,10 @@ export const downloadClientItemSchema = z.object({
 
 /** Estado global del cliente */
 export const downloadClientStatusSchema = z.object({
+  /** True if ALL torrents are in a paused state (aggregated from items) */
   paused: z.boolean(),
+  /** Actual global queue state when available from the client API */
+  queueState: z.enum(['running', 'paused', 'unknown']).optional(),
   rates: z.object({
     down: z.number(),
     up: z.number(),

@@ -46,7 +46,9 @@ export async function startServer(appConfig: Config) {
   const store = createSnapshotStoreDB(db);
   const runLog = createRunLogDB<IntegrationErrorReason>(db);
 
-  const registry = await createIntegrationRegistry(db);
+  const registry = await createIntegrationRegistry(db, (msg, meta) => {
+    server.log.info(meta ?? {}, msg);
+  });
 
   // Build policies map for task definitions
   const policiesMap = new Map<

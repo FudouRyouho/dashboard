@@ -33,7 +33,10 @@ function validateRequiredSecrets(row: IntegrationInstanceRow): void {
   }
 }
 
-const toInput = (row: IntegrationInstanceRow): IntegrationInput => {
+const toInput = (
+  row: IntegrationInstanceRow,
+  logger?: (msg: string, meta?: Record<string, unknown>) => void,
+): IntegrationInput => {
   validateRequiredSecrets(row);
   const secrets: { kind: string; value: string }[] = [];
   if (row.apiKey) {
@@ -54,11 +57,13 @@ const toInput = (row: IntegrationInstanceRow): IntegrationInput => {
     externalUrl: row.externalUrl ?? undefined,
     timeoutMs: 10_000,
     secrets,
+    logger,
   };
 };
 
 export const createIntegrationRegistry = async (
   db: DB,
+  logger?: (msg: string, meta?: Record<string, unknown>) => void,
 ): Promise<RegistryEntry[]> => {
   const integrations = await getAllIntegrations(db);
   const entries: RegistryEntry[] = [];
@@ -72,7 +77,7 @@ export const createIntegrationRegistry = async (
       continue;
     }
 
-    const input = toInput(integration);
+    const input = toInput(integration, logger);
     const instance = factory.create(input);
 
     entries.push({

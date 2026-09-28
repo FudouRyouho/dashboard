@@ -28,49 +28,26 @@ export class IntegrationError extends Error {
   }
 
   static fromTransport(error: unknown) {
-    if (error instanceof IntegrationError) return error;
-    if (
-      error instanceof Error &&
-      (error.name === 'AbortError' || error.name === 'TimeoutError')
-    ) {
-      return new IntegrationError(
-        'timeout',
-        'Integration request timed out',
-        undefined,
-        { cause: error },
-      );
-    }
+    // Delegate classification to the single source of truth
+    const classified = classifyIntegrationError(error);
 
-    // Handle FetchError (from ofetch) and similar errors with HTTP status
-    const status =
-      (
-        error as {
-          status?: number;
-          statusCode?: number;
-          response?: { status?: number };
-        }
-      )?.status ??
-      (error as { statusCode?: number })?.statusCode ??
-      (error as { response?: { status?: number } })?.response?.status;
-    if (Number.isFinite(status)) {
-      const reason: IntegrationErrorReason =
-        status === 401
-          ? 'unauthorized'
-          : status === 403
-            ? 'forbidden'
-            : 'unknown';
-      return new IntegrationError(
-        reason,
-        `Integration request failed with HTTP ${status}`,
-        status,
-        { cause: error },
-      );
-    }
+    // If it's already an IntegrationError, return it directly
+    if (error instanceof IntegrationError) return error;
+
+    // Map classified reason to appropriate message
+    const messages: Record<IntegrationErrorReason, string> = {
+      unauthorized: 'Integration request failed with HTTP 401',
+      forbidden: 'Integration request failed with HTTP 403',
+      unreachable: 'Integration request failed: unreachable',
+      timeout: 'Integration request timed out',
+      'invalid-response': 'Integration request failed: invalid response',
+      unknown: 'Integration request failed',
+    };
 
     return new IntegrationError(
-      'unknown',
-      'Integration request failed',
-      undefined,
+      classified.reason,
+      messages[classified.reason],
+      classified.httpStatus,
       { cause: error },
     );
   }
