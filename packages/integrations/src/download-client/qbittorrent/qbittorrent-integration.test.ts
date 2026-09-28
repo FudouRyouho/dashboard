@@ -172,7 +172,6 @@ describe('QbittorrentIntegration (handlers HTTP)', () => {
     expect(mapState('uploading')).toBe('seeding');
     expect(mapState('queuedUP')).toBe('seeding');
     expect(mapState('checkingUP')).toBe('seeding');
-    expect(mapState('stalledUP')).toBe('seeding');
     expect(mapState('forcedUP')).toBe('seeding');
 
     expect(mapState('pausedDL')).toBe('paused');
@@ -181,6 +180,7 @@ describe('QbittorrentIntegration (handlers HTTP)', () => {
     expect(mapState('stoppedUP')).toBe('paused');
 
     expect(mapState('stalledDL')).toBe('stalled');
+    expect(mapState('stalledUP')).toBe('stalled');
 
     expect(mapState('error')).toBe('unknown');
     expect(mapState('missingFiles')).toBe('unknown');

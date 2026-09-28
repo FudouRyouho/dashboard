@@ -15,22 +15,17 @@ export class QbittorrentIntegration
 {
   private client: QBittorrent | null = null;
 
-  private async getClientAsync(): Promise<QBittorrent> {
+  private async getClientAsync(_options?: { signal?: AbortSignal }): Promise<QBittorrent> {
     if (this.client) return this.client;
 
-    const credentials = this.hasSecretValue('apiKey')
-      ? { apiKey: this.getSecretValue('apiKey') }
-      : {
-          username: this.getSecretValue('username'),
-          password: this.getSecretValue('password'),
-        };
-
     this.client = new QBittorrent({
-      ...credentials,
+      username: this.getSecretValue('username'),
+      password: this.getSecretValue('password'),
       baseUrl: this.url('/').toString(),
     });
 
     try {
+      // getAppVersion doesn't accept signal in @ctrl/qbittorrent
       await this.client.getAppVersion();
     } catch (error) {
       this.client = null;
@@ -42,8 +37,9 @@ export class QbittorrentIntegration
 
   async getClientJobsAndStatusAsync(
     input: GetClientJobsAndStatusInput = {},
+    options?: { signal?: AbortSignal },
   ): Promise<DownloadClientJobsAndStatus> {
-    const client = await this.getClientAsync();
+    const client = await this.getClientAsync(options);
     const limit = input.limit ?? 50;
 
     let torrents;
@@ -68,8 +64,9 @@ export class QbittorrentIntegration
     // NOTE: This is TRUE only when ALL torrents are in states mapped to 'paused'
     // It does NOT reflect a global queue paused state, but rather the aggregated state
     // of all individual torrents (all must be pausedDL/pausedUP/stoppedDL/stoppedUP)
+    // queueState is 'unknown' because qBittorrent API doesn't expose global queue pause state
 
-    const status: DownloadClientStatus = { paused, rates, types: ['torrent'] };
+    const status: DownloadClientStatus = { paused, rates, types: ['torrent'], queueState: 'unknown' };
 
     const items: DownloadClientItem[] = torrents.map(
       (torrent): DownloadClientItem => {
@@ -106,31 +103,38 @@ export class QbittorrentIntegration
     return { status, items };
   }
 
-  async pauseQueueAsync(): Promise<void> {
-    const client = await this.getClientAsync();
+  async pauseQueueAsync(options?: { signal?: AbortSignal }): Promise<void> {
+    const client = await this.getClientAsync(options);
     await client.pauseTorrent('all');
   }
 
-  async pauseItemAsync(item: DownloadClientItem): Promise<void> {
-    const client = await this.getClientAsync();
+  async pauseItemAsync(
+    item: DownloadClientItem,
+    options?: { signal?: AbortSignal },
+  ): Promise<void> {
+    const client = await this.getClientAsync(options);
     await client.pauseTorrent(item.id);
   }
 
-  async resumeQueueAsync(): Promise<void> {
-    const client = await this.getClientAsync();
+  async resumeQueueAsync(options?: { signal?: AbortSignal }): Promise<void> {
+    const client = await this.getClientAsync(options);
     await client.resumeTorrent('all');
   }
 
-  async resumeItemAsync(item: DownloadClientItem): Promise<void> {
-    const client = await this.getClientAsync();
+  async resumeItemAsync(
+    item: DownloadClientItem,
+    options?: { signal?: AbortSignal },
+  ): Promise<void> {
+    const client = await this.getClientAsync(options);
     await client.resumeTorrent(item.id);
   }
 
   async deleteItemAsync(
     item: DownloadClientItem,
     fromDisk: boolean,
+    options?: { signal?: AbortSignal },
   ): Promise<void> {
-    const client = await this.getClientAsync();
+    const client = await this.getClientAsync(options);
     await client.removeTorrent(item.id, fromDisk);
   }
 
@@ -150,7 +154,6 @@ export class QbittorrentIntegration
       case 'forcedUP':
       case 'queuedUP':
       case 'uploading':
-      case 'stalledUP':
         return 'seeding';
       case 'pausedDL':
       case 'pausedUP':
@@ -158,6 +161,7 @@ export class QbittorrentIntegration
       case 'stoppedUP':
         return 'paused';
       case 'stalledDL':
+      case 'stalledUP':
         return 'stalled';
       case 'error':
       case 'checkingResumeData':
