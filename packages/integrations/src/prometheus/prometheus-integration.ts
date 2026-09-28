@@ -55,22 +55,12 @@ export class PrometheusIntegration
   async getSystemMetricsAsync(options?: {
     signal?: AbortSignal;
   }): Promise<PrometheusNormalized[]> {
-    // Discover instances
-    const instances = await this.discovery.discoverInstances(options?.signal);
-    if (!instances || instances.length === 0) {
+    const { instances, queryResults } = await this._runDiscoveryAndQueries(
+      options?.signal,
+    );
+    if (instances.length === 0) {
       return [];
     }
-
-    // Run all queries in parallel
-    const queries = getAllQueries();
-    const queryResults = new Map<string, unknown>();
-
-    await Promise.all(
-      queries.map(async ({ key, promql }) => {
-        const result = await this.client.query(promql, options?.signal);
-        queryResults.set(key, result ?? null);
-      }),
-    );
 
     // Normalize results
     return PrometheusNormalizer.normalize(queryResults, instances);
@@ -93,13 +83,9 @@ export class PrometheusIntegration
 
     if (!instances || !queryResults) {
       // Fallback: run full discovery and query (for backward compatibility)
-      const allMetrics = await this.getSystemMetricsAsync(
-        options?.signal ? { signal: options.signal } : undefined,
-      );
-      const serverData = allMetrics.find((m) => m.server === server);
-      if (!serverData) return null;
-
-      return PrometheusNormalizer.toServerMetrics(serverData);
+      const discovered = await this._runDiscoveryAndQueries(options?.signal);
+      instances = discovered.instances;
+      queryResults = discovered.queryResults;
     }
 
     // Use pre-discovered data
@@ -119,7 +105,20 @@ export class PrometheusIntegration
   async getDiscoveredDataAsync(options?: {
     signal?: AbortSignal;
   }): Promise<{ instances: string[]; queryResults: Map<string, unknown> }> {
-    const instances = await this.discovery.discoverInstances(options?.signal);
+    return this._runDiscoveryAndQueries(options?.signal);
+  }
+
+  /**
+   * Shared discovery + query flow.
+   *
+   * Discovers instances from Prometheus, runs all queries in parallel, and
+   * returns both so callers can reuse them (e.g. passing to
+   * getServerMetricsAsync to avoid double work).
+   */
+  private async _runDiscoveryAndQueries(
+    signal?: AbortSignal,
+  ): Promise<{ instances: string[]; queryResults: Map<string, unknown> }> {
+    const instances = await this.discovery.discoverInstances(signal);
     if (!instances || instances.length === 0) {
       return { instances: [], queryResults: new Map() };
     }
@@ -129,7 +128,7 @@ export class PrometheusIntegration
 
     await Promise.all(
       queries.map(async ({ key, promql }) => {
-        const result = await this.client.query(promql, options?.signal);
+        const result = await this.client.query(promql, signal);
         queryResults.set(key, result ?? null);
       }),
     );
