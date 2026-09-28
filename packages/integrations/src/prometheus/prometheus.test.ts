@@ -1,36 +1,27 @@
-import { test, expect, describe } from 'vitest';
+import { test, expect, describe, vi } from 'vitest';
 import { readFileSync } from 'fs';
-import { PrometheusClient } from './client';
+import { PrometheusClient, FetchFn } from './client';
 import { PrometheusDiscovery } from './discovery';
 import { PrometheusNormalizer } from './normalizer';
 import { PROMETHEUS_QUERIES, getAllQueries } from './promql-queries';
 
-// Store original fetch
-const originalFetch = global.fetch;
-
-// Helper to mock fetch
-function mockFetch(response: unknown) {
-  global.fetch = async () =>
-    ({
-      ok: true,
-      json: async () => response,
-    }) as Response;
+// Helper to create a mock fetch function
+function createMockFetch(response: unknown): FetchFn {
+  return vi.fn().mockResolvedValue(response);
 }
 
-// Helper to mock fetch error
-function mockFetchError(error: Error) {
-  global.fetch = async () => {
-    throw error;
-  };
+// Helper to create a mock fetch function that throws
+function createMockFetchError(error: Error): FetchFn {
+  return vi.fn().mockRejectedValue(error);
 }
 
 describe('Prometheus Integration - Client', () => {
   test('should create client with basic auth headers', async () => {
-    mockFetch({ status: 'success', data: { result: [] } });
+    const mockFetchFn = createMockFetch({ status: 'success', data: { result: [] } });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: true,
       username: 'admin',
       password: 'secret',
@@ -38,18 +29,18 @@ describe('Prometheus Integration - Client', () => {
 
     await client.query('up');
     // If we got here without error, auth headers were sent
-    expect(true).toBeTruthy();
+    expect(mockFetchFn).toHaveBeenCalled();
   });
 
   test('should create client without auth when hasAuth is false', async () => {
-    mockFetch({
+    const mockFetchFn = createMockFetch({
       status: 'success',
       data: { resultType: 'vector', result: [] },
     });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
 
@@ -58,11 +49,11 @@ describe('Prometheus Integration - Client', () => {
   });
 
   test('should return null on query error', async () => {
-    mockFetchError(new Error('Network error'));
+    const mockFetchFn = createMockFetchError(new Error('Network error'));
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
 
@@ -73,11 +64,11 @@ describe('Prometheus Integration - Client', () => {
 
 describe('Prometheus Integration - Discovery', () => {
   test('should discover instances via label_values', async () => {
-    mockFetch({ status: 'success', data: ['10.0.0.1:9100', '10.0.0.2:9100'] });
+    const mockFetchFn = createMockFetch({ status: 'success', data: ['10.0.0.1:9100', '10.0.0.2:9100'] });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
     const discovery = new PrometheusDiscovery(client);
@@ -88,17 +79,14 @@ describe('Prometheus Integration - Discovery', () => {
 
   test('should cache label_values responses', async () => {
     let callCount = 0;
-    global.fetch = async () => {
+    const mockFetchFn = vi.fn().mockImplementation(async () => {
       callCount++;
-      return {
-        ok: true,
-        json: async () => ({ status: 'success', data: ['val1', 'val2'] }),
-      } as Response;
-    };
+      return { status: 'success', data: ['val1', 'val2'] };
+    });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
     const discovery = new PrometheusDiscovery(client);
@@ -113,11 +101,11 @@ describe('Prometheus Integration - Discovery', () => {
   });
 
   test('should return null when label_values fails', async () => {
-    mockFetch({ status: 'error', data: [], error: 'not found' });
+    const mockFetchFn = createMockFetch({ status: 'error', data: [], error: 'not found' });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
     const discovery = new PrometheusDiscovery(client);
@@ -407,6 +395,3 @@ describe('Prometheus Integration - Falsifiers', () => {
     }
   });
 });
-
-// Restore original fetch
-global.fetch = originalFetch;

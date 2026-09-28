@@ -5,19 +5,28 @@ import {
   prometheusLabelValuesResponseSchema,
   type PrometheusInstantQueryResponse,
 } from './schemas/prometheus-response';
+import { IntegrationError } from '../base/integration-error';
+
+/**
+ * Fetch function signature compatible with Integration.fetchJson.
+ */
+export type FetchFn = <T = unknown>(
+  url: URL | string,
+  init?: RequestInit,
+) => Promise<T>;
 
 /**
 Prometheus HTTP client with Basic Auth and label_values discovery.
  *
- * Supports:
+ * Uses an injected fetch function (typically Integration.fetchJson) for HTTP.
+ * Manages:
  * - Basic auth via username/password secrets
- * - TLS skip verification option
- * - Timeout handling via AbortSignal
  * - Label values caching (5 min TTL)
+ * - Query/label_values endpoint construction
  */
 export class PrometheusClient {
   private readonly baseUrl: string;
-  private readonly timeoutMs: number;
+  private readonly fetchFn: FetchFn;
   private readonly hasAuth: boolean;
   private readonly username?: string;
   private readonly password?: string;
@@ -30,18 +39,14 @@ export class PrometheusClient {
 
   constructor(options: {
     baseUrl: string;
-    timeoutMs: number;
+    fetchFn: FetchFn;
     hasAuth: boolean;
-    tlsSkipVerify?: boolean;
     username?: string;
     password?: string;
   }) {
     this.baseUrl = options.baseUrl;
-    this.timeoutMs = options.timeoutMs;
+    this.fetchFn = options.fetchFn;
     this.hasAuth = options.hasAuth;
-    // Note: tlsSkipVerify stored for future Node.js support (not used in browser fetch)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    void (options.tlsSkipVerify ?? false);
     this.username = options.username;
     this.password = options.password;
   }
@@ -123,7 +128,7 @@ export class PrometheusClient {
   }
 
   /**
-   * Internal: fetch with auth headers and timeout.
+   * Internal: fetch with auth headers via injected fetch function.
    */
   private async fetchWithAuth(
     url: string,
@@ -141,23 +146,15 @@ export class PrometheusClient {
       headers['Authorization'] = `Basic ${auth}`;
     }
 
-    // Create timeout signal
-    const timeoutSignal = AbortSignal.timeout(this.timeoutMs);
-    const combinedSignal = signal
-      ? AbortSignal.any([signal, timeoutSignal])
-      : timeoutSignal;
-
-    const response = await fetch(url, {
-      headers,
-      signal: combinedSignal,
-      // Note: tlsSkipVerify would require Node.js specific options
-      // For browser fetch, this is not available
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    try {
+      return await this.fetchFn(url, { headers, signal });
+    } catch (error) {
+      // Normalize error to match previous behavior
+      if (error instanceof IntegrationError) {
+        // IntegrationError already has reason/httpStatus
+        throw new Error(`HTTP ${error.httpStatus ?? 'unknown'}: ${error.message}`);
+      }
+      throw error;
     }
-
-    return response.json();
   }
 }

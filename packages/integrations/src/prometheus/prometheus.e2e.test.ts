@@ -1,16 +1,18 @@
 import { test, expect, describe } from 'vitest';
-import { PrometheusClient } from './client';
+import { PrometheusClient, FetchFn } from './client';
 import { PrometheusDiscovery } from './discovery';
 import { PrometheusNormalizer } from './normalizer';
 import { getAllQueries } from './promql-queries';
 
 const PROMETHEUS_URL = process.env.PROMETHEUS_URL || 'http://127.0.0.1:9090';
 
+const fetchFn: FetchFn = fetch.bind(globalThis);
+
 describe('Prometheus Integration - E2E', () => {
   test('should connect to Prometheus and discover instances', async () => {
     const client = new PrometheusClient({
       baseUrl: PROMETHEUS_URL,
-      timeoutMs: 10000,
+      fetchFn: fetch.bind(globalThis),
       hasAuth: false,
     });
     const discovery = new PrometheusDiscovery(client);
@@ -27,7 +29,7 @@ describe('Prometheus Integration - E2E', () => {
   test('should query CPU metrics', async () => {
     const client = new PrometheusClient({
       baseUrl: PROMETHEUS_URL,
-      timeoutMs: 10000,
+      fetchFn,
       hasAuth: false,
     });
 
@@ -46,7 +48,7 @@ describe('Prometheus Integration - E2E', () => {
   test('should query memory metrics', async () => {
     const client = new PrometheusClient({
       baseUrl: PROMETHEUS_URL,
-      timeoutMs: 10000,
+      fetchFn,
       hasAuth: false,
     });
 
@@ -67,7 +69,7 @@ describe('Prometheus Integration - E2E', () => {
   test('should normalize full response', async () => {
     const client = new PrometheusClient({
       baseUrl: PROMETHEUS_URL,
-      timeoutMs: 10000,
+      fetchFn,
       hasAuth: false,
     });
     const discovery = new PrometheusDiscovery(client);

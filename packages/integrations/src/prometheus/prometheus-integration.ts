@@ -1,5 +1,5 @@
 import { Integration } from '../base/integration';
-import { PrometheusClient } from './client';
+import { PrometheusClient, FetchFn } from './client';
 import { PrometheusDiscovery } from './discovery';
 import { getAllQueries } from './promql-queries';
 import { PrometheusNormalizer } from './normalizer';
@@ -32,13 +32,13 @@ export class PrometheusIntegration
       password = this.getSecretValue('password');
     }
 
+    const fetchFn: FetchFn = this.fetchJson.bind(this);
     this.client = new PrometheusClient({
       baseUrl: this.baseUrl,
-      timeoutMs: this.timeoutMs,
+      fetchFn,
       hasAuth,
       username,
       password,
-      tlsSkipVerify: false, // Not implemented yet for browser fetch
     });
 
     this.discovery = new PrometheusDiscovery(this.client);
