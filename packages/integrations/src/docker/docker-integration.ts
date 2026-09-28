@@ -49,16 +49,16 @@ export class DockerIntegration
     const volumes = results[3].status === 'fulfilled' ? results[3].value : [];
 
     if (results[0].status === 'rejected') {
-      console.warn('Docker containers fetch failed:', results[0].reason);
+      this.log('Docker containers fetch failed', { error: results[0].reason });
     }
     if (results[1].status === 'rejected') {
-      console.warn('Docker images fetch failed:', results[1].reason);
+      this.log('Docker images fetch failed', { error: results[1].reason });
     }
     if (results[2].status === 'rejected') {
-      console.warn('Docker networks fetch failed:', results[2].reason);
+      this.log('Docker networks fetch failed', { error: results[2].reason });
     }
     if (results[3].status === 'rejected') {
-      console.warn('Docker volumes fetch failed:', results[3].reason);
+      this.log('Docker volumes fetch failed', { error: results[3].reason });
     }
 
     let running = 0;
@@ -66,7 +66,20 @@ export class DockerIntegration
     let healthy = 0;
     let unhealthy = 0;
     for (const c of containers) {
-      if (c.State === 'running' || c.Status.startsWith('Up')) {
+      const state = (c as any).State as
+        | { Status?: string; Running?: boolean }
+        | undefined;
+      const status = state?.Status ?? c.State;
+      const isRunning =
+        status === 'running' ||
+        (status !== 'exited' &&
+          status !== 'dead' &&
+          status !== 'created' &&
+          status !== 'paused' &&
+          status !== 'removing' &&
+          status !== 'restarting');
+
+      if (isRunning) {
         running++;
         if (c.Health?.Status === 'healthy') healthy++;
         else if (c.Health?.Status === 'unhealthy') unhealthy++;

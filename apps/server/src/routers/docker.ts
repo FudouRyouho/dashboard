@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { toIntegrationTRPCError } from '../integration-errors';
 import {
   supportsDocker,
+  IDockerIntegration,
+  Integration,
   type DockerDashboardStats,
 } from '@dashboard/integrations';
 import { dockerSnapshot } from '../tasks/task-ids';
@@ -11,26 +13,13 @@ const containerIdsInput = z.object({
   ids: z.array(z.string().min(1)),
 });
 
-interface DockerContainerManager {
-  startContainerAsync(id: string): Promise<void>;
-  stopContainerAsync(id: string): Promise<void>;
-  restartContainerAsync(id: string): Promise<void>;
-  removeContainerAsync(id: string): Promise<void>;
-}
-
 function getContainerManager(
-  integration: unknown,
-): DockerContainerManager | null {
-  const i = integration as Partial<DockerContainerManager>;
-  if (
-    typeof i.startContainerAsync !== 'function' ||
-    typeof i.stopContainerAsync !== 'function' ||
-    typeof i.restartContainerAsync !== 'function' ||
-    typeof i.removeContainerAsync !== 'function'
-  ) {
+  integration: Integration,
+): IDockerIntegration | null {
+  if (!supportsDocker(integration)) {
     return null;
   }
-  return i as DockerContainerManager;
+  return integration as IDockerIntegration;
 }
 
 function emptyStats(): DockerDashboardStats {
@@ -48,14 +37,14 @@ function emptyStats(): DockerDashboardStats {
  * Only throws if ALL integrations fail.
  */
 async function executeDockerOperation(
-  integrations: any[],
+  integrations: Integration[],
   operationName: string,
-  operationFn: (manager: DockerContainerManager, id: string) => Promise<void>,
+  operationFn: (manager: IDockerIntegration, id: string) => Promise<void>,
   ctx: any,
   input: { ids: string[] },
 ) {
   const results = await Promise.allSettled(
-    integrations.map(async (integration) => {
+    integrations.map(async (integration: Integration) => {
       const manager = getContainerManager(integration);
       if (!manager) {
         throw toIntegrationTRPCError(
