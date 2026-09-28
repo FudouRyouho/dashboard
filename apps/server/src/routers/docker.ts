@@ -9,18 +9,10 @@ import {
 } from '@dashboard/integrations';
 import { dockerSnapshot } from '../tasks/task-ids';
 
-const containerIdsInput = z.object({
+const dockerContainerInput = z.object({
+  integrationId: z.string().min(1),
   ids: z.array(z.string().min(1)),
 });
-
-function getContainerManager(
-  integration: Integration,
-): IDockerIntegration | null {
-  if (!supportsDocker(integration)) {
-    return null;
-  }
-  return integration as IDockerIntegration;
-}
 
 function emptyStats(): DockerDashboardStats {
   return {
@@ -32,56 +24,49 @@ function emptyStats(): DockerDashboardStats {
 }
 
 /**
- * Helper to execute a Docker operation across all integrations.
- * Uses Promise.allSettled to handle partial failures gracefully.
- * Only throws if ALL integrations fail.
+ * Find a Docker integration by id and return its container manager.
+ */
+function getDockerIntegration(
+  integrations: Integration[],
+  integrationId: string,
+): IDockerIntegration | null {
+  const integration = integrations.find((i) => i.publicIntegration.id === integrationId);
+  if (!integration || !supportsDocker(integration)) {
+    return null;
+  }
+  return integration as IDockerIntegration;
+}
+
+/**
+ * Execute a Docker operation on a single integration.
+ * Throws if ANY container operation fails.
  */
 async function executeDockerOperation(
-  integrations: Integration[],
+  manager: IDockerIntegration,
   operationName: string,
   operationFn: (manager: IDockerIntegration, id: string) => Promise<void>,
   ctx: any,
-  input: { ids: string[] },
-) {
-  const results = await Promise.allSettled(
-    integrations.map(async (integration: Integration) => {
-      const manager = getContainerManager(integration);
-      if (!manager) {
-        throw toIntegrationTRPCError(
-          new Error('Docker integration does not support container management'),
-          'Docker operation failed',
-        );
-      }
-      const errors: Error[] = [];
-      for (const id of input.ids) {
-        try {
-          await operationFn(manager, id);
-        } catch (err) {
-          errors.push(err instanceof Error ? err : new Error(String(err)));
-          ctx.logger.error(
-            {
-              integrationId: integration.publicIntegration.id,
-              containerId: id,
-            },
-            `Failed to ${operationName} container: ${err instanceof Error ? err.message : String(err)}`,
-          );
-        }
-      }
-      if (errors.length > 0) {
-        throw new Error(
-          `Failed to ${operationName} ${errors.length} container(s)`,
-        );
-      }
-    }),
-  );
-
-  const failures = results.filter(
-    (r): r is PromiseRejectedResult => r.status === 'rejected',
-  );
-  if (failures.length === integrations.length) {
+  input: { integrationId: string; ids: string[] },
+): Promise<void> {
+  const errors: Error[] = [];
+  for (const id of input.ids) {
+    try {
+      await operationFn(manager, id);
+    } catch (err) {
+      errors.push(err instanceof Error ? err : new Error(String(err)));
+      ctx.logger.error(
+        {
+          integrationId: input.integrationId,
+          containerId: id,
+        },
+        `Failed to ${operationName} container: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+  }
+  if (errors.length > 0) {
     throw toIntegrationTRPCError(
-      new Error('All Docker integrations failed'),
-      'Docker operation failed',
+      errors[0]!,
+      `Failed to ${operationName} ${errors.length} container(s)`,
     );
   }
 }
@@ -113,56 +98,80 @@ export const dockerRouter = createTRPCRouter({
     }),
 
   startAll: publicProcedure
-    .input(containerIdsInput)
+    .input(dockerContainerInput)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-      const dockerIntegrations = ctx.integrations.filter(supportsDocker);
+      const manager = getDockerIntegration(ctx.integrations, input.integrationId);
+      if (!manager) {
+        throw toIntegrationTRPCError(
+          new Error('Docker integration not found'),
+          'Docker operation failed',
+        );
+      }
       await executeDockerOperation(
-        dockerIntegrations,
+        manager,
         'start',
-        (manager, id) => manager.startContainerAsync(id),
+        (m, id) => m.startContainerAsync(id),
         ctx,
         input,
       );
     }),
 
   stopAll: publicProcedure
-    .input(containerIdsInput)
+    .input(dockerContainerInput)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-      const dockerIntegrations = ctx.integrations.filter(supportsDocker);
+      const manager = getDockerIntegration(ctx.integrations, input.integrationId);
+      if (!manager) {
+        throw toIntegrationTRPCError(
+          new Error('Docker integration not found'),
+          'Docker operation failed',
+        );
+      }
       await executeDockerOperation(
-        dockerIntegrations,
+        manager,
         'stop',
-        (manager, id) => manager.stopContainerAsync(id),
+        (m, id) => m.stopContainerAsync(id),
         ctx,
         input,
       );
     }),
 
   restartAll: publicProcedure
-    .input(containerIdsInput)
+    .input(dockerContainerInput)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-      const dockerIntegrations = ctx.integrations.filter(supportsDocker);
+      const manager = getDockerIntegration(ctx.integrations, input.integrationId);
+      if (!manager) {
+        throw toIntegrationTRPCError(
+          new Error('Docker integration not found'),
+          'Docker operation failed',
+        );
+      }
       await executeDockerOperation(
-        dockerIntegrations,
+        manager,
         'restart',
-        (manager, id) => manager.restartContainerAsync(id),
+        (m, id) => m.restartContainerAsync(id),
         ctx,
         input,
       );
     }),
 
   removeAll: publicProcedure
-    .input(containerIdsInput)
+    .input(dockerContainerInput)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-      const dockerIntegrations = ctx.integrations.filter(supportsDocker);
+      const manager = getDockerIntegration(ctx.integrations, input.integrationId);
+      if (!manager) {
+        throw toIntegrationTRPCError(
+          new Error('Docker integration not found'),
+          'Docker operation failed',
+        );
+      }
       await executeDockerOperation(
-        dockerIntegrations,
+        manager,
         'remove',
-        (manager, id) => manager.removeContainerAsync(id),
+        (m, id) => m.removeContainerAsync(id),
         ctx,
         input,
       );

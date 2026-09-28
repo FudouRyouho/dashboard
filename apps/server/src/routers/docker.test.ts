@@ -72,7 +72,7 @@ describe('dockerRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
-      await caller.startAll({ ids: ['container-1', 'container-2'] });
+      await caller.startAll({ integrationId: 'docker-1', ids: ['container-1', 'container-2'] });
       expect(integration.startContainerAsync).toHaveBeenCalledWith(
         'container-1',
       );
@@ -91,7 +91,7 @@ describe('dockerRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
-      await caller.stopAll({ ids: ['container-1'] });
+      await caller.stopAll({ integrationId: 'docker-1', ids: ['container-1'] });
       expect(integration.stopContainerAsync).toHaveBeenCalledWith(
         'container-1',
       );
@@ -107,7 +107,7 @@ describe('dockerRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
-      await caller.restartAll({ ids: ['container-1'] });
+      await caller.restartAll({ integrationId: 'docker-1', ids: ['container-1'] });
       expect(integration.restartContainerAsync).toHaveBeenCalledWith(
         'container-1',
       );
@@ -123,86 +123,10 @@ describe('dockerRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
-      await caller.removeAll({ ids: ['container-1'] });
+      await caller.removeAll({ integrationId: 'docker-1', ids: ['container-1'] });
       expect(integration.removeContainerAsync).toHaveBeenCalledWith(
         'container-1',
       );
-    });
-  });
-
-  describe('startAll with partial failure', () => {
-    test('succeeds when one integration fails but another succeeds', async () => {
-      const failingIntegration = createTestIntegration('docker', {
-        id: 'docker-fail',
-        name: 'Failing Docker',
-        startContainerAsync: vi
-          .fn()
-          .mockRejectedValue(new Error('Connection refused')),
-      });
-      const successIntegration = createTestIntegration('docker', {
-        id: 'docker-ok',
-        name: 'Working Docker',
-      });
-
-      const ctx = createTestTRPCContext({
-        integrations: [failingIntegration, successIntegration],
-      });
-      const caller = dockerRouter.createCaller(ctx);
-
-      // Should not throw because at least one integration succeeded
-      await expect(
-        caller.startAll({ ids: ['container-1'] }),
-      ).resolves.toBeUndefined();
-      expect(successIntegration.startContainerAsync).toHaveBeenCalledWith(
-        'container-1',
-      );
-    });
-
-    test('throws when ALL integrations fail', async () => {
-      const failingIntegration1 = createTestIntegration('docker', {
-        id: 'docker-fail-1',
-        name: 'Failing Docker 1',
-        startContainerAsync: vi.fn().mockRejectedValue(new Error('Error 1')),
-      });
-      const failingIntegration2 = createTestIntegration('docker', {
-        id: 'docker-fail-2',
-        name: 'Failing Docker 2',
-        startContainerAsync: vi.fn().mockRejectedValue(new Error('Error 2')),
-      });
-
-      const ctx = createTestTRPCContext({
-        integrations: [failingIntegration1, failingIntegration2],
-      });
-      const caller = dockerRouter.createCaller(ctx);
-
-      await expect(caller.startAll({ ids: ['container-1'] })).rejects.toThrow(
-        'Docker operation failed',
-      );
-    });
-  });
-
-  describe('stopAll with partial failure', () => {
-    test('succeeds when one integration is unreachable', async () => {
-      const failingIntegration = createTestIntegration('docker', {
-        id: 'docker-fail',
-        name: 'Failing Docker',
-        stopContainerAsync: vi
-          .fn()
-          .mockRejectedValue(new Error('ECONNREFUSED')),
-      });
-      const successIntegration = createTestIntegration('docker', {
-        id: 'docker-ok',
-        name: 'Working Docker',
-      });
-
-      const ctx = createTestTRPCContext({
-        integrations: [failingIntegration, successIntegration],
-      });
-      const caller = dockerRouter.createCaller(ctx);
-
-      await expect(
-        caller.stopAll({ ids: ['container-1'] }),
-      ).resolves.toBeUndefined();
     });
   });
 
@@ -221,7 +145,7 @@ describe('dockerRouter', () => {
 
       // Should NOT throw - 304 is idempotent success
       await expect(
-        caller.startAll({ ids: ['container-1'] }),
+        caller.startAll({ integrationId: 'docker-304', ids: ['container-1'] }),
       ).resolves.toBeUndefined();
       expect(integration.startContainerAsync).toHaveBeenCalledWith(
         'container-1',
@@ -241,8 +165,8 @@ describe('dockerRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
-      await expect(caller.startAll({ ids: ['nonexistent'] })).rejects.toThrow(
-        'Docker operation failed',
+      await expect(caller.startAll({ integrationId: 'docker-404', ids: ['nonexistent'] })).rejects.toThrow(
+        'Failed to start 1 container(s): unreachable',
       );
     });
 
@@ -257,9 +181,58 @@ describe('dockerRouter', () => {
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = dockerRouter.createCaller(ctx);
 
-      await expect(caller.startAll({ ids: ['container-1'] })).rejects.toThrow(
-        'Docker operation failed',
+      await expect(caller.startAll({ integrationId: 'docker-timeout', ids: ['container-1'] })).rejects.toThrow(
+        'Failed to start 1 container(s): timeout',
       );
+    });
+
+    test('throws when docker integration not found', async () => {
+      const ctx = createTestTRPCContext({ integrations: [] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(
+        caller.startAll({ integrationId: 'nonexistent', ids: ['c1'] }),
+      ).rejects.toThrow('Docker operation failed');
+    });
+  });
+
+
+  describe('integration not found', () => {
+    test('throws when integrationId does not match any docker integration', async () => {
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(
+        caller.startAll({ integrationId: 'nonexistent', ids: ['container-1'] }),
+      ).rejects.toThrow('Docker operation failed');
+    });
+  });
+
+  describe('partial container failure', () => {
+    test('throws when some containers fail but others succeed', async () => {
+      const integration = createTestIntegration('docker', {
+        id: 'docker-partial',
+        name: 'Docker Partial Test',
+        startContainerAsync: vi.fn().mockImplementation((id: string) => {
+          if (id === 'failed-container') {
+            return Promise.reject(new Error('Container not found'));
+          }
+          return Promise.resolve(undefined);
+        }),
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      // Should throw because at least one container failed
+      await expect(
+        caller.startAll({ integrationId: 'docker-partial', ids: ['ok-container', 'failed-container'] }),
+      ).rejects.toThrow('Failed to start 1 container(s): unknown');
+
+      expect(integration.startContainerAsync).toHaveBeenCalledTimes(2);
     });
   });
 });
