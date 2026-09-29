@@ -91,8 +91,14 @@ export abstract class Integration {
     init?: RequestInit,
   ): Promise<T> {
     const timeoutSignal = AbortSignal.timeout(this.timeoutMs);
+    const headers = new Headers(init?.headers);
+    // qBittorrent WebUI API v2 requires Referer/Origin for CSRF protection.
+    // Set them to the same domain and port used in the request Host header.
+    headers.set('Referer', this.baseUrl);
+    headers.set('Origin', this.baseUrl);
     const res = await fetch(String(url), {
       ...init,
+      headers,
       signal: init?.signal
         ? AbortSignal.any([init.signal, timeoutSignal])
         : timeoutSignal,
