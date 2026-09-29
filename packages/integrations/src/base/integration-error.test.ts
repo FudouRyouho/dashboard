@@ -123,3 +123,31 @@ test('IntegrationError.has correct name property', () => {
   const err = new IntegrationError('timeout', 'Timed out');
   expect(err.name).toBe('IntegrationError');
 });
+
+test('IntegrationError.fromHttpResponse creates invalid-response for 422', () => {
+  const err = IntegrationError.fromHttpResponse(422, 'Unprocessable Entity');
+  expect(err.reason).toBe('invalid-response');
+  expect(err.httpStatus).toBe(422);
+});
+
+test('IntegrationError.fromHttpResponse creates timeout for 503', () => {
+  const err = IntegrationError.fromHttpResponse(503, 'Service Unavailable');
+  expect(err.reason).toBe('timeout');
+  expect(err.httpStatus).toBe(503);
+});
+
+test('classifyIntegrationError returns invalid-response for 422 status', () => {
+  const err = new Error('Unprocessable Entity') as Error & { status?: number };
+  err.status = 422;
+  const result = classifyIntegrationError(err);
+  expect(result.reason).toBe('invalid-response');
+  expect(result.httpStatus).toBe(422);
+});
+
+test('classifyIntegrationError returns timeout for 503 status', () => {
+  const err = new Error('Service Unavailable') as Error & { status?: number };
+  err.status = 503;
+  const result = classifyIntegrationError(err);
+  expect(result.reason).toBe('timeout');
+  expect(result.httpStatus).toBe(503);
+});

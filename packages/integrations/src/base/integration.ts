@@ -104,7 +104,24 @@ export abstract class Integration {
         : timeoutSignal,
     });
     if (!res.ok && res.status !== 304) {
-      throw IntegrationError.fromHttpResponse(res.status, res.statusText);
+      // Read error body for context (e.g., Prometheus returns { status, errorType, error })
+      let errorBody: unknown;
+      try {
+        errorBody = await res.json();
+      } catch {
+        // Ignore if body is not JSON
+      }
+      const error = IntegrationError.fromHttpResponse(res.status, res.statusText);
+      if (errorBody) {
+        // Attach error body as cause for downstream logging
+        throw new IntegrationError(
+          error.reason,
+          `${error.message}: ${JSON.stringify(errorBody)}`,
+          error.httpStatus,
+          { cause: errorBody },
+        );
+      }
+      throw error;
     }
     const contentLength = res.headers.get('content-length');
     if (!contentLength || contentLength === '0') return undefined as T;

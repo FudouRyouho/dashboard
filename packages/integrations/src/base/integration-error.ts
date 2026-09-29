@@ -18,7 +18,11 @@ export class IntegrationError extends Error {
         ? 'unauthorized'
         : status === 403
           ? 'forbidden'
-          : 'unknown';
+          : status === 422
+            ? 'invalid-response'
+            : status === 503
+              ? 'timeout'
+              : 'unknown';
 
     return new IntegrationError(
       reason,
@@ -105,7 +109,11 @@ export const classifyIntegrationError = (
             ? 'unauthorized'
             : status === 403
               ? 'forbidden'
-              : 'unknown',
+              : status === 422
+                ? 'invalid-response'
+                : status === 503
+                  ? 'timeout'
+                  : 'unknown',
         httpStatus: status,
       };
     }
