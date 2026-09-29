@@ -2,7 +2,7 @@ import type { DB } from '../connection';
 import { taskPolicies } from '../schemas/tasks';
 import { eq, and } from 'drizzle-orm';
 
-export type TaskType = 'calendar' | 'mediaReleases' | 'docker';
+export type TaskType = 'calendar' | 'media-releases' | 'docker';
 
 export interface TaskPolicyRow {
   id: string;
@@ -58,7 +58,7 @@ export async function getAllPoliciesByIntegrationId(
  * Get a policy for a specific integration and task type
  * @param db Database connection
  * @param integrationId Integration ID
- * @param taskType Task type (calendar/mediaReleases)
+ * @param taskType Task type (calendar/media-releases)
  * @returns Policy or null
  */
 export async function getPolicyByIntegrationAndType(
@@ -124,7 +124,7 @@ export async function upsertTaskPolicy(
  * Delete a policy for a specific integration and task type
  * @param db Database connection
  * @param integrationId Integration ID
- * @param taskType Task type (calendar/mediaReleases)
+ * @param taskType Task type (calendar/media-releases)
  */
 export async function deleteTaskPolicy(
   db: DB,

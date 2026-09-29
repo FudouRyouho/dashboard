@@ -18,7 +18,7 @@ export const policiesRouter = createTRPCRouter({
     .input(
       z.object({
         integrationId: z.string(),
-        taskType: z.enum(['calendar', 'mediaReleases', 'docker']),
+        taskType: z.enum(['calendar', 'media-releases', 'docker']),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -34,7 +34,7 @@ export const policiesRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         integrationId: z.string(),
-        taskType: z.enum(['calendar', 'mediaReleases', 'docker']),
+        taskType: z.enum(['calendar', 'media-releases', 'docker']),
         everyMs: z.number().int().positive(),
         runOnStart: z.boolean(),
         expectedDurationMs: z.number().int().positive(),
@@ -50,7 +50,7 @@ export const policiesRouter = createTRPCRouter({
     .input(
       z.object({
         integrationId: z.string(),
-        taskType: z.enum(['calendar', 'mediaReleases', 'docker']),
+        taskType: z.enum(['calendar', 'media-releases', 'docker']),
       }),
     )
     .mutation(async ({ ctx, input }) => {

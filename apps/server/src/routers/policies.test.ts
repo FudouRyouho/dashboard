@@ -70,7 +70,7 @@ describe('policiesRouter', () => {
         {
           id: 'policy-2',
           integrationId,
-          taskType: 'mediaReleases' as const,
+          taskType: 'media-releases' as const,
           everyMs: 7200000,
           runOnStart: false,
           expectedDurationMs: 60000,
@@ -118,7 +118,7 @@ describe('policiesRouter', () => {
   });
 
   describe('get', () => {
-    const taskTypes = ['calendar', 'mediaReleases', 'docker'] as const;
+    const taskTypes = ['calendar', 'media-releases', 'docker'] as const;
 
     for (const taskType of taskTypes) {
       test(`returns policy for taskType: ${taskType}`, async () => {
@@ -174,7 +174,7 @@ describe('policiesRouter', () => {
       failureCooldownMs: 60000,
     };
 
-    const taskTypes = ['calendar', 'mediaReleases', 'docker'] as const;
+    const taskTypes = ['calendar', 'media-releases', 'docker'] as const;
 
     for (const taskType of taskTypes) {
       test(`upserts policy for taskType: ${taskType}`, async () => {
@@ -232,7 +232,7 @@ describe('policiesRouter', () => {
   });
 
   describe('delete', () => {
-    const taskTypes = ['calendar', 'mediaReleases', 'docker'] as const;
+    const taskTypes = ['calendar', 'media-releases', 'docker'] as const;
 
     for (const taskType of taskTypes) {
       test(`deletes policy for taskType: ${taskType}`, async () => {

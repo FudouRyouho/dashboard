@@ -60,7 +60,7 @@ test('getAllPoliciesByIntegrationId returns policies for integration', async () 
     await upsertTaskPolicy(db, {
       id: randomUUID(),
       integrationId,
-      taskType: 'mediaReleases',
+      taskType: 'media-releases',
       everyMs: 3600000,
       runOnStart: false,
       expectedDurationMs: 5000,
@@ -137,7 +137,7 @@ test('upsertTaskPolicy creates new policy', async () => {
     await upsertTaskPolicy(db, {
       id,
       integrationId,
-      taskType: 'mediaReleases',
+      taskType: 'media-releases',
       everyMs: 3600000,
       runOnStart: false,
       expectedDurationMs: 5000,
@@ -148,7 +148,7 @@ test('upsertTaskPolicy creates new policy', async () => {
     const result = await getPolicyByIntegrationAndType(
       db,
       integrationId,
-      'mediaReleases',
+      'media-releases',
     );
     expect(result, 'Debe existir después de insertar').toBeTruthy();
     expect(result!.expectedDurationMs).toBe(5000);
@@ -229,7 +229,7 @@ test('upsertTaskPolicy maintains unique constraint', async () => {
     await upsertTaskPolicy(db, {
       id: randomUUID(),
       integrationId,
-      taskType: 'mediaReleases',
+      taskType: 'media-releases',
       everyMs: 3600000,
       runOnStart: false,
       expectedDurationMs: 5000,

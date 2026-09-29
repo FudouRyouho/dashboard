@@ -8,18 +8,19 @@ import {
 import { calendarTask } from './calendar-task';
 import { dockerTask } from './docker-task';
 import { mediaReleasesTask } from './media-releases-task';
+import { TASK_ID_SUFFIX } from './task-ids';
 
 export function createTaskDefinitions(
   entries: RegistryEntry[],
   policies: Map<
     string,
-    { calendar?: TaskPolicy; mediaReleases?: TaskPolicy; docker?: TaskPolicy }
+    { calendar?: TaskPolicy; 'media-releases'?: TaskPolicy; docker?: TaskPolicy }
   >,
 ): TaskDefinition[] {
   const definitions: TaskDefinition[] = [];
 
   for (const { integration, row } of entries) {
-    const built: string[] = [];
+    const built: (keyof typeof TASK_ID_SUFFIX)[] = [];
     const configPolicies = policies.get(row.id) ?? {};
 
     if (supportsCalendar(integration)) {
@@ -29,7 +30,7 @@ export function createTaskDefinitions(
 
     if (supportsMediaReleases(integration)) {
       definitions.push(
-        mediaReleasesTask(integration, configPolicies.mediaReleases),
+        mediaReleasesTask(integration, configPolicies['media-releases']),
       );
       built.push('media-releases');
     }
@@ -47,10 +48,10 @@ export function createTaskDefinitions(
 
 function assertNoUnknownTasks(
   row: RegistryEntry['row'],
-  built: string[],
+  built: (keyof typeof TASK_ID_SUFFIX)[],
   configPolicies: {
     calendar?: TaskPolicy;
-    mediaReleases?: TaskPolicy;
+    'media-releases'?: TaskPolicy;
     docker?: TaskPolicy;
   },
 ): void {

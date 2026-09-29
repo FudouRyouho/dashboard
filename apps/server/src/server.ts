@@ -53,11 +53,11 @@ export async function startServer(appConfig: Config) {
   // Build policies map for task definitions
   const policiesMap = new Map<
     string,
-    { calendar?: any; mediaReleases?: any }
+    { calendar?: any; 'media-releases'?: any; docker?: any }
   >();
   for (const entry of registry) {
     const policies = await getAllPoliciesByIntegrationId(db, entry.row.id);
-    const taskPolicies: { calendar?: any; mediaReleases?: any } = {};
+    const taskPolicies: { calendar?: any; 'media-releases'?: any; docker?: any } = {};
     for (const policy of policies) {
       if (policy.taskType === 'calendar') {
         taskPolicies.calendar = {
@@ -69,8 +69,8 @@ export async function startServer(appConfig: Config) {
             cooldownMs: policy.failureCooldownMs,
           },
         };
-      } else if (policy.taskType === 'mediaReleases') {
-        taskPolicies.mediaReleases = {
+      } else if (policy.taskType === 'media-releases') {
+        taskPolicies['media-releases'] = {
           everyMs: policy.everyMs,
           runOnStart: policy.runOnStart,
           expectedDurationMs: policy.expectedDurationMs,
