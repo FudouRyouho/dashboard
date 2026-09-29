@@ -250,7 +250,7 @@ test('validateIntegrationPublic validates public schema', () => {
 
 test('validateResultStatus validates valid status with success', () => {
   const status = {
-    data: { obtainedAt: '2026-01-15T10:00:00.000Z' },
+    data: { obtainedAt: '2026-01-15T10:00:00.000Z', from: '2026-01-01T00:00:00.000Z', to: '2026-02-01T00:00:00.000Z' },
     attempt: { outcome: 'success' as const, at: '2026-01-15T10:00:00.000Z' },
   };
   const result = validateResultStatus(status);
@@ -259,7 +259,7 @@ test('validateResultStatus validates valid status with success', () => {
 
 test('validateResultStatus validates valid status with failure', () => {
   const status = {
-    data: { obtainedAt: '2026-01-15T10:00:00.000Z' },
+    data: { obtainedAt: '2026-01-15T10:00:00.000Z', from: '2026-01-01T00:00:00.000Z', to: '2026-02-01T00:00:00.000Z' },
     attempt: {
       outcome: 'failure' as const,
       at: '2026-01-15T10:00:00.000Z',

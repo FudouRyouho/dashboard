@@ -11,9 +11,16 @@ export const TASK_ID_SUFFIX = {
   'system-health': 'system-health',
 } as const;
 
+// Helper type for calendar snapshot data (includes coverage info)
+export type CalendarSnapshotData = {
+  data: CalendarEvent[];
+  from: string;
+  to: string;
+};
+
 export const calendarSnapshot = (
   integrationId: string,
-): SnapshotKey<CalendarEvent[]> => ({ taskId: `${integrationId}:${TASK_ID_SUFFIX.calendar}` });
+): SnapshotKey<CalendarSnapshotData> => ({ taskId: `${integrationId}:${TASK_ID_SUFFIX.calendar}` });
 
 export const mediaReleasesSnapshot = (
   integrationId: string,

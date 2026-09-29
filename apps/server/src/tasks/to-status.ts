@@ -31,7 +31,11 @@ export function toStatus(
   }
 
   return {
-    data: snapshot ? { obtainedAt: snapshot.obtainedAt.toISOString() } : null,
+    data: snapshot ? {
+      obtainedAt: snapshot.obtainedAt.toISOString(),
+      from: (snapshot as any).from ?? null,
+      to: (snapshot as any).to ?? null,
+    } : null,
     attempt: !lastRun
       ? null
       : lastRun.outcome === 'success'

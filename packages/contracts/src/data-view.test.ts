@@ -11,7 +11,7 @@ describe('dataViewOf', () => {
   test('successful attempt, data is fresh', () => {
     expect(
       dataViewOf({
-        data: { obtainedAt: t },
+        data: { obtainedAt: t, from: t, to: t },
         attempt: { outcome: 'success', at: t },
       }),
     ).toBe('fresh');
@@ -20,7 +20,7 @@ describe('dataViewOf', () => {
   test('failed attempt with prior data, data became outdated', () => {
     expect(
       dataViewOf({
-        data: { obtainedAt: t },
+        data: { obtainedAt: t, from: t, to: t },
         attempt: { outcome: 'failure', at: t, reason: 'unreachable' },
       }),
     ).toBe('outdated');
