@@ -6,6 +6,7 @@ export * from './base/calendar';
 export * from './base/media-releases';
 export * from './base/download-client';
 export * from './base/system-health';
+export * from './base/indexer-manager';
 export * from './jellyfin/jellyfin-integration';
 export * from './base/docker';
 export * from './docker/docker-integration';
@@ -13,6 +14,7 @@ export * from './prometheus/prometheus-integration';
 export * from './prometheus/types';
 export * from './prometheus/normalizer';
 export * from './qbittorrent/qbittorrent-integration';
+export * from './prowlarr/prowlarr-integration';
 export * from './registry';
 
 // Register integrations
@@ -22,3 +24,4 @@ import './jellyfin/registration';
 import './docker/registration';
 import './prometheus/registration';
 import './qbittorrent/registration';
+import './prowlarr/registration';

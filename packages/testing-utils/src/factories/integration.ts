@@ -21,6 +21,8 @@ function defaultPort(kind: IntegrationKind): number {
       return 2375;
     case 'prometheus':
       return 9090;
+    case 'prowlarr':
+      return 9696;
   }
 }
 
@@ -124,6 +126,10 @@ export function createTestIntegration<K extends IntegrationKind>(
     result.getDiscoveredDataAsync = vi
       .fn()
       .mockResolvedValue({ instances: [], queryResults: new Map() });
+  }
+  if (kind === 'prowlarr') {
+    result.getIndexersAsync = vi.fn().mockResolvedValue([]);
+    result.testAllIndexersAsync = vi.fn().mockResolvedValue(undefined);
   }
 
   for (const [key, value] of Object.entries(overrides)) {

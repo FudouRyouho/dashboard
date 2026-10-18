@@ -9,6 +9,7 @@ import type { CalendarEvent } from '@dashboard/contracts';
 import type {
   PrometheusNormalized,
   ServerMetrics,
+  Indexer,
 } from '@dashboard/integrations';
 
 /**
@@ -68,6 +69,10 @@ export interface TestIntegration<K extends IntegrationKind> {
   getDiscoveredDataAsync?: (options?: {
     signal?: AbortSignal;
   }) => Promise<{ instances: string[]; queryResults: Map<string, unknown> }>;
+
+  // Indexer manager capability
+  getIndexersAsync?: () => Promise<Indexer[]>;
+  testAllIndexersAsync?: () => Promise<void>;
 }
 
 /**

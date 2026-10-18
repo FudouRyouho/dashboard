@@ -30,4 +30,8 @@ export const integrationDefs = {
     name: 'qBittorrent',
     iconUrl: '/icons/qbittorrent.svg',
   },
+  prowlarr: {
+    name: 'Prowlarr',
+    iconUrl: '/icons/prowlarr.svg',
+  },
 } as const satisfies Record<IntegrationKind, IntegrationDef>;

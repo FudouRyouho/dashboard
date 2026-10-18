@@ -123,8 +123,8 @@ export abstract class Integration {
       }
       throw error;
     }
-    const contentLength = res.headers.get('content-length');
-    if (!contentLength || contentLength === '0') return undefined as T;
+    // Note: some APIs (Sonarr, Radarr, Prowlarr) don't send Content-Length headers.
+    // We still attempt to parse the response as JSON even when content-length is missing.
     return (await res.json()) as T;
   }
 

@@ -16,6 +16,7 @@ export const secretRequirements: Record<IntegrationKind, SecretRequirement[]> =
     ],
     docker: [],
     prometheus: [],
+    prowlarr: [{ kind: 'apiKey', required: true }],
   } as const;
 
 export const integrationInputBaseSchema = z.object({
@@ -67,6 +68,13 @@ export const upsertIntegrationInputSchema = z.discriminatedUnion('kind', [
     .extend({
       kind: z.literal('prometheus'),
       port: z.number().int().positive().default(9090),
+    })
+    .strict(),
+  integrationInputBaseSchema
+    .extend({
+      kind: z.literal('prowlarr'),
+      apiKey: z.string().min(1),
+      port: z.number().int().positive().default(9696),
     })
     .strict(),
 ]);

@@ -12,7 +12,7 @@ export interface IntegrationMetadata {
 }
 
 export type IntegrationCapability =
-  'calendar' | 'mediaReleases' | 'docker' | 'systemHealth' | 'downloadClient';
+  'calendar' | 'mediaReleases' | 'docker' | 'systemHealth' | 'downloadClient' | 'indexerManager';
 
 export interface IntegrationFactory {
   create(input: IntegrationInput): Integration;

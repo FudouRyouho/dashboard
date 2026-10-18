@@ -5,6 +5,7 @@ export const integrationKinds = [
   'docker',
   'prometheus',
   'qbittorrent',
+  'prowlarr',
 ] as const;
 export type IntegrationKind = (typeof integrationKinds)[number];
 
