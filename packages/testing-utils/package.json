@@ -1,0 +1,29 @@
+{
+  "name": "@dashboard/testing-utils",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./msw": "./src/msw/index.ts",
+    "./fixtures": "./src/fixtures/index.ts",
+    "./factories": "./src/factories/index.ts",
+    "./core": "./src/core/index.ts"
+  },
+  "description": "Centralized test infrastructure for @dashboard monorepo (L0/L1/L2 architecture)",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vitest": "*",
+    "zod": "catalog:",
+    "@trpc/server": "*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "msw": "^2.15.0",
+    "@trpc/server": "catalog:"
+  }
+}

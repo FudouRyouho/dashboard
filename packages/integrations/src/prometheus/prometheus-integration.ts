@@ -1,5 +1,5 @@
 import { Integration } from '../base/integration';
-import { PrometheusClient } from './client';
+import { PrometheusClient, FetchFn } from './client';
 import { PrometheusDiscovery } from './discovery';
 import { getAllQueries } from './promql-queries';
 import { PrometheusNormalizer } from './normalizer';
@@ -7,19 +7,23 @@ import { PrometheusNormalized, ServerMetrics } from './types';
 import { ISystemHealthIntegration } from '../base/system-health';
 
 /**
- * D4 + D5: Prometheus Integration implementation.
+ * Prometheus Integration implementation.
  *
  * Uses IntegrationInput base + secrets for auth.
  * Implements ISystemHealthIntegration capability.
  */
-export class PrometheusIntegration extends Integration implements ISystemHealthIntegration {
+export class PrometheusIntegration
+  extends Integration
+  implements ISystemHealthIntegration
+{
   private readonly client: PrometheusClient;
   private readonly discovery: PrometheusDiscovery;
 
   constructor(integration: import('../base/integration').IntegrationInput) {
     super(integration);
 
-    const hasAuth = this.hasSecretValue('username') && this.hasSecretValue('password');
+    const hasAuth =
+      this.hasSecretValue('username') && this.hasSecretValue('password');
     let username: string | undefined;
     let password: string | undefined;
 
@@ -28,13 +32,13 @@ export class PrometheusIntegration extends Integration implements ISystemHealthI
       password = this.getSecretValue('password');
     }
 
+    const fetchFn: FetchFn = this.fetchJson.bind(this);
     this.client = new PrometheusClient({
       baseUrl: this.baseUrl,
-      timeoutMs: this.timeoutMs,
+      fetchFn,
       hasAuth,
       username,
       password,
-      tlsSkipVerify: false, // Not implemented yet for browser fetch
     });
 
     this.discovery = new PrometheusDiscovery(this.client);
@@ -48,23 +52,15 @@ export class PrometheusIntegration extends Integration implements ISystemHealthI
    * 2. Run all queries
    * 3. Normalize results by instance
    */
-  async getSystemMetricsAsync(options?: { signal?: AbortSignal }): Promise<PrometheusNormalized[]> {
-    // Discover instances
-    const instances = await this.discovery.discoverInstances(options?.signal);
-    if (!instances || instances.length === 0) {
+  async getSystemMetricsAsync(options?: {
+    signal?: AbortSignal;
+  }): Promise<PrometheusNormalized[]> {
+    const { instances, queryResults } = await this._runDiscoveryAndQueries(
+      options?.signal,
+    );
+    if (instances.length === 0) {
       return [];
     }
-
-    // Run all queries in parallel
-    const queries = getAllQueries();
-    const queryResults = new Map<string, unknown>();
-
-    await Promise.all(
-      queries.map(async ({ key, promql }) => {
-        const result = await this.client.query(promql, options?.signal);
-        queryResults.set(key, result ?? null);
-      })
-    );
 
     // Normalize results
     return PrometheusNormalizer.normalize(queryResults, instances);
@@ -72,12 +68,71 @@ export class PrometheusIntegration extends Integration implements ISystemHealthI
 
   /**
    * Get metrics for a specific server.
+   * If instances and queryResults are provided, reuse them to avoid re-discovery and re-querying.
    */
-  async getServerMetricsAsync(server: string, options?: { signal?: AbortSignal }): Promise<ServerMetrics | null> {
-    const allMetrics = await this.getSystemMetricsAsync(options);
-    const serverData = allMetrics.find(m => m.server === server);
+  async getServerMetricsAsync(
+    server: string,
+    options?: {
+      signal?: AbortSignal;
+      instances?: string[];
+      queryResults?: Map<string, unknown>;
+    },
+  ): Promise<ServerMetrics | null> {
+    let instances = options?.instances;
+    let queryResults = options?.queryResults;
+
+    if (!instances || !queryResults) {
+      // Fallback: run full discovery and query (for backward compatibility)
+      const discovered = await this._runDiscoveryAndQueries(options?.signal);
+      instances = discovered.instances;
+      queryResults = discovered.queryResults;
+    }
+
+    // Use pre-discovered data
+    const serverData = PrometheusNormalizer.normalize(
+      queryResults,
+      instances,
+    ).find((m) => m.server === server);
     if (!serverData) return null;
 
     return PrometheusNormalizer.toServerMetrics(serverData);
+  }
+
+  /**
+   * Discover instances and run all queries, returning both for reuse.
+   * Used by getAllMetrics and can be passed to getServerMetricsAsync to avoid double work.
+   */
+  async getDiscoveredDataAsync(options?: {
+    signal?: AbortSignal;
+  }): Promise<{ instances: string[]; queryResults: Map<string, unknown> }> {
+    return this._runDiscoveryAndQueries(options?.signal);
+  }
+
+  /**
+   * Shared discovery + query flow.
+   *
+   * Discovers instances from Prometheus, runs all queries in parallel, and
+   * returns both so callers can reuse them (e.g. passing to
+   * getServerMetricsAsync to avoid double work).
+   */
+  private async _runDiscoveryAndQueries(
+    signal?: AbortSignal,
+  ): Promise<{ instances: string[]; queryResults: Map<string, unknown> }> {
+    const instances = await this.discovery.discoverInstances(signal);
+    if (!instances || instances.length === 0) {
+      return { instances: [], queryResults: new Map() };
+    }
+
+    const queries = getAllQueries();
+    const queryResults = new Map<string, unknown>();
+
+    await Promise.all(
+      queries.map(async ({ key, promql }) => {
+        const result = await this.client.query(promql, signal);
+        queryResults.set(key, result ?? null);
+      }),
+    );
+
+    return { instances, queryResults };
   }
 }

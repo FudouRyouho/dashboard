@@ -31,7 +31,7 @@ export class JellyfinIntegration
       'PremiereDate',
     ].join(',');
 
-    // Resolver userId dinámicamente (patrón Homarr: /Users → primer user)
+    // Resolve userId dynamically (Homarr pattern: /Users → first user)
     const usersUrl = this.url('/Users');
     const usersResponse = await this.fetchJson<{ Id: string }[]>(usersUrl, {
       headers: { 'X-Emby-Token': this.getSecretValue('apiKey') },
@@ -40,7 +40,7 @@ export class JellyfinIntegration
 
     const userId = usersResponse[0]?.Id;
     if (!userId) {
-      throw new Error('No hay usuarios en Jellyfin para resolver userId');
+      throw new Error('No users in Jellyfin to resolve userId');
     }
 
     const url = this.url('/Items/Latest', {

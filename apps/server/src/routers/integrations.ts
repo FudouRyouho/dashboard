@@ -1,47 +1,24 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import {
-  integrationInputBaseSchema,
   integrationOutputSchema,
   type IntegrationKind,
+  upsertIntegrationInputSchema,
 } from '@dashboard/contracts';
 
-const upsertIntegrationInputSchema = z.discriminatedUnion('kind', [
-  integrationInputBaseSchema.extend({
-    kind: z.literal('sonarr'),
-    apiKey: z.string().min(1),
-    port: z.number().int().positive().default(8989),
-  }),
-  integrationInputBaseSchema.extend({
-    kind: z.literal('radarr'),
-    apiKey: z.string().min(1),
-    port: z.number().int().positive().default(7878),
-  }),
-  integrationInputBaseSchema.extend({
-    kind: z.literal('jellyfin'),
-    apiKey: z.string().min(1),
-    port: z.number().int().positive().default(8096),
-  }),
-  integrationInputBaseSchema.extend({
-    kind: z.literal('docker'),
-    port: z.number().int().positive().default(2375),
-  }),
-  integrationInputBaseSchema.extend({
-    kind: z.literal('qbittorrent'),
-    apiKey: z.string().optional(),
-    port: z.number().int().positive().default(8080),
-  }),
-]);
+const upsertIntegrationInput = upsertIntegrationInputSchema;
 
 export const integrationsRouter = createTRPCRouter({
-  list: publicProcedure.output(z.array(integrationOutputSchema)).query(async ({ ctx }) => {
-    const { getAllIntegrations } = await import('@dashboard/db');
-    const integrations = await getAllIntegrations(ctx.db);
-    return integrations.map((i) => ({
-      ...i,
-      kind: i.kind as IntegrationKind,
-    }));
-  }),
+  list: publicProcedure
+    .output(z.array(integrationOutputSchema))
+    .query(async ({ ctx }) => {
+      const { getAllIntegrations } = await import('@dashboard/db');
+      const integrations = await getAllIntegrations(ctx.db);
+      return integrations.map((i) => ({
+        ...i,
+        kind: i.kind as IntegrationKind,
+      }));
+    }),
 
   get: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -57,7 +34,7 @@ export const integrationsRouter = createTRPCRouter({
     }),
 
   upsert: publicProcedure
-    .input(upsertIntegrationInputSchema)
+    .input(upsertIntegrationInput)
     .output(integrationOutputSchema)
     .mutation(async ({ ctx, input }) => {
       const { upsertIntegration } = await import('@dashboard/db');

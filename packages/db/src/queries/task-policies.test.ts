@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { unlinkSync } from 'node:fs';
 import { initializeDatabase } from '@dashboard/db';
@@ -12,10 +11,7 @@ import {
 import { upsertIntegration } from './integrations.js';
 
 const tempPath = () => `./data/test-policies-${randomUUID()}.sqlite`;
-const migrationsFolder = new URL(
-  '../../migrations',
-  import.meta.url,
-).pathname;
+const migrationsFolder = new URL('../../migrations', import.meta.url).pathname;
 
 async function withTempDb<T>(
   fn: (db: Awaited<ReturnType<typeof initializeDatabase>>) => Promise<T>,
@@ -34,14 +30,14 @@ async function withTempDb<T>(
 test('getAllPoliciesByIntegrationId returns empty array when no policies', async () => {
   await withTempDb(async (db) => {
     const policies = await getAllPoliciesByIntegrationId(db, 'integration-1');
-    assert.equal(policies.length, 0, 'Debe retornar array vacío');
+    expect(policies.length).toBe(0);
   });
 });
 
 test('getAllPoliciesByIntegrationId returns policies for integration', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -64,7 +60,7 @@ test('getAllPoliciesByIntegrationId returns policies for integration', async () 
     await upsertTaskPolicy(db, {
       id: randomUUID(),
       integrationId,
-      taskType: 'mediaReleases',
+      taskType: 'media-releases',
       everyMs: 3600000,
       runOnStart: false,
       expectedDurationMs: 5000,
@@ -73,14 +69,18 @@ test('getAllPoliciesByIntegrationId returns policies for integration', async () 
     });
 
     const policies = await getAllPoliciesByIntegrationId(db, integrationId);
-    assert.equal(policies.length, 2, 'Debe haber 2 políticas');
+    expect(policies.length).toBe(2);
   });
 });
 
 test('getPolicyByIntegrationAndType returns null when not found', async () => {
   await withTempDb(async (db) => {
-    const result = await getPolicyByIntegrationAndType(db, 'integration-1', 'calendar');
-    assert.equal(result, null, 'Debe retornar null cuando no existe');
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      'integration-1',
+      'calendar',
+    );
+    expect(result).toBe(null);
   });
 });
 
@@ -88,7 +88,7 @@ test('getPolicyByIntegrationAndType returns policy when exists', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
     const id = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -108,12 +108,16 @@ test('getPolicyByIntegrationAndType returns policy when exists', async () => {
       failureCooldownMs: 60000,
     });
 
-    const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
-    assert.ok(result, 'Debe encontrar la política');
-    assert.equal(result!.id, id);
-    assert.equal(result!.taskType, 'calendar');
-    assert.equal(result!.everyMs, 14400000);
-    assert.equal(result!.runOnStart, true);
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      integrationId,
+      'calendar',
+    );
+    expect(result, 'Debe encontrar la política').toBeTruthy();
+    expect(result!.id).toBe(id);
+    expect(result!.taskType).toBe('calendar');
+    expect(result!.everyMs).toBe(14400000);
+    expect(result!.runOnStart).toBe(true);
   });
 });
 
@@ -121,7 +125,7 @@ test('upsertTaskPolicy creates new policy', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
     const id = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -133,7 +137,7 @@ test('upsertTaskPolicy creates new policy', async () => {
     await upsertTaskPolicy(db, {
       id,
       integrationId,
-      taskType: 'mediaReleases',
+      taskType: 'media-releases',
       everyMs: 3600000,
       runOnStart: false,
       expectedDurationMs: 5000,
@@ -141,9 +145,13 @@ test('upsertTaskPolicy creates new policy', async () => {
       failureCooldownMs: 30000,
     });
 
-    const result = await getPolicyByIntegrationAndType(db, integrationId, 'mediaReleases');
-    assert.ok(result, 'Debe existir después de insertar');
-    assert.equal(result!.expectedDurationMs, 5000);
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      integrationId,
+      'media-releases',
+    );
+    expect(result, 'Debe existir después de insertar').toBeTruthy();
+    expect(result!.expectedDurationMs).toBe(5000);
   });
 });
 
@@ -151,7 +159,7 @@ test('upsertTaskPolicy updates existing policy', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
     const id = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -182,18 +190,22 @@ test('upsertTaskPolicy updates existing policy', async () => {
       failureCooldownMs: 120000,
     });
 
-    const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
-    assert.ok(result, 'Debe existir después de actualizar');
-    assert.equal(result!.everyMs, 7200000, 'Debe tener valor actualizado');
-    assert.equal(result!.runOnStart, false, 'runOnStart debe ser false');
-    assert.equal(result!.failureMaxAttempts, 5, 'failureMaxAttempts debe ser 5');
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      integrationId,
+      'calendar',
+    );
+    expect(result, 'Debe existir después de actualizar').toBeTruthy();
+    expect(result!.everyMs).toBe(7200000);
+    expect(result!.runOnStart).toBe(false);
+    expect(result!.failureMaxAttempts).toBe(5);
   });
 });
 
 test('upsertTaskPolicy maintains unique constraint', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -217,7 +229,7 @@ test('upsertTaskPolicy maintains unique constraint', async () => {
     await upsertTaskPolicy(db, {
       id: randomUUID(),
       integrationId,
-      taskType: 'mediaReleases',
+      taskType: 'media-releases',
       everyMs: 3600000,
       runOnStart: false,
       expectedDurationMs: 5000,
@@ -226,7 +238,7 @@ test('upsertTaskPolicy maintains unique constraint', async () => {
     });
 
     const policies = await getAllPoliciesByIntegrationId(db, integrationId);
-    assert.equal(policies.length, 2, 'Debe haber 2 políticas diferentes por taskType');
+    expect(policies.length).toBe(2);
   });
 });
 
@@ -234,7 +246,7 @@ test('deleteTaskPolicy removes policy', async () => {
   await withTempDb(async (db) => {
     const integrationId = randomUUID();
     const id = randomUUID();
-    
+
     // Create integration instance first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId,
@@ -256,8 +268,12 @@ test('deleteTaskPolicy removes policy', async () => {
 
     await deleteTaskPolicy(db, integrationId, 'calendar');
 
-    const result = await getPolicyByIntegrationAndType(db, integrationId, 'calendar');
-    assert.equal(result, null, 'Debe retornar null después de eliminar');
+    const result = await getPolicyByIntegrationAndType(
+      db,
+      integrationId,
+      'calendar',
+    );
+    expect(result).toBe(null);
   });
 });
 
@@ -274,7 +290,7 @@ test('policies map to correct integration IDs', async () => {
   await withTempDb(async (db) => {
     const integrationId1 = randomUUID();
     const integrationId2 = randomUUID();
-    
+
     // Create integration instances first (FK requirement)
     await upsertIntegration(db, {
       id: integrationId1,
@@ -282,7 +298,7 @@ test('policies map to correct integration IDs', async () => {
       name: 'TestSonarr1',
       url: 'http://localhost:8989',
     });
-    
+
     await upsertIntegration(db, {
       id: integrationId2,
       kind: 'radarr',
@@ -315,9 +331,9 @@ test('policies map to correct integration IDs', async () => {
     const policies1 = await getAllPoliciesByIntegrationId(db, integrationId1);
     const policies2 = await getAllPoliciesByIntegrationId(db, integrationId2);
 
-    assert.equal(policies1.length, 1, 'integrationId1 debe tener 1 política');
-    assert.equal(policies2.length, 1, 'integrationId2 debe tener 1 política');
-    assert.equal(policies1[0]!.everyMs, 14400000);
-    assert.equal(policies2[0]!.everyMs, 7200000);
+    expect(policies1.length).toBe(1);
+    expect(policies2.length).toBe(1);
+    expect(policies1[0]!.everyMs).toBe(14400000);
+    expect(policies2[0]!.everyMs).toBe(7200000);
   });
 });

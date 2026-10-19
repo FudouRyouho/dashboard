@@ -1,5 +1,4 @@
 import { createTRPCClient, httpBatchLink, TRPCClientError } from '@trpc/client';
-import superjson from 'superjson';
 import type { AppRouter } from '..';
 import 'dotenv/config';
 
@@ -9,7 +8,6 @@ const trpc = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
       url: `http://127.0.0.1:${port}/trpc`,
-      transformer: superjson,
     }),
   ],
 });

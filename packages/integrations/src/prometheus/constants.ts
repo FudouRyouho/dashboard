@@ -30,7 +30,14 @@ export const NODE_EXPORTER_METRICS = {
 /**
  * Labels used for grouping/aggregation.
  */
-export const GROUPING_LABELS = ['instance', 'device', 'mountpoint', 'fstype', 'chip', 'sensor'] as const;
+export const GROUPING_LABELS = [
+  'instance',
+  'device',
+  'mountpoint',
+  'fstype',
+  'chip',
+  'sensor',
+] as const;
 
 /**
  * System mountpoints that should be marked with isSystemMount=true.
@@ -40,9 +47,21 @@ export const SYSTEM_MOUNTPOINTS = ['/', '/boot', '/boot/efi', '/efi'] as const;
 /**
  * Non-system mountpoints to exclude from isSystemMount.
  */
-export const NON_SYSTEM_MOUNT_EXCLUDE = ['/run', '/tmp', '/var/run', '/var/tmp'] as const;
+export const NON_SYSTEM_MOUNT_EXCLUDE = [
+  '/run',
+  '/tmp',
+  '/var/run',
+  '/var/tmp',
+] as const;
 
 /**
  * Filesystem types considered virtual/system.
  */
-export const VIRTUAL_FSTYPES = ['tmpfs', 'devtmpfs', 'proc', 'sysfs', 'cgroup', 'cgroup2'] as const;
+export const VIRTUAL_FSTYPES = [
+  'tmpfs',
+  'devtmpfs',
+  'proc',
+  'sysfs',
+  'cgroup',
+  'cgroup2',
+] as const;

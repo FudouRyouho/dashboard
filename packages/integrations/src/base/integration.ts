@@ -1,5 +1,5 @@
 import { removeTrailingSlash } from '@dashboard/common';
-import { IntegrationKind } from '@dashboard/contracts';
+import { IntegrationKind, secretRequirements } from '@dashboard/contracts';
 import { IntegrationError } from './integration-error';
 
 export interface IntegrationInput {
@@ -11,6 +11,7 @@ export interface IntegrationInput {
   externalUrl?: string;
   secrets: { kind: string; value: string }[];
   timeoutMs?: number;
+  logger?: (msg: string, meta?: Record<string, unknown>) => void;
 }
 
 type QueryParams = Record<
@@ -18,21 +19,40 @@ type QueryParams = Record<
   Date | boolean | number | string | null | undefined
 >;
 
+/**
+ * Returns true if the integration input has all required secrets for its kind.
+ * Used as a type guard / validation before constructing an Integration instance.
+ */
+export function hasRequiredSecrets(input: IntegrationInput): boolean {
+  const required = secretRequirements[input.kind] ?? [];
+  const present = new Set<string>(input.secrets.map((s) => s.kind));
+  return required.filter((r) => r.required).every((r) => present.has(r.kind));
+}
+
 export abstract class Integration {
   protected readonly baseUrl: string;
   protected readonly externalBaseUrl: string;
   protected readonly timeoutMs: number;
+  private readonly _logger?: (msg: string, meta?: Record<string, unknown>) => void;
 
   constructor(protected integration: IntegrationInput) {
     const urlObj = new URL(integration.url);
     // If port is explicitly provided, use it; otherwise use port from URL (if any)
-    const port = integration.port !== undefined ? integration.port : urlObj.port;
+    const port =
+      integration.port !== undefined ? integration.port : urlObj.port;
     const base = `${urlObj.protocol}//${urlObj.hostname}`;
     this.baseUrl = port ? `${base}:${port}` : base;
     this.externalBaseUrl = integration.externalUrl
       ? removeTrailingSlash(integration.externalUrl)
       : this.baseUrl;
     this.timeoutMs = integration.timeoutMs ?? 10_000;
+    this._logger = integration.logger;
+  }
+
+  protected log(msg: string, meta?: Record<string, unknown>): void {
+    if (this._logger) {
+      this._logger(msg, meta);
+    }
   }
 
   public get publicIntegration() {
@@ -71,15 +91,40 @@ export abstract class Integration {
     init?: RequestInit,
   ): Promise<T> {
     const timeoutSignal = AbortSignal.timeout(this.timeoutMs);
+    const headers = new Headers(init?.headers);
+    // qBittorrent WebUI API v2 requires Referer/Origin for CSRF protection.
+    // Set them to the same domain and port used in the request Host header.
+    headers.set('Referer', this.baseUrl);
+    headers.set('Origin', this.baseUrl);
     const res = await fetch(String(url), {
       ...init,
+      headers,
       signal: init?.signal
         ? AbortSignal.any([init.signal, timeoutSignal])
         : timeoutSignal,
     });
-    if (!res.ok) {
-      throw IntegrationError.fromHttpResponse(res.status, res.statusText);
+    if (!res.ok && res.status !== 304) {
+      // Read error body for context (e.g., Prometheus returns { status, errorType, error })
+      let errorBody: unknown;
+      try {
+        errorBody = await res.json();
+      } catch {
+        // Ignore if body is not JSON
+      }
+      const error = IntegrationError.fromHttpResponse(res.status, res.statusText);
+      if (errorBody) {
+        // Attach error body as cause for downstream logging
+        throw new IntegrationError(
+          error.reason,
+          `${error.message}: ${JSON.stringify(errorBody)}`,
+          error.httpStatus,
+          { cause: errorBody },
+        );
+      }
+      throw error;
     }
+    // Note: some APIs (Sonarr, Radarr, Prowlarr) don't send Content-Length headers.
+    // We still attempt to parse the response as JSON even when content-length is missing.
     return (await res.json()) as T;
   }
 

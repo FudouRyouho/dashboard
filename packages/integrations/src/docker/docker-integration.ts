@@ -28,7 +28,7 @@ export class DockerIntegration
   async getDashboardStatsAsync(options?: {
     signal?: AbortSignal;
   }): Promise<DockerDashboardStats> {
-    const [containers, images, networks, volumes] = await Promise.all([
+    const results = await Promise.allSettled([
       this.fetchDocker<z.infer<typeof dockerContainerSchema>[]>(
         '/containers/json?all=true',
         { signal: options?.signal },
@@ -42,12 +42,44 @@ export class DockerIntegration
       }),
     ]);
 
+    const containers =
+      results[0].status === 'fulfilled' ? results[0].value : [];
+    const images = results[1].status === 'fulfilled' ? results[1].value : [];
+    const networks = results[2].status === 'fulfilled' ? results[2].value : [];
+    const volumes = results[3].status === 'fulfilled' ? results[3].value : [];
+
+    if (results[0].status === 'rejected') {
+      this.log('Docker containers fetch failed', { error: results[0].reason });
+    }
+    if (results[1].status === 'rejected') {
+      this.log('Docker images fetch failed', { error: results[1].reason });
+    }
+    if (results[2].status === 'rejected') {
+      this.log('Docker networks fetch failed', { error: results[2].reason });
+    }
+    if (results[3].status === 'rejected') {
+      this.log('Docker volumes fetch failed', { error: results[3].reason });
+    }
+
     let running = 0;
     let stopped = 0;
     let healthy = 0;
     let unhealthy = 0;
     for (const c of containers) {
-      if (c.State === 'running' || c.Status.startsWith('Up')) {
+      const state = (c as any).State as
+        | { Status?: string; Running?: boolean }
+        | undefined;
+      const status = state?.Status ?? c.State;
+      const isRunning =
+        status === 'running' ||
+        (status !== 'exited' &&
+          status !== 'dead' &&
+          status !== 'created' &&
+          status !== 'paused' &&
+          status !== 'removing' &&
+          status !== 'restarting');
+
+      if (isRunning) {
         running++;
         if (c.Health?.Status === 'healthy') healthy++;
         else if (c.Health?.Status === 'unhealthy') unhealthy++;
@@ -96,5 +128,21 @@ export class DockerIntegration
         total: volumeCount,
       },
     };
+  }
+
+  async startContainerAsync(id: string): Promise<void> {
+    await this.fetchDocker(`/containers/${id}/start`, { method: 'POST' });
+  }
+
+  async stopContainerAsync(id: string): Promise<void> {
+    await this.fetchDocker(`/containers/${id}/stop`, { method: 'POST' });
+  }
+
+  async restartContainerAsync(id: string): Promise<void> {
+    await this.fetchDocker(`/containers/${id}/restart`, { method: 'POST' });
+  }
+
+  async removeContainerAsync(id: string): Promise<void> {
+    await this.fetchDocker(`/containers/${id}`, { method: 'DELETE' });
   }
 }

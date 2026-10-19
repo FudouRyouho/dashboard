@@ -5,8 +5,8 @@
  */
 
 /**
- * D4: Input configuration for Prometheus integration.
- * Uses IntegrationInput base + secrets for auth.
+ * Input configuration for Prometheus integration.
+ * Extends IntegrationInput base with auth secrets.
  */
 export interface PrometheusIntegrationConfig {
   /** Prometheus server URL (from IntegrationInput.url) */

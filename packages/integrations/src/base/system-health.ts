@@ -2,17 +2,31 @@ import { Integration } from './integration';
 import { PrometheusNormalized, ServerMetrics } from '../prometheus/types';
 
 /**
- * D4: Capability interface for system health metrics.
+ * Capability interface for system health metrics.
  */
 export interface ISystemHealthIntegration {
-  getSystemMetricsAsync(options?: { signal?: AbortSignal }): Promise<PrometheusNormalized[]>;
-  getServerMetricsAsync(server: string, options?: { signal?: AbortSignal }): Promise<ServerMetrics | null>;
+  getSystemMetricsAsync(options?: {
+    signal?: AbortSignal;
+  }): Promise<PrometheusNormalized[]>;
+  getServerMetricsAsync(
+    server: string,
+    options?: {
+      signal?: AbortSignal;
+      instances?: string[];
+      queryResults?: Map<string, unknown>;
+    },
+  ): Promise<ServerMetrics | null>;
+  getDiscoveredDataAsync(options?: {
+    signal?: AbortSignal;
+  }): Promise<{ instances: string[]; queryResults: Map<string, unknown> }>;
 }
 
 /**
  * Type guard for system health capability.
  */
 export const supportsSystemHealth = (
-  integration: Integration
+  integration: Integration,
 ): integration is ISystemHealthIntegration & Integration =>
-  typeof (integration as Partial<ISystemHealthIntegration>)['getSystemMetricsAsync'] === 'function';
+  typeof (integration as Partial<ISystemHealthIntegration>)[
+    'getSystemMetricsAsync'
+  ] === 'function';

@@ -2,10 +2,12 @@ import type { DB } from '../connection';
 import { taskPolicies } from '../schemas/tasks';
 import { eq, and } from 'drizzle-orm';
 
+export type TaskType = 'calendar' | 'media-releases' | 'docker';
+
 export interface TaskPolicyRow {
   id: string;
   integrationId: string;
-  taskType: 'calendar' | 'mediaReleases';
+  taskType: TaskType;
   everyMs: number;
   runOnStart: boolean;
   expectedDurationMs: number;
@@ -16,7 +18,7 @@ export interface TaskPolicyRow {
 export interface UpsertTaskPolicyInput {
   id: string;
   integrationId: string;
-  taskType: 'calendar' | 'mediaReleases';
+  taskType: TaskType;
   everyMs: number;
   runOnStart: boolean;
   expectedDurationMs: number;
@@ -46,7 +48,7 @@ export async function getAllPoliciesByIntegrationId(
     .select()
     .from(taskPolicies)
     .where(eq(taskPolicies.integrationId, integrationId));
-  return results.map(r => ({
+  return results.map((r) => ({
     ...r,
     runOnStart: parseRunOnStart(r.runOnStart),
   })) as unknown as TaskPolicyRow[];
@@ -56,13 +58,13 @@ export async function getAllPoliciesByIntegrationId(
  * Get a policy for a specific integration and task type
  * @param db Database connection
  * @param integrationId Integration ID
- * @param taskType Task type (calendar/mediaReleases)
+ * @param taskType Task type (calendar/media-releases)
  * @returns Policy or null
  */
 export async function getPolicyByIntegrationAndType(
   db: DB,
   integrationId: string,
-  taskType: 'calendar' | 'mediaReleases',
+  taskType: TaskType,
 ): Promise<TaskPolicyRow | null> {
   const results = await db
     .select()
@@ -122,12 +124,12 @@ export async function upsertTaskPolicy(
  * Delete a policy for a specific integration and task type
  * @param db Database connection
  * @param integrationId Integration ID
- * @param taskType Task type (calendar/mediaReleases)
+ * @param taskType Task type (calendar/media-releases)
  */
 export async function deleteTaskPolicy(
   db: DB,
   integrationId: string,
-  taskType: 'calendar' | 'mediaReleases',
+  taskType: TaskType,
 ): Promise<void> {
   await db
     .delete(taskPolicies)

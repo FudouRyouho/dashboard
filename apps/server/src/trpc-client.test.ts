@@ -1,6 +1,5 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { AppRouter } from '.';
-import superjson from 'superjson';
 import test, { describe } from 'node:test';
 import assert from 'node:assert/strict';
 import net from 'node:net';
@@ -9,7 +8,6 @@ const trpc = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
       url: 'http://127.0.0.1:3050/trpc',
-      transformer: superjson,
     }),
   ],
 });
@@ -39,7 +37,9 @@ describe('trpc-client integration tests', () => {
   test('health query returns ok (requires running server)', async () => {
     const running = await isServerRunning(3050);
     if (!running) {
-      console.log('SKIP: Server not running at 127.0.0.1:3050, skipping network test');
+      console.log(
+        'SKIP: Server not running at 127.0.0.1:3050, skipping network test',
+      );
       return;
     }
     const result = await trpc.health.query();
@@ -49,13 +49,15 @@ describe('trpc-client integration tests', () => {
   test('calendar.getEvents returns array for valid range (requires running server)', async () => {
     const running = await isServerRunning(3050);
     if (!running) {
-      console.log('SKIP: Server not running at 127.0.0.1:3050, skipping network test');
+      console.log(
+        'SKIP: Server not running at 127.0.0.1:3050, skipping network test',
+      );
       return;
     }
     const result = await trpc.calendar.getEvents.query({
       start: new Date('2026-08-01T00:00:00.000Z'),
       end: new Date('2026-08-31T23:59:59.999Z'),
     });
-    assert.ok(Array.isArray(result));
+    assert.ok(Array.isArray(result), 'result should be an array');
   });
 });

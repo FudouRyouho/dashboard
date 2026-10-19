@@ -1,6 +1,6 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import { calendarResultSchema, inRange } from '@dashboard/contracts';
+import { calendarResultSchema, inRange, type CalendarEvent } from '@dashboard/contracts';
 import { supportsCalendar } from '@dashboard/integrations';
 import { toStatus } from '../tasks/to-status';
 import { calendarSnapshot } from '../tasks/task-ids';
@@ -25,10 +25,14 @@ export const calendarRouter = createTRPCRouter({
         const snapshot = ctx.store.get(key);
         const lastRun = ctx.runLog.last(key.taskId);
 
+        // Extract events from snapshot (wrapper object with coverage)
+        const snapshotData = snapshot?.data as { data: CalendarEvent[]; from?: string; to?: string } | undefined;
+        const events = snapshotData?.data ?? [];
+
         return {
           integration: integration.publicIntegration,
           status: toStatus(snapshot, lastRun),
-          events: (snapshot?.data ?? []).filter(
+          events: events.filter(
             inRange(input.start, input.end),
           ),
         };

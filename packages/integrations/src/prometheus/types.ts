@@ -1,7 +1,7 @@
 /**
  * Prometheus normalized data structure.
  *
- * D1: Normalization by server (instance label).
+Normalization by server (instance label).
  * Each server = one Prometheus target (machine being monitored).
  */
 export interface PrometheusNormalized {

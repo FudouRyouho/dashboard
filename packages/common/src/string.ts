@@ -10,12 +10,12 @@ export const joinPaths = (base: string, ...paths: string[]): string => {
   const protocolMatch = base.match(/^(https?:\/\/)/);
   const protocol = protocolMatch ? protocolMatch[1] : '';
   const baseWithoutProtocol = protocol ? base.slice(protocol.length) : base;
-  
+
   const allParts = [baseWithoutProtocol, ...paths];
   const normalized = allParts
-    .map(p => p.replace(/\/+/g, '/').replace(/^\/|\/$/g, ''))
+    .map((p) => p.replace(/\/+/g, '/').replace(/^\/|\/$/g, ''))
     .filter(Boolean);
-  
+
   return protocol + normalized.join('/');
 };
 

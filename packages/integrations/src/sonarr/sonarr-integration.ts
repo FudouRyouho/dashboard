@@ -40,7 +40,7 @@ export class SonarrIntegration
         title: event.title,
         subtitle: event.series.title,
         description: event.series.overview ?? null,
-        startDate: event.airDateUtc.toISOString(),
+        startDate: event.airDateUtc ? event.airDateUtc.toISOString() : '',
         endDate: null,
         image: bestImage?.remoteUrl
           ? {

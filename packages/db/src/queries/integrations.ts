@@ -10,6 +10,8 @@ export interface IntegrationInstanceRow {
   url: string;
   externalUrl: string | null;
   apiKey?: string | null;
+  username?: string | null;
+  password?: string | null;
   port: number | null;
   createdAt: Date;
   updatedAt: Date;
@@ -22,6 +24,8 @@ export interface UpsertIntegrationInput {
   url: string;
   externalUrl?: string | null;
   apiKey?: string;
+  username?: string | null;
+  password?: string | null;
   port?: number | null;
 }
 
@@ -107,6 +111,8 @@ export async function upsertIntegration(
         url: input.url,
         externalUrl: input.externalUrl ?? null,
         apiKey: input.apiKey,
+        username: input.username ?? null,
+        password: input.password ?? null,
         port: input.port ?? null,
         updatedAt: now,
       })
@@ -120,6 +126,8 @@ export async function upsertIntegration(
       url: input.url,
       externalUrl: input.externalUrl ?? null,
       apiKey: input.apiKey,
+      username: input.username ?? null,
+      password: input.password ?? null,
       port: input.port ?? null,
       createdAt: now,
       updatedAt: now,

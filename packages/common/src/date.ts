@@ -30,7 +30,15 @@ export const startOfDay = (date: Date): Date =>
  * @returns Date at 23:59:59.999
  */
 export const endOfDay = (date: Date): Date =>
-  new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+  new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    23,
+    59,
+    59,
+    999,
+  );
 
 /**
  * Add months to a date

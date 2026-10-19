@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const integrationErrorReasons = [
   'unauthorized',
+  'forbidden',
   'unreachable',
   'timeout',
   'invalid-response',
@@ -12,7 +13,11 @@ export type IntegrationErrorReason = (typeof integrationErrorReasons)[number];
 
 const isoDate = z.string().datetime({ offset: true });
 
-const dataFactsSchema = z.object({ obtainedAt: isoDate }).nullable();
+const dataFactsSchema = z.object({
+  obtainedAt: isoDate,
+  from: isoDate,
+  to: isoDate,
+}).nullable();
 
 const attemptFactsSchema = z
   .discriminatedUnion('outcome', [

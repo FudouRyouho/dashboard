@@ -3,13 +3,12 @@ import {
   type TaskDefinition,
   type TaskPolicy,
 } from '@dashboard/tasks';
-import type { CalendarEvent } from '@dashboard/contracts';
 import type {
   ICalendarIntegration,
   Integration,
 } from '@dashboard/integrations';
 import { serverCalendarWindow } from './calendar-window';
-import { calendarSnapshot } from './task-ids';
+import { calendarSnapshot, type CalendarSnapshotData } from './task-ids';
 
 const CALENDAR_DEFAULTS = {
   everyMs: 4 * 60 * 60 * 1000,
@@ -22,7 +21,7 @@ const INCLUDE_UNMONITORED = false;
 export function calendarTask(
   integration: ICalendarIntegration & Integration,
   policy: TaskPolicy = {},
-): TaskDefinition<CalendarEvent[]> {
+): TaskDefinition<CalendarSnapshotData> {
   const { everyMs, runOnStart, expectedDurationMs } = {
     ...CALENDAR_DEFAULTS,
     ...policy,
@@ -43,7 +42,11 @@ export function calendarTask(
         {
           signal,
         },
-      );
+      ).then((events) => ({
+        data: events,
+        from: start.toISOString(),
+        to: end.toISOString(),
+      }));
     },
   };
 }

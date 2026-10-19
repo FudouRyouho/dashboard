@@ -1,36 +1,27 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect, describe, vi } from 'vitest';
 import { readFileSync } from 'fs';
-import { PrometheusClient } from './client';
+import { PrometheusClient, FetchFn } from './client';
 import { PrometheusDiscovery } from './discovery';
 import { PrometheusNormalizer } from './normalizer';
 import { PROMETHEUS_QUERIES, getAllQueries } from './promql-queries';
 
-// Store original fetch
-const originalFetch = global.fetch;
-
-// Helper to mock fetch
-function mockFetch(response: unknown) {
-  global.fetch = async () => ({
-    ok: true,
-    json: async () => response,
-  }) as Response;
+// Helper to create a mock fetch function
+function createMockFetch(response: unknown): FetchFn {
+  return vi.fn().mockResolvedValue(response);
 }
 
-// Helper to mock fetch error
-function mockFetchError(error: Error) {
-  global.fetch = async () => {
-    throw error;
-  };
+// Helper to create a mock fetch function that throws
+function createMockFetchError(error: Error): FetchFn {
+  return vi.fn().mockRejectedValue(error);
 }
 
-test('Prometheus Integration - Client', async (t) => {
-  await t.test('should create client with basic auth headers', async () => {
-    mockFetch({ status: 'success', data: { result: [] } });
+describe('Prometheus Integration - Client', () => {
+  test('should create client with basic auth headers', async () => {
+    const mockFetchFn = createMockFetch({ status: 'success', data: { result: [] } });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: true,
       username: 'admin',
       password: 'secret',
@@ -38,67 +29,64 @@ test('Prometheus Integration - Client', async (t) => {
 
     await client.query('up');
     // If we got here without error, auth headers were sent
-    assert.ok(true);
+    expect(mockFetchFn).toHaveBeenCalled();
   });
 
-  await t.test('should create client without auth when hasAuth is false', async () => {
-    mockFetch({
+  test('should create client without auth when hasAuth is false', async () => {
+    const mockFetchFn = createMockFetch({
       status: 'success',
       data: { resultType: 'vector', result: [] },
     });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
 
     const result = await client.query('up');
-    assert.ok(result !== null);
+    expect(result !== null).toBeTruthy();
   });
 
-  await t.test('should return null on query error', async () => {
-    mockFetchError(new Error('Network error'));
+  test('should return null on query error', async () => {
+    const mockFetchFn = createMockFetchError(new Error('Network error'));
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
 
     const result = await client.query('up');
-    assert.equal(result, null);
+    expect(result).toBe(null);
   });
 });
 
-test('Prometheus Integration - Discovery', async (t) => {
-  await t.test('should discover instances via label_values', async () => {
-    mockFetch({ status: 'success', data: ['10.0.0.1:9100', '10.0.0.2:9100'] });
+describe('Prometheus Integration - Discovery', () => {
+  test('should discover instances via label_values', async () => {
+    const mockFetchFn = createMockFetch({ status: 'success', data: ['10.0.0.1:9100', '10.0.0.2:9100'] });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
     const discovery = new PrometheusDiscovery(client);
 
     const instances = await discovery.discoverInstances();
-    assert.deepEqual(instances, ['10.0.0.1:9100', '10.0.0.2:9100']);
+    expect(instances).toEqual(['10.0.0.1:9100', '10.0.0.2:9100']);
   });
 
-  await t.test('should cache label_values responses', async () => {
+  test('should cache label_values responses', async () => {
     let callCount = 0;
-    global.fetch = async () => {
+    const mockFetchFn = vi.fn().mockImplementation(async () => {
       callCount++;
-      return {
-        ok: true,
-        json: async () => ({ status: 'success', data: ['val1', 'val2'] }),
-      } as Response;
-    };
+      return { status: 'success', data: ['val1', 'val2'] };
+    });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
     const discovery = new PrometheusDiscovery(client);
@@ -106,29 +94,29 @@ test('Prometheus Integration - Discovery', async (t) => {
     const result1 = await discovery.discoverInstances();
     const result2 = await discovery.discoverInstances();
 
-    assert.deepEqual(result1, ['val1', 'val2']);
-    assert.deepEqual(result2, ['val1', 'val2']);
+    expect(result1).toEqual(['val1', 'val2']);
+    expect(result2).toEqual(['val1', 'val2']);
     // Should only fetch once due to cache
-    assert.equal(callCount, 1);
+    expect(callCount).toBe(1);
   });
 
-  await t.test('should return null when label_values fails', async () => {
-    mockFetch({ status: 'error', data: [], error: 'not found' });
+  test('should return null when label_values fails', async () => {
+    const mockFetchFn = createMockFetch({ status: 'error', data: [], error: 'not found' });
 
     const client = new PrometheusClient({
       baseUrl: 'http://prometheus:9090',
-      timeoutMs: 5000,
+      fetchFn: mockFetchFn,
       hasAuth: false,
     });
     const discovery = new PrometheusDiscovery(client);
 
     const result = await discovery.discoverInstances();
-    assert.equal(result, null);
+    expect(result).toBe(null);
   });
 });
 
-test('Prometheus Integration - Normalizer', async (t) => {
-  await t.test('should normalize query results by instance', () => {
+describe('Prometheus Integration - Normalizer', () => {
+  test('should normalize query results by instance', () => {
     const mockQueryResults = new Map<string, unknown>([
       [
         'cpuUsage',
@@ -233,14 +221,14 @@ test('Prometheus Integration - Normalizer', async (t) => {
     const instances = ['10.0.0.1:9100', '10.0.0.2:9100'];
     const result = PrometheusNormalizer.normalize(mockQueryResults, instances);
 
-    assert.equal(result.length, 1);
+    expect(result.length).toBe(1);
     const firstResult = result[0];
-    assert.ok(firstResult);
-    assert.equal(firstResult.server, '10.0.0.1:9100');
-    assert.ok(firstResult.metrics.length > 0);
+    expect(firstResult).toBeTruthy();
+    expect(firstResult!.server).toBe('10.0.0.1:9100');
+    expect(firstResult!.metrics.length > 0).toBeTruthy();
   });
 
-  await t.test('should include isSystemMount=true for system mountpoints', () => {
+  test('should include isSystemMount=true for system mountpoints', () => {
     const mockQueryResults = new Map<string, unknown>([
       [
         'diskSize',
@@ -286,25 +274,25 @@ test('Prometheus Integration - Normalizer', async (t) => {
     const result = PrometheusNormalizer.normalize(mockQueryResults, instances);
 
     const firstResult = result[0];
-    assert.ok(firstResult);
-    const diskMetrics = firstResult.metrics.find(m => m.name === 'disk');
-    assert.ok(diskMetrics);
+    expect(firstResult).toBeTruthy();
+    const diskMetrics = firstResult!.metrics.find((m) => m.name === 'disk');
+    expect(diskMetrics!).toBeTruthy();
     // Check values array: [totalBytes, availableBytes, usagePercent, readBytes, writeBytes]
     // Usage percent for / should be ~50% (50GB used out of 100GB)
-    const usagePercent = diskMetrics.values[2];
-    assert.ok(usagePercent !== null);
-    assert.ok(Math.abs((usagePercent as number) - 50) < 1);
+    const usagePercent = diskMetrics!.values[2];
+    expect(usagePercent !== null).toBeTruthy();
+    expect(Math.abs((usagePercent as number) - 50) < 1);
   });
 
-  await t.test('should return empty array when no data', () => {
+  test('should return empty array when no data', () => {
     const emptyResults = new Map<string, unknown>();
     const instances = ['10.0.0.1:9100'];
     const result = PrometheusNormalizer.normalize(emptyResults, instances);
 
-    assert.deepEqual(result, []);
+    expect(result).toEqual([]);
   });
 
-  await t.test('should handle missing instance gracefully', () => {
+  test('should handle missing instance gracefully', () => {
     const mockQueryResults = new Map<string, unknown>([
       [
         'cpuUsage',
@@ -325,65 +313,75 @@ test('Prometheus Integration - Normalizer', async (t) => {
     const instances = ['10.0.0.1:9100'];
     const result = PrometheusNormalizer.normalize(mockQueryResults, instances);
 
-    assert.deepEqual(result, []);
+    expect(result).toEqual([]);
   });
 });
 
-test('Prometheus Integration - Queries', async (t) => {
-  await t.test('should have [5m] rate window in queries', () => {
+describe('Prometheus Integration - Queries', () => {
+  test('should have [5m] rate window in queries', () => {
     const queries = getAllQueries();
     for (const query of queries) {
-      if (query.key.includes('Read') || query.key.includes('Write') ||
-          query.key.includes('Rx') || query.key.includes('Tx')) {
-        assert.ok(query.promql.includes('[5m]'), `Query ${query.key} should have [5m] window`);
+      if (
+        query.key.includes('Read') ||
+        query.key.includes('Write') ||
+        query.key.includes('Rx') ||
+        query.key.includes('Tx')
+      ) {
+        expect(query.promql.includes('[5m]')).toBeTruthy();
       }
     }
   });
 
-  await t.test('should use grouping labels in queries', () => {
+  test('should use grouping labels in queries', () => {
     const cpuQuery = PROMETHEUS_QUERIES.cpuUsage;
-    assert.ok(cpuQuery.promql.includes('by (instance, cpu)'));
+    expect(cpuQuery.promql.includes('by (instance, cpu)')).toBeTruthy();
   });
 });
 
-test('Prometheus Integration - Falsifiers', async (t) => {
-  await t.test('D1: server is used as grouping label', () => {
+describe('Prometheus Integration - Falsifiers', () => {
+  test('server is used as grouping label', () => {
     const queries = getAllQueries();
-    const hasInstanceGrouping = queries.some(q =>
-      q.groupingLabels.includes('instance')
+    const hasInstanceGrouping = queries.some((q) =>
+      q.groupingLabels.includes('instance'),
     );
-    assert.ok(hasInstanceGrouping, 'At least one query should group by instance');
+    expect(
+      hasInstanceGrouping,
+      'At least one query should group by instance',
+    ).toBeTruthy();
   });
 
-  await t.test('D2: label_values is used in client', () => {
+  test('label_values is used in client', () => {
     const clientSource = readFileSync(
       'packages/integrations/src/prometheus/client.ts',
-      'utf-8'
+      'utf-8',
     );
-    assert.ok(clientSource.includes('labelValues'), 'Client should use label_values');
-    assert.ok(clientSource.includes('label_values'), 'Client should reference label_values API');
+    expect(clientSource.includes('labelValues')).toBeTruthy();
+    expect(clientSource.includes('label_values')).toBeTruthy();
   });
 
-  await t.test('D3: [5m] rate window is present', () => {
+  test('[5m] rate window is present', () => {
     const queriesSource = readFileSync(
       'packages/integrations/src/prometheus/promql-queries.ts',
-      'utf-8'
+      'utf-8',
     );
     const matches = queriesSource.match(/\[5m\]/g);
-    assert.ok(matches, 'Should have [5m] rate windows');
-    assert.ok(matches!.length >= 5, 'Should have at least 5 [5m] references');
+    expect(matches, 'Should have [5m] rate windows').toBeTruthy();
+    expect(
+      matches!.length >= 5,
+      'Should have at least 5 [5m] references',
+    ).toBeTruthy();
   });
 
-  await t.test('D4: prometheus is in integrationKinds', () => {
+  test('prometheus is in integrationKinds', () => {
     const kindsSource = readFileSync(
       'packages/contracts/src/kinds.ts',
-      'utf-8'
+      'utf-8',
     );
-    assert.ok(kindsSource.includes("'prometheus'"), 'Should contain prometheus kind');
-    assert.ok(kindsSource.includes('integrationKinds'), 'Should be in integrationKinds');
+    expect(kindsSource.includes("'prometheus'")).toBeTruthy();
+    expect(kindsSource.includes('integrationKinds')).toBeTruthy();
   });
 
-  await t.test('D5: no ErrorCode or ErrorType in prometheus code', () => {
+  test('no ErrorCode or ErrorType in prometheus code', () => {
     const files = [
       'packages/integrations/src/prometheus/client.ts',
       'packages/integrations/src/prometheus/normalizer.ts',
@@ -392,11 +390,8 @@ test('Prometheus Integration - Falsifiers', async (t) => {
 
     for (const file of files) {
       const content = readFileSync(file, 'utf-8');
-      assert.ok(!content.includes('ErrorCode'), `${file} should not contain ErrorCode`);
-      assert.ok(!content.includes('ErrorType'), `${file} should not contain ErrorType`);
+      expect(!content.includes('ErrorCode')).toBeTruthy();
+      expect(!content.includes('ErrorType')).toBeTruthy();
     }
   });
 });
-
-// Restore original fetch
-global.fetch = originalFetch;

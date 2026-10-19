@@ -1,6 +1,9 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { downloadClientItemSchema, downloadClientStatusSchema, downloadClientJobsAndStatusSchema } from './download-client.js';
+import { test, expect } from 'vitest';
+import {
+  downloadClientItemSchema,
+  downloadClientStatusSchema,
+  downloadClientJobsAndStatusSchema,
+} from './download-client.js';
 
 test('downloadClientItemSchema parses a completed torrent (uploading state)', () => {
   const raw = {
@@ -19,10 +22,10 @@ test('downloadClientItemSchema parses a completed torrent (uploading state)', ()
   };
 
   const result = downloadClientItemSchema.parse(raw);
-  assert.equal(result.id, raw.id);
-  assert.equal(result.state, 'seeding');
-  assert.equal(result.progress, 1);
-  assert.equal(result.size, 1461514465);
+  expect(result.id).toBe(raw.id);
+  expect(result.state).toBe('seeding');
+  expect(result.progress).toBe(1);
+  expect(result.size).toBe(1461514465);
 });
 
 test('downloadClientItemSchema parses a queued torrent (leeching state)', () => {
@@ -41,12 +44,12 @@ test('downloadClientItemSchema parses a queued torrent (leeching state)', () => 
   };
 
   const result = downloadClientItemSchema.parse(raw);
-  assert.equal(result.state, 'leeching');
-  assert.equal(result.progress, 0);
+  expect(result.state).toBe('leeching');
+  expect(result.progress).toBe(0);
 });
 
 test('downloadClientItemSchema rejects missing required fields', () => {
-  assert.throws(() => {
+  expect(() =>
     downloadClientItemSchema.parse({
       type: 'torrent',
       // missing id
@@ -59,12 +62,12 @@ test('downloadClientItemSchema rejects missing required fields', () => {
       added: 0,
       state: 'unknown' as const,
       progress: 0,
-    });
-  });
+    }),
+  ).toThrow();
 });
 
 test('downloadClientItemSchema rejects invalid state', () => {
-  assert.throws(() => {
+  expect(() =>
     downloadClientItemSchema.parse({
       type: 'torrent',
       id: 'abc',
@@ -77,12 +80,12 @@ test('downloadClientItemSchema rejects invalid state', () => {
       added: 0,
       state: 'invalid-state' as any,
       progress: 0,
-    });
-  });
+    }),
+  ).toThrow();
 });
 
 test('downloadClientItemSchema rejects negative progress', () => {
-  assert.throws(() => {
+  expect(() =>
     downloadClientItemSchema.parse({
       type: 'torrent',
       id: 'abc',
@@ -95,12 +98,12 @@ test('downloadClientItemSchema rejects negative progress', () => {
       added: 0,
       state: 'unknown' as const,
       progress: -0.1,
-    });
-  });
+    }),
+  ).toThrow();
 });
 
 test('downloadClientItemSchema rejects progress > 1', () => {
-  assert.throws(() => {
+  expect(() =>
     downloadClientItemSchema.parse({
       type: 'torrent',
       id: 'abc',
@@ -113,8 +116,8 @@ test('downloadClientItemSchema rejects progress > 1', () => {
       added: 0,
       state: 'unknown' as const,
       progress: 1.1,
-    });
-  });
+    }),
+  ).toThrow();
 });
 
 test('downloadClientStatusSchema parses status with rates', () => {
@@ -125,10 +128,10 @@ test('downloadClientStatusSchema parses status with rates', () => {
   };
 
   const result = downloadClientStatusSchema.parse(raw);
-  assert.equal(result.paused, false);
-  assert.equal(result.rates.down, 50000);
-  assert.equal(result.rates.up, 10000);
-  assert.equal(result.types[0], 'torrent');
+  expect(result.paused).toBe(false);
+  expect(result.rates.down).toBe(50000);
+  expect(result.rates.up).toBe(10000);
+  expect(result.types[0]).toBe('torrent');
 });
 
 test('downloadClientJobsAndStatusSchema parses full response', () => {
@@ -136,26 +139,27 @@ test('downloadClientJobsAndStatusSchema parses full response', () => {
     status: {
       paused: false,
       rates: { down: 50000, up: 10000 },
-      types: ['torrent'],
+      types: ['torrent'] as const,
     },
     items: [
       {
-        type: 'torrent',
+        type: 'torrent' as const,
         id: 'abc123',
         name: 'Test Torrent',
         size: 1000000,
         sent: 500000,
-        downSpeed: 5000,
-        upSpeed: 1000,
-        time: 60000,
-        added: 1700000000000,
-        state: 'leeching',
+        downSpeed: 1000,
+        upSpeed: 500,
+        time: 100,
+        added: 1234567890,
+        state: 'leeching' as const,
         progress: 0.5,
       },
     ],
   };
 
   const result = downloadClientJobsAndStatusSchema.parse(raw);
-  assert.equal(result.items.length, 1);
-  assert.equal(result.status.paused, false);
+  expect(result.status.paused).toBe(false);
+  expect(result.items).toHaveLength(1);
+  expect(result.items[0]!.name).toBe('Test Torrent');
 });

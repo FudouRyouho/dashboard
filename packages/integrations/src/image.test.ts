@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import {
   imageCoverTypes,
   ImageSchema,
@@ -8,14 +7,14 @@ import {
 } from './image.js';
 
 test('imageCoverTypes contains expected values', () => {
-  assert.equal(imageCoverTypes.length, 7);
-  assert.ok(imageCoverTypes.includes('poster'));
-  assert.ok(imageCoverTypes.includes('banner'));
-  assert.ok(imageCoverTypes.includes('fanart'));
-  assert.ok(imageCoverTypes.includes('screenshot'));
-  assert.ok(imageCoverTypes.includes('clearlogo'));
-  assert.ok(imageCoverTypes.includes('headshot'));
-  assert.ok(imageCoverTypes.includes('unknown'));
+  expect(imageCoverTypes.length).toBe(7);
+  expect(imageCoverTypes.includes('poster')).toBeTruthy();
+  expect(imageCoverTypes.includes('banner')).toBeTruthy();
+  expect(imageCoverTypes.includes('fanart')).toBeTruthy();
+  expect(imageCoverTypes.includes('screenshot')).toBeTruthy();
+  expect(imageCoverTypes.includes('clearlogo')).toBeTruthy();
+  expect(imageCoverTypes.includes('headshot')).toBeTruthy();
+  expect(imageCoverTypes.includes('unknown')).toBeTruthy();
 });
 
 test('ImageSchema parses valid poster image', () => {
@@ -23,8 +22,8 @@ test('ImageSchema parses valid poster image', () => {
     coverType: 'poster',
     remoteUrl: 'https://example.com/poster.jpg',
   });
-  assert.equal(result.coverType, 'poster');
-  assert.equal(result.remoteUrl, 'https://example.com/poster.jpg');
+  expect(result.coverType).toBe('poster');
+  expect(result.remoteUrl).toBe('https://example.com/poster.jpg');
 });
 
 test('ImageSchema parses image with undefined remoteUrl', () => {
@@ -32,16 +31,16 @@ test('ImageSchema parses image with undefined remoteUrl', () => {
     coverType: 'banner',
     remoteUrl: undefined,
   });
-  assert.equal(result.coverType, 'banner');
-  assert.equal(result.remoteUrl, undefined);
+  expect(result.coverType).toBe('banner');
+  expect(result.remoteUrl).toBe(undefined);
 });
 
 test('ImageSchema parses image without remoteUrl', () => {
   const result = ImageSchema.parse({
     coverType: 'fanart',
   });
-  assert.equal(result.coverType, 'fanart');
-  assert.equal(result.remoteUrl, undefined);
+  expect(result.coverType).toBe('fanart');
+  expect(result.remoteUrl).toBe(undefined);
 });
 
 test('ImageSchema catches unknown coverType', () => {
@@ -49,11 +48,11 @@ test('ImageSchema catches unknown coverType', () => {
     coverType: 'invalid_type',
     remoteUrl: 'https://example.com/image.jpg',
   });
-  assert.equal(result.coverType, 'unknown');
+  expect(result.coverType).toBe('unknown');
 });
 
 test('ImageSchema rejects invalid remoteUrl', () => {
-  assert.throws(() => {
+  expect(() => {
     ImageSchema.parse({
       coverType: 'poster',
       remoteUrl: 'not-a-url',
@@ -62,11 +61,11 @@ test('ImageSchema rejects invalid remoteUrl', () => {
 });
 
 test('aspectRatioByCoverType has correct ratios', () => {
-  assert.deepEqual(aspectRatioByCoverType.poster, { width: 2, height: 3 });
-  assert.deepEqual(aspectRatioByCoverType.banner, { width: 758, height: 140 });
-  assert.deepEqual(aspectRatioByCoverType.fanart, { width: 16, height: 9 });
-  assert.deepEqual(aspectRatioByCoverType.headshot, { width: 1, height: 1 });
-  assert.deepEqual(aspectRatioByCoverType.unknown, { width: 2, height: 3 });
+  expect(aspectRatioByCoverType.poster).toEqual({ width: 2, height: 3 });
+  expect(aspectRatioByCoverType.banner).toEqual({ width: 758, height: 140 });
+  expect(aspectRatioByCoverType.fanart).toEqual({ width: 16, height: 9 });
+  expect(aspectRatioByCoverType.headshot).toEqual({ width: 1, height: 1 });
+  expect(aspectRatioByCoverType.unknown).toEqual({ width: 2, height: 3 });
 });
 
 test('chooseBestImage returns poster when available', () => {
@@ -75,8 +74,8 @@ test('chooseBestImage returns poster when available', () => {
     { coverType: 'banner', remoteUrl: 'https://example.com/banner.jpg' },
   ];
   const result = chooseBestImage(images as any);
-  assert.ok(result);
-  assert.equal(result!.coverType, 'poster');
+  expect(result).toBeTruthy();
+  expect(result!.coverType).toBe('poster');
 });
 
 test('chooseBestImage returns first available image by priority', () => {
@@ -85,8 +84,8 @@ test('chooseBestImage returns first available image by priority', () => {
     { coverType: 'poster', remoteUrl: 'https://example.com/poster.jpg' },
   ];
   const result = chooseBestImage(images as any);
-  assert.ok(result);
-  assert.equal(result!.coverType, 'poster');
+  expect(result).toBeTruthy();
+  expect(result!.coverType).toBe('poster');
 });
 
 test('chooseBestImage skips images without remoteUrl', () => {
@@ -95,8 +94,8 @@ test('chooseBestImage skips images without remoteUrl', () => {
     { coverType: 'banner', remoteUrl: 'https://example.com/banner.jpg' },
   ];
   const result = chooseBestImage(images as any);
-  assert.ok(result);
-  assert.equal(result!.coverType, 'banner');
+  expect(result).toBeTruthy();
+  expect(result!.coverType).toBe('banner');
 });
 
 test('chooseBestImage returns undefined when no images with url', () => {
@@ -105,12 +104,12 @@ test('chooseBestImage returns undefined when no images with url', () => {
     { coverType: 'banner', remoteUrl: undefined },
   ];
   const result = chooseBestImage(images as any);
-  assert.equal(result, undefined);
+  expect(result).toBe(undefined);
 });
 
 test('chooseBestImage returns undefined for empty array', () => {
   const result = chooseBestImage([]);
-  assert.equal(result, undefined);
+  expect(result).toBe(undefined);
 });
 
 test('chooseBestImage handles unknown coverType gracefully', () => {
@@ -118,6 +117,6 @@ test('chooseBestImage handles unknown coverType gracefully', () => {
     { coverType: 'unknown', remoteUrl: 'https://example.com/image.jpg' },
   ];
   const result = chooseBestImage(images as any);
-  assert.ok(result);
-  assert.equal(result!.coverType, 'unknown');
+  expect(result).toBeTruthy();
+  expect(result!.coverType).toBe('unknown');
 });

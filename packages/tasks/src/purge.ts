@@ -1,5 +1,8 @@
 import type { DB } from '@dashboard/db';
-import { purgeTaskRunsOlderThan, purgeTaskSnapshotsOlderThan } from '@dashboard/db';
+import {
+  purgeTaskRunsOlderThan,
+  purgeTaskSnapshotsOlderThan,
+} from '@dashboard/db';
 import type { TaskDefinition } from './types';
 
 export interface CreatePurgeTaskOptions {

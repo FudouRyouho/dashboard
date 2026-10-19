@@ -50,7 +50,7 @@ const mediaReleaseSeriesSchema = z.object({
   href: z.string().url(),
 });
 
-// Unión discriminada principal
+// Main discriminated union
 export const mediaReleaseSchema = z.discriminatedUnion('type', [
   mediaReleaseMovieSchema,
   mediaReleaseEpisodeSchema,
