@@ -94,6 +94,7 @@ export class JellyfinIntegration
       title: item.Name,
       description: item.Overview ?? null,
       releaseDate: item.DateCreated ?? null,
+      genres: item.Genres ?? [],
       imageUrls: { poster, backdrop },
       href,
     };
@@ -107,7 +108,6 @@ export class JellyfinIntegration
           : null,
         studio: item.Studios?.[0]?.Name ?? null,
         rating: item.CommunityRating ?? null,
-        genres: item.Genres ?? [],
       };
     }
 

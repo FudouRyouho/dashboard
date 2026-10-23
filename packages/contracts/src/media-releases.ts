@@ -27,6 +27,7 @@ const mediaReleaseEpisodeSchema = z.object({
   seriesId: z.string().optional(),
   seasonNumber: z.number().optional(),
   episodeNumber: z.number().optional(),
+  genres: z.array(z.string()).default([]),
   imageUrls: z.object({
     poster: z.string().url().nullable(),
     backdrop: z.string().url().nullable(),
@@ -43,6 +44,7 @@ const mediaReleaseSeriesSchema = z.object({
   firstAired: z.string().datetime({ offset: true }).nullable(),
   childCount: z.number().nullable(),
   status: z.string().nullable(),
+  genres: z.array(z.string()).default([]),
   imageUrls: z.object({
     poster: z.string().url().nullable(),
     backdrop: z.string().url().nullable(),

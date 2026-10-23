@@ -1,54 +1,95 @@
 import type { MediaReleaseEvent } from '@dashboard/contracts';
 
+/**
+ * Mocks para la sección "Media Releases" (últimos estrenos).
+ *
+ * NOTAS DE DATOS REALES (verificados con curl):
+ * - Sonarr: las URLs de artwork vienen de TheTVDB (artworks.thetvdb.com)
+ *   y son PÚBLICAS, no requieren header. Ej: posters/74796-3.jpg.
+ * - Radarr: las URLs vienen de TMDB (image.tmdb.org) y también son
+ *   PÚBLICAS. Ej: /t/p/original/3sgnSfNT27Bx5O5ukr7B26mhEQq.jpg.
+ * - Jellyfin: la imagen primaria se sirve por la ruta
+ *   http://<host>:<port>/Items/{id}/Images/Primary y funciona SIN header
+ *   (HTTP 200, image/jpeg). Las respuestas de Items/Latest devuelven 401
+ *   con el token actual, así que usamos el Id del item capturado en
+ *   references/responses/jellyfin-items-latest.captured.json.
+ */
 export const mediaReleasesMock: MediaReleaseEvent[] = [
   {
     type: 'movie',
-    id: 'radarr:movie:101',
-    title: 'Spider-Man: Beyond the Spider-Verse',
+    id: 'radarr:movie:82',
+    title: 'Avatar: Aang, El último Maestro Aire',
     description:
-      'Miles Morales viaja a través del multiverso junto a Gwen Stacy y un nuevo equipo de Spider-People para enfrentarse a un villano más poderoso que cualquier amenaza que hayan conocido.',
-    releaseDate: '2026-09-15T00:00:00.000Z',
-    runtimeMs: 8400000, // 140 min
-    studio: 'Columbia Pictures / Sony Pictures Animation',
-    rating: 8.9,
-    genres: ['Animación', 'Acción', 'Aventura', 'Ciencia Ficción'],
+      'Aang, el último Maestro Aire sobrevive a un ataque a su templo y despierta cien años después, donde el mundo ha sido destruido por la guerra del Fuego.',
+    releaseDate: '2026-07-24T00:00:00.000Z',
+    runtimeMs: 1_740_000_000, // ~290 min
+    studio: 'Paramount Pictures / Nickelodeon',
+    rating: 8.1,
+    genres: ['Animación', 'Aventura', 'Acción', 'Fantasía'],
     imageUrls: {
-      poster: 'https://artworks.thetvdb.com/banners/v4/movie/14713/posters/62a8c3d8c1e2b.jpg',
-      backdrop: 'https://artworks.thetvdb.com/banners/v4/movie/14713/backgrounds/62a8c3d8c1e2b.jpg',
+      poster:
+        'https://image.tmdb.org/t/p/original/3sgnSfNT27Bx5O5ukr7B26mhEQq.jpg',
+      backdrop:
+        'https://image.tmdb.org/t/p/original/ezbrL1dMymKQZw7mDEWa2ZTzN7d.jpg',
     },
-    href: 'http://192.168.10.197:7878/movie/spider-man-beyond-the-spider-verse',
+    href: 'http://192.168.10.197:7878/movie/avatar-aang-el-ultimo-maestro-aire',
   },
   {
     type: 'episode',
-    id: 'sonarr:episode:201',
-    title: 'La Niebla del Tiempo',
-    seriesTitle: 'Frieren: Más allá del final del viaje',
-    seriesId: 'sonarr:series:55',
-    seasonNumber: 2,
-    episodeNumber: 4,
+    id: 'sonarr:episode:15841',
+    title: 'THE BLADE',
+    seriesTitle: 'Bleach',
+    seriesId: 'sonarr:series:136',
+    seasonNumber: 17,
+    episodeNumber: 41,
     description:
-      'Frieren y su grupo se adentran en la meseta norteña en busca de información sobre los antiguos hechiceros mientras lidian con bestias mágicas.',
-    releaseDate: '2026-10-18T14:00:00.000Z',
+      'For as long as he can remember, Ichigo Kurosaki has been able to see ghosts. But when he meets Rukia, a Soul Reaper who battles evil spirits known as Hollows, he finds his life is changed forever when Rukia transfers most of her powers to him.',
+    releaseDate: '2026-10-19T14:00:00.000Z',
+    genres: ['Action', 'Adventure', 'Animation', 'Anime', 'Fantasy', 'Martial Arts'],
     imageUrls: {
-      poster: 'https://artworks.thetvdb.com/banners/v4/series/424109/posters/651d5c228a472.jpg',
-      backdrop: 'https://artworks.thetvdb.com/banners/v4/series/424109/backgrounds/651d5c228a472.jpg',
+      poster:
+        'https://artworks.thetvdb.com/banners/posters/74796-3.jpg',
+      backdrop:
+        'https://artworks.thetvdb.com/banners/graphical/74796-g6.jpg',
     },
-    href: 'http://192.168.10.197:8989/series/frieren-beyond-journeys-end',
+    href: 'http://192.168.10.197:8989/series/bleach',
+  },
+  {
+    type: 'episode',
+    id: 'sonarr:episode:6193',
+    title: 'Last Chance for a Slow Dance',
+    seriesTitle: 'Cyberpunk: Edgerunners',
+    seriesId: 'sonarr:series:162',
+    seasonNumber: 1,
+    episodeNumber: 1,
+    description:
+      'David Martinez, un estudiante de secundaria, se ve forzado a robar un ciberware de alta gama para pagar las facturas médicas de su madre.',
+    releaseDate: '2026-10-20T20:00:00.000Z',
+    genres: ['Animation', 'Action', 'Adventure', 'Sci-Fi', 'Drama'],
+    imageUrls: {
+      poster:
+        'https://artworks.thetvdb.com/banners/series/384541/posters/5ef503b89742f.jpg',
+      backdrop:
+        'https://artworks.thetvdb.com/banners/v4/series/384541/banners/633481a4256af.jpg',
+    },
+    href: 'http://192.168.10.197:8989/series/cyberpunk-edgerunners',
   },
   {
     type: 'series',
-    id: 'jellyfin:series:301',
-    title: 'Cyberpunk: Edgerunners 2',
+    id: 'jellyfin:series:3c439490c8eccafcea6a492ecef6c2b8',
+    title: 'Daemons of the Shadow Realm',
     description:
-      'Una nueva historia situada en las oscuras y peligrosas calles de Night City, explorando el costo humano del ciberware y la obsesión por la gloria.',
-    releaseDate: '2026-10-01T00:00:00.000Z',
-    firstAired: '2026-10-01T00:00:00.000Z',
-    childCount: 10,
+      'In a remote mountain village under the watchful eyes of two stone guardians, the young Yuru contentedly lives off the land while staying close to the only family he has left—Asa, his precious twin sister.',
+    releaseDate: '2026-04-04T03:00:00.000Z',
+    firstAired: '2026-04-04T03:00:00.000Z',
+    childCount: 12,
     status: 'Continuing',
+    genres: ['Action', 'Adventure', 'Anime', 'Comedy', 'Fantasy'],
     imageUrls: {
-      poster: 'https://artworks.thetvdb.com/banners/v4/series/414578/posters/6320579e4316d.jpg',
-      backdrop: 'https://artworks.thetvdb.com/banners/v4/series/414578/backgrounds/6320579e4316d.jpg',
+      poster:
+        'http://192.168.10.125:8096/Items/3c439490c8eccafcea6a492ecef6c2b8/Images/Primary?maxHeight=492&quality=90',
+      backdrop: null,
     },
-    href: 'http://192.168.10.125:8096/web/index.html#!/details?id=301',
+    href: 'http://192.168.10.125:8096/web/index.html#!/details?id=3c439490c8eccafcea6a492ecef6c2b8',
   },
 ];
