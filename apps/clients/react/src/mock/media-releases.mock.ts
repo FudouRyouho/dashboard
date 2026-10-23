@@ -45,6 +45,7 @@ export const mediaReleasesMock: MediaReleaseEvent[] = [
     description:
       'For as long as he can remember, Ichigo Kurosaki has been able to see ghosts. But when he meets Rukia, a Soul Reaper who battles evil spirits known as Hollows, he finds his life is changed forever when Rukia transfers most of her powers to him.',
     releaseDate: '2026-10-19T14:00:00.000Z',
+    runtimeMs: null, // Sonarr/Radarr solo tienen capability 'calendar'; no proveen runtimeMs a mediaReleases
     genres: ['Action', 'Adventure', 'Animation', 'Anime', 'Fantasy', 'Martial Arts'],
     imageUrls: {
       poster:
@@ -65,6 +66,7 @@ export const mediaReleasesMock: MediaReleaseEvent[] = [
     description:
       'David Martinez, un estudiante de secundaria, se ve forzado a robar un ciberware de alta gama para pagar las facturas médicas de su madre.',
     releaseDate: '2026-10-20T20:00:00.000Z',
+    runtimeMs: null, // Sonarr/Radarr solo tienen capability 'calendar'; no proveen runtimeMs a mediaReleases
     genres: ['Animation', 'Action', 'Adventure', 'Sci-Fi', 'Drama'],
     imageUrls: {
       poster:
@@ -84,6 +86,8 @@ export const mediaReleasesMock: MediaReleaseEvent[] = [
     firstAired: '2026-04-04T03:00:00.000Z',
     childCount: 12,
     status: 'Continuing',
+    studio: 'bones film',
+    rating: 7.8,
     genres: ['Action', 'Adventure', 'Anime', 'Comedy', 'Fantasy'],
     imageUrls: {
       poster:

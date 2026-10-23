@@ -119,6 +119,9 @@ export class JellyfinIntegration
         seriesId: item.SeriesId,
         seasonNumber: item.ParentIndexNumber,
         episodeNumber: item.IndexNumber,
+        runtimeMs: item.RunTimeTicks
+          ? Math.round(item.RunTimeTicks / 10_000)
+          : null,
       };
     }
 
@@ -128,6 +131,8 @@ export class JellyfinIntegration
       firstAired: item.PremiereDate ?? null,
       childCount: item.ChildCount,
       status: item.Status ?? null,
+      studio: item.Studios?.[0]?.Name ?? null,
+      rating: item.CommunityRating ?? null,
     };
   }
 }
