@@ -2,21 +2,19 @@ import { Box, Container, Flex, Popover, Text } from '@mantine/core';
 import { CalendarEventList } from './CalendarEventList';
 import { useDisclosure } from '@mantine/hooks';
 import { type CalendarEvent } from '@dashboard/contracts';
+import { mediaTypeDefs } from '@dashboard/definitions';
 
 interface CalendarDayProps {
   date: string;
   events: CalendarEvent[];
+  /** Brand color of the source integration (resuelto en CalendarBase). */
+  kindColor?: string;
   disabled: boolean;
 }
 
-export function CalenderDay({ date, events, disabled }: CalendarDayProps) {
+export function CalenderDay({ date, events, kindColor, disabled }: CalendarDayProps) {
   const [opened, { toggle }] = useDisclosure(false);
 
-  /**
-   * ToDo: Añadir soporte para light/dark theme utilizando el hook de mantine
-   *
-   * Añadir espacios de colores para concatenar el feelback de la propia implementacion
-   */
   const dateObj = new Date(date + 'T00:00:00');
   const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
 
@@ -52,7 +50,7 @@ export function CalenderDay({ date, events, disabled }: CalendarDayProps) {
           <Text ta={'center'} style={{ color: textColor }}>
             {date.split('-')[2]}
           </Text>
-          <NotificationIndicator events={events} />
+          <NotificationIndicator events={events} kindColor={kindColor} />
         </Container>
       </Popover.Target>
       <Popover.Dropdown
@@ -68,32 +66,42 @@ export function CalenderDay({ date, events, disabled }: CalendarDayProps) {
   );
 }
 
-interface NotificationIndicatorProps {
+function NotificationIndicator({
+  events,
+  kindColor,
+}: {
   events: CalendarEvent[];
-}
-
-function NotificationIndicator({ events }: NotificationIndicatorProps) {
-  const notificationEvents = [
-    ...new Set(events.map((event) => event.indicatorColor)),
-  ].filter(String);
+  kindColor?: string;
+}) {
+  // Dot por tipo de dato (episode/movie/other) + dot de la app de origen.
+  // Layout final pendiente de pulir (decidido: mostrar ambos colores).
+  const typeColors = [
+    ...new Set(
+      events
+        .map((event) => mediaTypeDefs[event.metadata.type as keyof typeof mediaTypeDefs]?.color)
+        .filter(Boolean),
+    ),
+  ];
+  const colors = [...(kindColor ? [kindColor] : []), ...typeColors];
   return (
     <Flex
       w="80%"
       align={'center'}
       pos={'absolute'}
+      gap={3}
       bottom={10}
       left={'12.5%'}
       p={0}
       direction={'row'}
       justify={'center'}
     >
-      {notificationEvents.map((notificationEvent: string) => {
+      {colors.map((color: string) => {
         return (
           <Box
-            key={notificationEvent}
-            bg={notificationEvent}
+            key={color}
+            bg={color}
             h={8}
-            w={'100%'}
+            w={8}
             p={0}
             style={{ borderRadius: 999 }}
           />

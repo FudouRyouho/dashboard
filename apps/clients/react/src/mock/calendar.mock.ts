@@ -27,7 +27,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 9,
       episodeNumber: 7,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -85,7 +84,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 9,
       episodeNumber: 8,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -128,7 +126,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 9,
       episodeNumber: 9,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -171,7 +168,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 41,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -214,7 +210,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 9,
       episodeNumber: 10,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -257,7 +252,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 4,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -300,7 +294,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 17,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -343,7 +336,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 4,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -386,7 +378,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 4,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -429,7 +420,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 4,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -472,7 +462,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 5,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -515,7 +504,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 42,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -558,7 +546,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 17,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -601,7 +588,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 5,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -644,7 +630,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 18,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -687,7 +672,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 5,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -730,7 +714,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 5,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -773,7 +756,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 5,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -816,7 +798,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 5,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -859,7 +840,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 6,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -902,7 +882,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 43,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -945,7 +924,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 18,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -988,7 +966,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 6,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1031,7 +1008,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 6,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1074,7 +1050,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 19,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1117,7 +1092,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 6,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1160,7 +1134,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 6,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1203,7 +1176,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 6,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1246,7 +1218,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 6,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1289,7 +1260,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 4,
       episodeNumber: 12,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1332,7 +1302,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 7,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1375,7 +1344,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 44,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1418,7 +1386,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 19,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1461,7 +1428,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 7,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1504,7 +1470,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 7,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1547,7 +1512,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 20,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1590,7 +1554,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 7,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1633,7 +1596,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 7,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1676,7 +1638,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 7,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1719,7 +1680,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 7,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1762,7 +1722,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 4,
       episodeNumber: 13,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1805,7 +1764,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 8,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1848,7 +1806,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 45,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1891,7 +1848,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 20,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1934,7 +1890,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 8,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -1977,7 +1932,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 8,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2020,7 +1974,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 21,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2063,7 +2016,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 8,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2106,7 +2058,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 8,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2149,7 +2100,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 8,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2192,7 +2142,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 8,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2235,7 +2184,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 4,
       episodeNumber: 14,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2278,7 +2226,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 9,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2321,7 +2268,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 46,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2364,7 +2310,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 21,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2407,7 +2352,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 9,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2450,7 +2394,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 9,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2493,7 +2436,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 22,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2536,7 +2478,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 9,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2579,7 +2520,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 9,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2622,7 +2562,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 9,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2665,7 +2604,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 9,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2708,7 +2646,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 4,
       episodeNumber: 15,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2751,7 +2688,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 10,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2794,7 +2730,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 47,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2837,7 +2772,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 22,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2880,7 +2814,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 10,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2923,7 +2856,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 10,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -2966,7 +2898,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 23,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3009,7 +2940,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 10,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3052,7 +2982,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 10,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3095,7 +3024,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 10,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3138,7 +3066,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 10,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3181,7 +3108,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 4,
       episodeNumber: 16,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3224,7 +3150,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 11,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3267,7 +3192,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 48,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3310,7 +3234,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 23,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3353,7 +3276,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 11,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3396,7 +3318,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 11,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3439,7 +3360,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 24,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3482,7 +3402,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 11,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3525,7 +3444,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 11,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3568,7 +3486,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 11,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3611,7 +3528,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 4,
       episodeNumber: 17,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3654,7 +3570,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 12,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3697,7 +3612,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 49,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3740,7 +3654,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 24,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3783,7 +3696,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 12,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3826,7 +3738,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 12,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3869,7 +3780,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 12,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3912,7 +3822,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 12,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3955,7 +3864,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 12,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -3998,7 +3906,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 4,
       episodeNumber: 18,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -4041,7 +3948,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 17,
       episodeNumber: 50,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -4084,7 +3990,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 2,
       episodeNumber: 13,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -4127,7 +4032,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 13,
     },
-    indicatorColor: 'blue',
     links: [
       {
         name: 'Sonarr',
@@ -4170,7 +4074,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 8,
     },
-    indicatorColor: 'yellow',
     links: [
       {
         name: 'Sonarr',
@@ -4213,7 +4116,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 8,
     },
-    indicatorColor: 'red',
     links: [
       {
         name: 'Sonarr',
@@ -4256,7 +4158,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 8,
     },
-    indicatorColor: 'lime',
     links: [
       {
         name: 'Sonarr',
@@ -4289,7 +4190,6 @@ export const calendarEvents: CalendarEvent[] = [
       seasonNumber: 1,
       episodeNumber: 8,
     },
-    indicatorColor: 'purple',
     links: [
       {
         name: 'Sonarr',

@@ -3,13 +3,26 @@ import { useMemo, useState } from 'react';
 import { CalenderDay } from './CalendarDay';
 import { type CalendarEvent } from '@dashboard/contracts';
 import { splitMultiDayEvents, toLocalDay } from '@dashboard/core';
+import { integrationDefs } from '@dashboard/definitions';
 
-export interface CalendarBaseProps {
-  events: CalendarEvent[];
+interface CalendarBaseProps {
+  /**
+   * Form del response real (calendar.getEvents): eventos agrupados por
+   * integracion. `kind` alimenta el dot de "app de origen" vía definitions.
+   */
+  groups: Array<{ kind: string; events: CalendarEvent[] }>;
 }
 
-export function CalenderBase({ events }: CalendarBaseProps) {
-  const normalizedEvents = useMemo(() => splitMultiDayEvents(events), [events]);
+export const integrationIndicatorColor = (
+  kind: string,
+): string | undefined =>
+  (integrationDefs as Record<string, { color: string }>)[kind]?.color;
+
+export function CalenderBase({ groups }: CalendarBaseProps) {
+  const normalizedEvents = useMemo(
+    () => splitMultiDayEvents(groups.flatMap((g) => g.events)),
+    [groups],
+  );
 
   const [month, setMonth] = useState(new Date());
   return (
@@ -35,10 +48,15 @@ export function CalenderBase({ events }: CalendarBaseProps) {
         const eventsForDate = normalizedEvents.filter(
           (event) => toLocalDay(event.startDate) === tileDate,
         );
+        const kind =
+          groups.find((g) =>
+            g.events.some((e) => e.id === eventsForDate[0]?.id),
+          )?.kind ?? '';
         return (
           <CalenderDay
             date={tileDate}
             events={eventsForDate}
+            kindColor={integrationIndicatorColor(kind)}
             disabled={eventsForDate.length === 0}
           />
         );

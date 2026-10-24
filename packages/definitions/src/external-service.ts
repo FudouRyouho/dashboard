@@ -3,7 +3,9 @@ import type { ExternalServiceKind } from '@dashboard/contracts';
 interface ExternalServiceDef {
   name: string;
   iconUrl: string;
+  /** Brand color as hex. Framework-agnostic. */
   color?: string;
+  /** True when `color` is dark (white text on top); false when light. */
   isDark: boolean;
 }
 
@@ -24,7 +26,7 @@ export const externalServiceDefs = {
     name: 'TMDB',
     iconUrl: '/icons/tmdb.svg',
     color: '#032541',
-    isDark: false,
+    isDark: true,
   },
   prowlarr: {
     name: 'Prowlarr',
