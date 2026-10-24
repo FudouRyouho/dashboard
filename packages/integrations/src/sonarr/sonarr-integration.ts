@@ -59,7 +59,6 @@ export class SonarrIntegration
           seasonNumber: event.seasonNumber,
           episodeNumber: event.episodeNumber,
         },
-        indicatorColor: 'blue',
         links: [
           {
             name: 'Sonarr',

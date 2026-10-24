@@ -28,7 +28,6 @@ test('validateCalendarEvent validates valid event', () => {
     image: null,
     location: 'Location',
     metadata: { type: 'other' },
-    indicatorColor: '#ff0000',
     links: [],
   };
   const result = validateCalendarEvent(event);
@@ -46,7 +45,6 @@ test('safeValidateCalendarEvent returns success for valid event', () => {
     image: null,
     location: 'Location',
     metadata: { type: 'other' },
-    indicatorColor: '#ff0000',
     links: [],
   };
   const result = safeValidateCalendarEvent(event);
@@ -75,7 +73,6 @@ test('isCalendarEvent returns true for valid event', () => {
     image: null,
     location: 'Location',
     metadata: { type: 'other' },
-    indicatorColor: '#ff0000',
     links: [],
   };
   expect(isCalendarEvent(event)).toBeTruthy();

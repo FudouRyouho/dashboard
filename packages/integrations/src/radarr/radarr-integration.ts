@@ -61,7 +61,6 @@ export class RadarrIntegration
               movieId: event.id,
               releaseType,
             },
-            indicatorColor: 'yellow',
             links: [
               {
                 name: 'Radarr',

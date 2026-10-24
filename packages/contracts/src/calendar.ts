@@ -58,7 +58,6 @@ export const calendarEventSchema = z.object({
   location: z.string().nullable(),
 
   metadata: calendarEventMetadataSchema,
-  indicatorColor: z.string(),
   links: z.array(calendarLinkSchema),
 });
 

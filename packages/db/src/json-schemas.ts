@@ -49,7 +49,6 @@ export const calendarSnapshotDataSchema = z
           }),
           z.object({ type: z.literal('other') }),
         ]),
-        indicatorColor: z.string(),
         links: z.array(
           z.object({
             name: z.string(),

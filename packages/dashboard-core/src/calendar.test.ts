@@ -17,7 +17,6 @@ const makeEvent = (overrides: Partial<CalendarEvent> = {}): CalendarEvent => ({
   image: null,
   location: null,
   metadata: { type: 'episode', seriesId: 1, seasonNumber: 1, episodeNumber: 1 },
-  indicatorColor: 'blue',
   links: [],
   ...overrides,
 });
