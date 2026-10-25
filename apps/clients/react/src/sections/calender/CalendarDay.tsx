@@ -7,7 +7,7 @@ import { mediaTypeDefs } from '@dashboard/definitions';
 interface CalendarDayProps {
   date: string;
   events: CalendarEvent[];
-  /** Brand color of the source integration (resuelto en CalendarBase). */
+  /** Brand color of the source integration (resolved in CalendarBase). */
   kindColor?: string;
   disabled: boolean;
 }
@@ -18,13 +18,13 @@ export function CalenderDay({ date, events, kindColor, disabled }: CalendarDayPr
   const dateObj = new Date(date + 'T00:00:00');
   const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
 
-  let textColor = 'gray'; // Default, día de semana sin evento
+  let textColor = 'gray'; // Weekday without events
 
   if (!isWeekend && !disabled)
-    textColor = 'white'; // Día semana, con evento
+    textColor = 'white'; // Weekday with events
   else if (isWeekend && !disabled)
-    textColor = 'lime'; // Finde, con evento
-  else if (isWeekend && disabled) textColor = 'green'; // Finde, sin evento
+    textColor = 'lime'; // Weekend with events
+  else if (isWeekend && disabled) textColor = 'green'; // Weekend without events
 
   return (
     <Popover
@@ -73,8 +73,8 @@ function NotificationIndicator({
   events: CalendarEvent[];
   kindColor?: string;
 }) {
-  // Dot por tipo de dato (episode/movie/other) + dot de la app de origen.
-  // Layout final pendiente de pulir (decidido: mostrar ambos colores).
+  // One dot per data type (episode/movie/other) + one for the source app.
+  // Final layout pending polish (decision: show both colors).
   const typeColors = [
     ...new Set(
       events

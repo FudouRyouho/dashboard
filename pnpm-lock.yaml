@@ -6,48 +6,9 @@ settings:
 
 catalogs:
   default:
-    '@trpc/client':
-      specifier: 11.18.0
-      version: 11.18.0
-    '@trpc/server':
-      specifier: 11.18.0
-      version: 11.18.0
-    '@types/better-sqlite3':
-      specifier: 9.6.0
-      version: 9.6.0
-    '@types/node':
-      specifier: 24.13.3
-      version: 24.13.3
-    better-sqlite3:
-      specifier: 13.0.3
-      version: 13.0.3
-    dotenv:
-      specifier: 17.4.2
-      version: 17.4.2
-    drizzle-kit:
-      specifier: 0.30.6
-      version: 0.30.6
-    drizzle-orm:
-      specifier: 0.38.4
-      version: 0.38.4
-    fastify:
-      specifier: 5.11.3
-      version: 5.11.3
-    p-queue:
-      specifier: 9.3.3
-      version: 9.3.3
-    toad-scheduler:
-      specifier: 4.1.0
-      version: 4.1.0
-    tsx:
-      specifier: 4.23.12
-      version: 4.23.12
     typescript:
       specifier: 5.9.3
       version: 5.9.3
-    zod:
-      specifier: 3.25.76
-      version: 3.25.76
 
 importers:
 
@@ -89,6 +50,9 @@ importers:
       '@dashboard/contracts':
         specifier: workspace:*
         version: link:../../../packages/contracts
+      '@dashboard/core':
+        specifier: workspace:*
+        version: link:../../../packages/dashboard-core
       '@dashboard/definitions':
         specifier: workspace:*
         version: link:../../../packages/definitions
@@ -119,7 +83,7 @@ importers:
         version: 19.2.5(@types/react@19.2.18)
       '@vitejs/plugin-react':
         specifier: ^6.0.4
-        version: 6.1.1(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(sugarss@5.0.1(postcss@8.5.26))(tsx@4.23.12))
+        version: 6.1.1(vite@8.2.2(sugarss@5.0.1(postcss@8.5.26)))
       eslint:
         specifier: ^10.8.0
         version: 10.9.1
@@ -143,7 +107,7 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^8.2.0
-        version: 8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(sugarss@5.0.1(postcss@8.5.26))(tsx@4.23.12)
+        version: 8.2.2(sugarss@5.0.1(postcss@8.5.26))
 
   apps/server:
     dependencies:
@@ -212,6 +176,8 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+
+  packages/dashboard-core: {}
 
   packages/db:
     dependencies:
@@ -3644,10 +3610,10 @@ snapshots:
       '@typescript-eslint/types': 8.69.0
       eslint-visitor-keys: 5.0.1
 
-  '@vitejs/plugin-react@6.1.1(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(sugarss@5.0.1(postcss@8.5.26))(tsx@4.23.12))':
+  '@vitejs/plugin-react@6.1.1(vite@8.2.2(sugarss@5.0.1(postcss@8.5.26)))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(sugarss@5.0.1(postcss@8.5.26))(tsx@4.23.12)
+      vite: 8.2.2(sugarss@5.0.1(postcss@8.5.26))
 
   '@vitest/coverage-v8@5.0.1(vitest@5.0.1)':
     dependencies:
@@ -4810,7 +4776,7 @@ snapshots:
       sugarss: 5.0.1(postcss@8.5.26)
       tsx: 4.23.12
 
-  vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(sugarss@5.0.1(postcss@8.5.26))(tsx@4.23.12):
+  vite@8.2.2(sugarss@5.0.1(postcss@8.5.26)):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -4818,11 +4784,8 @@ snapshots:
       rolldown: 1.2.7
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 26.4.1
-      esbuild: 0.28.2
       fsevents: 2.3.3
       sugarss: 5.0.1(postcss@8.5.26)
-      tsx: 4.23.12
 
   vitest@5.0.1(@types/node@24.13.3)(@vitest/coverage-v8@5.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@5.9.3))(vite@7.3.6(@types/node@24.13.3)(lightningcss@1.33.0)(sugarss@5.0.1(postcss@8.5.26))(tsx@4.23.12)):
     dependencies:

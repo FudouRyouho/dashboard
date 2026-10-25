@@ -24,13 +24,14 @@
     "vite": "^8.2.0"
   },
   "dependencies": {
+    "@dashboard/contracts": "workspace:*",
+    "@dashboard/core": "workspace:*",
+    "@dashboard/definitions": "workspace:*",
     "@mantine/core": "^9.5.1",
     "@mantine/dates": "^9.5.1",
     "@mantine/hooks": "^9.5.1",
     "@tabler/icons-react": "^3.46.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "@dashboard/definitions": "workspace:*",
-    "@dashboard/contracts": "workspace:*"
+    "react-dom": "^19.2.8"
   }
 }

@@ -1,19 +1,6 @@
 import type { MediaReleaseEvent } from '@dashboard/contracts';
 
-/**
- * Mocks para la sección "Media Releases" (últimos estrenos).
- *
- * NOTAS DE DATOS REALES (verificados con curl):
- * - Sonarr: las URLs de artwork vienen de TheTVDB (artworks.thetvdb.com)
- *   y son PÚBLICAS, no requieren header. Ej: posters/74796-3.jpg.
- * - Radarr: las URLs vienen de TMDB (image.tmdb.org) y también son
- *   PÚBLICAS. Ej: /t/p/original/3sgnSfNT27Bx5O5ukr7B26mhEQq.jpg.
- * - Jellyfin: la imagen primaria se sirve por la ruta
- *   http://<host>:<port>/Items/{id}/Images/Primary y funciona SIN header
- *   (HTTP 200, image/jpeg). Las respuestas de Items/Latest devuelven 401
- *   con el token actual, así que usamos el Id del item capturado en
- *   references/responses/jellyfin-items-latest.captured.json.
- */
+
 export const mediaReleasesMock: MediaReleaseEvent[] = [
   {
     type: 'movie',

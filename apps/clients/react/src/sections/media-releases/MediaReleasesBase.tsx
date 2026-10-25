@@ -12,7 +12,7 @@ import { Avatar, Badge, Box, Card, Group, Image, Stack, Text, TooltipFloating, U
 import type { MediaReleaseEvent } from '@dashboard/contracts';
 import { mediaTypeColor } from '@dashboard/definitions';
 import { useState } from 'react';
-import { type Icon123, IconCalendar, IconClock, IconStarFilled } from '@tabler/icons-react';
+import { IconCalendar, IconClock, IconStarFilled } from '@tabler/icons-react';
 import { getMantineColor } from '../../theme';
 import { OverflowBadge } from './overflow-badge';
 
@@ -20,10 +20,8 @@ interface MediaReleasesBaseProps {
   releases: MediaReleaseEvent[];
 }
 
-export type TablerIcon = typeof Icon123;
-
 interface IconAndLabelProps {
-  icon?: TablerIcon;
+  icon?: (props: { size: number; color?: string }) => React.ReactNode;
   label: string;
 }
 
@@ -63,6 +61,9 @@ const InfoDivider = () => (
 export function MediaReleasesBase({ releases }: MediaReleasesBaseProps) {
   const [imgDisplay] =
     useState<keyof MediaReleaseEvent['imageUrls']>('backdrop');
+  const [showDescriptionTooltip] = useState(true);
+  const [showType] = useState(true);
+  const [showSource] = useState(true);
 
   return (
     <Card withBorder p="md">
@@ -70,10 +71,11 @@ export function MediaReleasesBase({ releases }: MediaReleasesBaseProps) {
         <Text fw={600}>Media Releases</Text>
         {releases.map((release) => (
           <TooltipFloating
+            key={release.id}
             label={release.description}
             w={300}
             multiline
-            disabled={release.description === undefined}
+            disabled={release.description === undefined || !showDescriptionTooltip}
           >
             <UnstyledButton
               component="a"
@@ -147,7 +149,7 @@ export function MediaReleasesBase({ releases }: MediaReleasesBaseProps) {
                 </Group>
                 {(true) && (
                   <Stack justify="space-between" align="end" h="100%" style={{ zIndex: 0 }}>
-                    {true && (
+                    {showType && (
                     <Badge
                       w="max-content"
                       size="xs"
@@ -156,21 +158,15 @@ export function MediaReleasesBase({ releases }: MediaReleasesBaseProps) {
                     >
                       {release.type}
                     </Badge>
-                    )}
-
-                    {true && (
-                      <Avatar
-                        size="sm"
-                        radius="xl"
-                        src="/icons/jellyfin.svg"
-                        alt="Jellyfin"
-                        // DEUDA: MediaReleaseEvent no trae provenance (kind/name
-                        // del servicio de origen). Hoy solo Jellyfin implementa
-                        // media-releases; cuando se sume otra integracion,
-                        // agregar source: { kind, name } al contract en lugar
-                        // de derivarlo del prefijo del id.
-                      />
-                    )}
+                  )}
+                  {showSource && (
+                    <Avatar
+                      size="sm"
+                      radius="xl"
+                      src="/icons/jellyfin.svg"
+                      alt="Jellyfin"
+                    />
+                  )}
                   </Stack>
                 )}
               </Group>

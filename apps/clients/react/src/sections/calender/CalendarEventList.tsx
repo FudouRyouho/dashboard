@@ -112,16 +112,16 @@ export function CalendarEventList({ events }: { events: CalendarEvent[] }) {
                                 : 'black',
                             '&:hover': link.color
                               ? {
-                                  backgroundColor: link.isDark
-                                    ? lighten(link.color, 0.1)
-                                    : darken(link.color, 0.1),
-                                }
+                                backgroundColor: link.isDark
+                                  ? lighten(link.color, 0.1)
+                                  : darken(link.color, 0.1),
+                              }
                               : undefined,
                           },
                         }}
                         leftSection={
                           link.logo ? (
-                            <Image src={`/${link.logo}.svg`} w={20} h={20} />
+                            <Image src={`/icons/${link.logo}.svg`} w={20} h={20} />
                           ) : undefined
                         }
                       >

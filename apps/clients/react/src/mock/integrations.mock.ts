@@ -1,5 +1,7 @@
 import type { IntegrationKind } from '@dashboard/contracts';
 
+export type IntegrationStatus = 'connected' | 'offline' | 'unknown';
+
 export interface IntegrationConfigMock {
   id: string;
   kind: IntegrationKind;
@@ -9,6 +11,8 @@ export interface IntegrationConfigMock {
   apiKey?: string;
   username?: string;
   password?: string;
+  /** Last connectivity result; 'unknown' when never tested. Mock stands in for integrations.test API. */
+  status: IntegrationStatus;
   createdAt: string;
   updatedAt: string;
 }
@@ -21,6 +25,7 @@ export const integrationsMock: IntegrationConfigMock[] = [
     url: 'http://192.168.10.197',
     port: 8989,
     apiKey: '1b69876fabd54fad8a796046009f9dc2',
+    status: 'connected',
     createdAt: '2026-09-01T10:00:00.000Z',
     updatedAt: '2026-10-15T12:00:00.000Z',
   },
@@ -31,6 +36,7 @@ export const integrationsMock: IntegrationConfigMock[] = [
     url: 'http://192.168.10.197',
     port: 7878,
     apiKey: 'f2e083f421ac41859b7797a0a1b181b1',
+    status: 'connected',
     createdAt: '2026-09-01T10:00:00.000Z',
     updatedAt: '2026-10-15T12:00:00.000Z',
   },
@@ -41,6 +47,7 @@ export const integrationsMock: IntegrationConfigMock[] = [
     url: 'http://192.168.10.197',
     port: 9696,
     apiKey: 'c0b8853885b143f59dce08036e367abe',
+    status: 'connected',
     createdAt: '2026-09-05T14:00:00.000Z',
     updatedAt: '2026-10-18T23:00:00.000Z',
   },
@@ -52,6 +59,7 @@ export const integrationsMock: IntegrationConfigMock[] = [
     port: 8080,
     username: 'FudouRyouho',
     password: 'NOloliNOlife',
+    status: 'offline',
     createdAt: '2026-09-01T10:00:00.000Z',
     updatedAt: '2026-10-15T12:00:00.000Z',
   },
@@ -62,6 +70,7 @@ export const integrationsMock: IntegrationConfigMock[] = [
     url: 'http://192.168.10.125',
     port: 8096,
     apiKey: 'f4faf35855b340f4b6378ecea12df42a',
+    status: 'connected',
     createdAt: '2026-09-02T11:00:00.000Z',
     updatedAt: '2026-10-10T09:00:00.000Z',
   },
@@ -71,6 +80,7 @@ export const integrationsMock: IntegrationConfigMock[] = [
     name: 'Docker Servidor (197)',
     url: 'http://192.168.10.197',
     port: 2375,
+    status: 'connected',
     createdAt: '2026-09-01T10:00:00.000Z',
     updatedAt: '2026-10-15T12:00:00.000Z',
   },
@@ -80,6 +90,7 @@ export const integrationsMock: IntegrationConfigMock[] = [
     name: 'Docker Local (125)',
     url: 'http://192.168.10.125',
     port: 2375,
+    status: 'offline',
     createdAt: '2026-09-01T10:00:00.000Z',
     updatedAt: '2026-10-15T12:00:00.000Z',
   },
@@ -89,6 +100,7 @@ export const integrationsMock: IntegrationConfigMock[] = [
     name: 'Prometheus Metrics',
     url: 'http://192.168.10.197',
     port: 9090,
+    status: 'unknown',
     createdAt: '2026-09-01T10:00:00.000Z',
     updatedAt: '2026-10-15T12:00:00.000Z',
   },

@@ -14,12 +14,12 @@ export const downloadsMock: DownloadClientJobsAndStatus = {
     {
       type: 'torrent',
       id: 'a1b2c3d4e5f67890123456789abcdef012345678',
-      name: 'Spider-Man.Across.the.Spider-Verse.2023.2160p.UHD.Remux.DV.HDR10.Atmos-FraMeSToR',
+      name: 'Avatar.Aang.El.Ultimo.Aire.2026.2160p.UHD.Remux.DV.HDR10.Atmos-FraMeSToR',
       size: 58_450_000_000, // 58.4 GB
       sent: 12_300_000_000,
       downSpeed: 28_400_000, // 28.4 MB/s
       upSpeed: 2_100_000,
-      time: 640, // 10 min aprox restantes
+      time: 640, // ~10 min approx restantes
       added: 1729300000,
       state: 'leeching',
       progress: 0.68,
@@ -28,7 +28,7 @@ export const downloadsMock: DownloadClientJobsAndStatus = {
     {
       type: 'torrent',
       id: 'b2c3d4e5f67890123456789abcdef0123456789a',
-      name: 'Frieren.Beyond.Journeys.End.S02E04.1080p.CR.WEB-DL.DDP2.0.H.264-VARYG',
+      name: 'Bleach.S17E41.THE.BLADE.1080p.CR.WEB-DL.DDP2.0.H.264-VARYG',
       size: 1_450_000_000, // 1.45 GB
       sent: 450_000_000,
       downSpeed: 16_850_000, // 16.8 MB/s
