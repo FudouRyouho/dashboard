@@ -17,10 +17,7 @@ import {
 export class PrometheusNormalizer {
   /**
    * Normalize all query results into PrometheusNormalized structure.
-   *
-   * @param queryResults - Map of query key to Prometheus response
-   * @param instances - List of discovered instances
-   * @returns Array of normalized data per server
+   * Input: raw Prometheus responses keyed by query; output: one entry per discovered instance.
    */
   static normalize(
     queryResults: Map<string, unknown>,
@@ -96,9 +93,16 @@ export class PrometheusNormalizer {
     const netRx = this.extractMetric(queryResults, 'networkRx', instance);
     const netTx = this.extractMetric(queryResults, 'networkTx', instance);
     if (netRx || netTx) {
+      // Preserve the labels returned by extractMetric (device, instance, ...)
+      // so toServerMetrics can group by the real NIC instead of collapsing
+      // every interface to a single 'unknown' row. Fallback keeps instance
+      // available when neither extract produced labels.
       metrics.push({
         name: 'network',
-        labels: { instance },
+        labels: {
+          ...netRx?.labels ?? netTx?.labels ?? { instance },
+          instance,
+        },
         values: [netRx?.values[0] ?? null, netTx?.values[0] ?? null],
         timestamps: [
           netRx?.timestamps[0] ?? null,

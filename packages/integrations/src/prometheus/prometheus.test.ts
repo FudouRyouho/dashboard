@@ -315,6 +315,85 @@ describe('Prometheus Integration - Normalizer', () => {
 
     expect(result).toEqual([]);
   });
+
+  test('toServerMetrics preserves network device label from extracted metric (eth1, not unknown)', () => {
+    // A2: the network series must keep the real device label that
+    // extractMetric returns (result.metric), instead of collapsing to
+    // { instance } and then toServerMetrics grouping by device||'unknown'.
+    const mockQueryResults = new Map<string, unknown>([
+      [
+        'networkRx',
+        {
+          data: {
+            resultType: 'vector',
+            result: [
+              {
+                metric: {
+                  instance: '10.0.0.1:9100',
+                  device: 'eth1',
+                },
+                value: [1234567890, '1000'],
+              },
+            ],
+          },
+        },
+      ],
+      [
+        'networkTx',
+        {
+          data: {
+            resultType: 'vector',
+            result: [
+              {
+                metric: {
+                  instance: '10.0.0.1:9100',
+                  device: 'eth1',
+                },
+                value: [1234567890, '500'],
+              },
+            ],
+          },
+        },
+      ],
+    ]);
+
+    const instances = ['10.0.0.1:9100'];
+    const normalized = PrometheusNormalizer.normalize(mockQueryResults, instances);
+
+    expect(normalized).toHaveLength(1);
+    const server = PrometheusNormalizer.toServerMetrics(normalized[0]!);
+
+    expect(server.network).toHaveLength(1);
+    expect(server.network[0]!.device).toBe('eth1');
+    expect(server.network[0]!.rxBytesPerSec).toBe(1000);
+    expect(server.network[0]!.txBytesPerSec).toBe(500);
+  });
+
+  test('toServerMetrics keeps instance label available on network series', () => {
+    const mockQueryResults = new Map<string, unknown>([
+      [
+        'networkRx',
+        {
+          data: {
+            resultType: 'vector',
+            result: [
+              {
+                metric: { instance: '10.0.0.1:9100', device: 'eth0' },
+                value: [1234567890, '1'],
+              },
+            ],
+          },
+        },
+      ],
+    ]);
+
+    const instances = ['10.0.0.1:9100'];
+    const normalized = PrometheusNormalizer.normalize(mockQueryResults, instances);
+    const netMetric = normalized[0]!.metrics.find((m) => m.name === 'network');
+    expect(netMetric).toBeTruthy();
+    expect(netMetric!.labels.instance).toBe('10.0.0.1:9100');
+    expect(netMetric!.labels.device).toBe('eth0');
+  });
 });
 
 describe('Prometheus Integration - Queries', () => {
