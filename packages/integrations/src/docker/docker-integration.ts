@@ -158,7 +158,7 @@ export class DockerIntegration
     params.set('timestamps', String(options?.timestamps ?? false));
     params.set('follow', String(options?.follow ?? false));
 
-    const raw = await this.fetchDocker<Uint8Array>(
+    const raw = await this.fetchRaw(
       `/containers/${id}/logs?${params.toString()}`,
       { headers: { Accept: 'application/vnd.docker.raw-stream' } },
     );

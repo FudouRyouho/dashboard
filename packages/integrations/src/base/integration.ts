@@ -128,6 +128,46 @@ export abstract class Integration {
     return (await res.json()) as T;
   }
 
+  /**
+   * Fetch raw bytes from the API (for non-JSON responses like Docker logs).
+   */
+  protected async fetchRaw(
+    url: URL | string,
+    init?: RequestInit,
+  ): Promise<Uint8Array> {
+    const timeoutSignal = AbortSignal.timeout(this.timeoutMs);
+    const headers = new Headers(init?.headers);
+    headers.set('Referer', this.baseUrl);
+    headers.set('Origin', this.baseUrl);
+    const fullUrl = new URL(String(url), this.baseUrl);
+    const res = await fetch(fullUrl, {
+      ...init,
+      headers,
+      signal: init?.signal
+        ? AbortSignal.any([init.signal, timeoutSignal])
+        : timeoutSignal,
+    });
+    if (!res.ok) {
+      let errorBody: unknown;
+      try {
+        errorBody = await res.json();
+      } catch {
+        // Ignore
+      }
+      const error = IntegrationError.fromHttpResponse(res.status, res.statusText);
+      if (errorBody) {
+        throw new IntegrationError(
+          error.reason,
+          `${error.message}: ${JSON.stringify(errorBody)}`,
+          error.httpStatus,
+          { cause: errorBody },
+        );
+      }
+      throw error;
+    }
+    return new Uint8Array(await res.arrayBuffer());
+  }
+
   private createUrl(
     baseUrl: string,
     path: `/${string}`,
