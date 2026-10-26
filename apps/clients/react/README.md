@@ -8,12 +8,25 @@ Cliente web del dashboard. Vite 8 + React 19 + Mantine 9.
 
 ## Estado
 
-UI sobre **mock data** (`src/mock/calendar.mock.ts`). El mock tipa contra el contrato real, así que la capa presentacional ya está escrita contra la forma definitiva de los datos.
+UI sobre **mock data**:
+
+  - calendar.mock.ts
+  - docker.mock.ts
+  - downloads.mock.ts
+  - integrations.mock.ts  (shape = integrationOutputSchema, 7 kinds, sin status/secrets)
+  - media-releases.mock.ts (shape = {integration, status, releases}[])
+  - system-health.mock.ts  (con name/status/lastScrapeTime del normalizer)
 
 ## Estructura
 
 - `shell/` — layout: header, tabs, cambio de tema
-- `sections/` — una carpeta por sección del dashboard
+- `sections/` — una carpeta por sección del dashboard; cada una exporta solo `XxxBase` como puerta de entrada
+  - `calendar/` — `CalendarBase`, `CalendarDay`, `CalendarEventList`, `calendar-colors.ts`
+  - `docker/` — `DockerSectionBase`, `DockerContainerTable`, `DockerContainerRow`, `DockerContainerContextMenu`, `DockerStatsBar`, `docker-colors.ts`, `docker-format.ts`, `types.ts`
+  - `downloads/` — `DownloadsSectionBase`, `DownloadTable`, `TorrentRow`, `TorrentNameCell`, `DownloadContextMenu`, `StatsBar`, `FooterBar`, `StateFilter`, `downloads-colors.ts`, `format.ts`
+  - `integrations/` — `IntegrationsBase`, `IntegrationCard`, `IntegrationEditModal`, `useIntegrationsState.ts`
+  - `media-releases/` — `MediaReleasesBase`, `MediaReleaseItem`, `media-releases-colors.ts`, `OverflowBadge`, `types.ts`
+  - `system-health/` — `SystemHealthBase`, `CpuMemoryRings`, `MetricRing`, `DiskUsageList`, `NetworkInterfacesList`, `SensorList`, `NetworkSummaryBar`, `health-colors.ts`, `format.ts`
 - `mock/` — datos de prueba, tipados contra `@dashboard/integrations`
 - `theme.ts` — tema de Mantine
 

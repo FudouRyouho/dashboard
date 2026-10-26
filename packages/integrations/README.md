@@ -1,6 +1,6 @@
 # @dashboard/integrations
 
-Una clase por servicio externo, cada una se comunica con su propia 'integracion' retornando el contrato de `@dashboard/contracts`, ya alidado.
+Una clase por servicio externo, cada una se comunica con su propia 'integracion' retornando el contrato de `@dashboard/contracts`, ya validado.
 
 ## Estructura
 
@@ -15,8 +15,13 @@ Una clase por servicio externo, cada una se comunica con su propia 'integracion'
 - `sonarr/`, `radarr/` — la integración y el schema Zod de su respuesta
 - `jellyfin/` — integración Jellyfin, schemas Zod en `schemas/`
 - `prometheus/` — integración Prometheus (métricas del sistema), schemas Zod en `schemas/`
+  - `normalizer.ts` — normaliza respuestas crudas de Prometheus a `PrometheusNormalized`; preserva etiquetas `device` de red.
 - `download-client/` — integración qBittorrent, schemas Zod en `schemas/`
 - `docker/` — integración nativa Docker Engine API (puerto 2375), schemas Zod en `schemas/`
+
+## systemHealthRouter (server)
+
+`getAllMetrics` / `getMetrics` tipan `PrometheusNormalized[]` / `ServerMetrics[]`.
 
 ## Agregar una integración
 

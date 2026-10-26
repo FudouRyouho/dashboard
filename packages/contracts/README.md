@@ -8,7 +8,7 @@ contrato sin agregarle campos.
 
 - `kinds.ts` — `integrationKinds` y el tipo `IntegrationKind`
 - `calendar.ts` — `CalendarEvent`, `CalendarImage`, `CalendarLink` y el grupo por integración
-- `integrations.ts` — schemas de integración (configuración, instancias)
+- `integrations.ts` — schemas de integración (configuración, instancias); exporta `type IntegrationOutput = z.infer<typeof integrationOutputSchema>`
 - `download-client.ts` — tipos y schemas de trabajos de descarga
 - `media-releases.ts` — tipos y schemas de liberaciones multimedia
 - `validation.ts` — helpers de validación Zod compartidos
@@ -30,3 +30,5 @@ cuándo es, por el otro cómo salió el último intento.
 | `outcome: success` | —      | fresh         |
 | `outcome: failure` | hay    | outdated      |
 | `outcome: failure` | `null` | missing       |
+
+> **Nota:** `ResultStatus` se consume en `mediaReleases.getLatest` y `calendar.getEvents`.
