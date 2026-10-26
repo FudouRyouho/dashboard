@@ -1,4 +1,19 @@
-import type { CalendarEvent } from '@dashboard/contracts';
+import type { CalendarEvent, IntegrationKind, ResultStatus } from '@dashboard/contracts';
+
+/**
+ * One group of `calendar.getEvents`: `{ integration, status, events }`, where
+ * `integration` is `integrationPublicSchema` (`integration.publicIntegration`).
+ */
+interface CalendarEventsGroupMock {
+  integration: {
+    id: string;
+    kind: IntegrationKind;
+    name: string;
+    url: string;
+  };
+  events: CalendarEvent[];
+  status: ResultStatus;
+}
 
 export const calendarEvents: CalendarEvent[] = [
   {
@@ -4205,5 +4220,32 @@ export const calendarEvents: CalendarEvent[] = [
         isDark: false,
       },
     ],
+  },
+];
+
+/**
+ * `calendar.getEvents` answers `{ integration, status, events }` per
+ * calendar-capable integration (apps/server/src/routers/calendar.ts:34-38).
+ * All the events above come from the Sonarr instance, so they ride one group;
+ * `status` mirrors a snapshot task that ran and covered the month range the
+ * events span.
+ */
+export const calendarGroupsMock: CalendarEventsGroupMock[] = [
+  {
+    integration: {
+      id: 'sonarr-main',
+      kind: 'sonarr',
+      name: 'Sonarr (Series)',
+      url: 'http://192.168.10.197:8989',
+    },
+    status: {
+      data: {
+        obtainedAt: '2026-08-01T12:00:00.000Z',
+        from: '2026-07-01T00:00:00.000Z',
+        to: '2026-10-31T23:59:59.000Z',
+      },
+      attempt: { outcome: 'success', at: '2026-08-01T12:00:00.000Z' },
+    },
+    events: calendarEvents,
   },
 ];

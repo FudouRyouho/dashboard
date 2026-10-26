@@ -1,16 +1,29 @@
 import { Calendar } from '@mantine/dates';
 import { useMemo, useState } from 'react';
 import { CalendarDay } from './CalendarDay';
-import { type CalendarEvent } from '@dashboard/contracts';
+import type { CalendarEvent, IntegrationKind, ResultStatus } from '@dashboard/contracts';
 import { splitMultiDayEvents, toLocalDay } from '@dashboard/core';
 import { integrationIndicatorColor } from './calendar-colors';
+
+interface CalendarGroupProps {
+  /** `integrationPublicSchema` (`integration.publicIntegration`); `kind` feeds the source dot. */
+  integration: {
+    id: string;
+    kind: IntegrationKind;
+    name: string;
+    url: string;
+  };
+  /** Snapshot facts of the calendar task; no slot for it in the month grid yet. */
+  status: ResultStatus;
+  events: CalendarEvent[];
+}
 
 interface CalendarBaseProps {
   /**
    * Form del response real (calendar.getEvents): eventos agrupados por
-   * integracion. `kind` alimenta el dot de "app de origen" vía definitions.
+   * integracion, cada grupo con su propio `status`.
    */
-  groups: { kind: string; events: CalendarEvent[] }[];
+  groups: CalendarGroupProps[];
 }
 
 export function CalendarBase({ groups }: CalendarBaseProps) {
@@ -46,7 +59,7 @@ export function CalendarBase({ groups }: CalendarBaseProps) {
         const kind =
           groups.find((g) =>
             g.events.some((e) => e.id === eventsForDate[0]?.id),
-          )?.kind ?? '';
+          )?.integration.kind ?? '';
         return (
           <CalendarDay
             date={tileDate}

@@ -14,8 +14,12 @@ import {
 import { IconPin } from '@tabler/icons-react';
 import { type CalendarEvent } from '@dashboard/contracts';
 
-export function CalendarEventList({ events }: { events: CalendarEvent[] }) {
+export function CalendarEventList({ events: unsortedEvents }: { events: CalendarEvent[] }) {
   const { colorScheme } = useMantineColorScheme();
+
+  const sortedEvents = [...unsortedEvents].sort((a, b) =>
+    new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  );
 
   return (
     <ScrollArea
@@ -28,7 +32,7 @@ export function CalendarEventList({ events }: { events: CalendarEvent[] }) {
       }}
     >
       <Stack>
-        {events.map((event) => (
+        {sortedEvents.map((event) => (
           <Group key={`event-${event.id}`} align="start" wrap="nowrap">
             {event.image !== null && (
               <Box pos="relative">
