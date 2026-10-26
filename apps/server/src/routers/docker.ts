@@ -9,11 +9,6 @@ import {
 } from '@dashboard/integrations';
 import { dockerSnapshot } from '../tasks/task-ids';
 
-const dockerContainerInput = z.object({
-  integrationId: z.string().min(1),
-  ids: z.array(z.string().min(1)),
-});
-
 function emptyStats(): DockerDashboardStats {
   return {
     containers: { running: 0, stopped: 0, healthy: 0, unhealthy: 0, total: 0 },
@@ -97,8 +92,85 @@ export const dockerRouter = createTRPCRouter({
       });
     }),
 
+  // New: Get detailed container list for an integration
+  getContainerList: publicProcedure
+    .input(z.object({ integrationId: z.string().min(1) }))
+    .output(z.array(z.record(z.unknown())))
+    .query(async ({ ctx, input }) => {
+      const manager = getDockerIntegration(ctx.integrations, input.integrationId);
+      if (!manager) {
+        throw toIntegrationTRPCError(
+          new Error('Docker integration not found'),
+          'Docker operation failed',
+        );
+      }
+      return manager.getContainersAsync();
+    }),
+
+  // New: Get container logs
+  getContainerLogs: publicProcedure
+    .input(z.object({
+      integrationId: z.string().min(1),
+      containerId: z.string().min(1),
+      tail: z.union([z.number().positive(), z.literal('all')]).default(100),
+      stdout: z.boolean().default(true),
+      stderr: z.boolean().default(true),
+      since: z.number().optional(),
+      until: z.number().optional(),
+      timestamps: z.boolean().default(false),
+      follow: z.boolean().default(false),
+    }))
+    .output(z.array(z.string()))
+    .query(async ({ ctx, input }) => {
+      const manager = getDockerIntegration(ctx.integrations, input.integrationId);
+      if (!manager) {
+        throw toIntegrationTRPCError(
+          new Error('Docker integration not found'),
+          'Docker operation failed',
+        );
+      }
+      const { integrationId, containerId, ...logOptions } = input;
+      return manager.getContainerLogsAsync(containerId, logOptions);
+    }),
+
+  // New: Get container stats
+  getContainerStats: publicProcedure
+    .input(z.object({
+      integrationId: z.string().min(1),
+      containerId: z.string().min(1),
+    }))
+    .output(z.unknown())
+    .query(async ({ ctx, input }) => {
+      const manager = getDockerIntegration(ctx.integrations, input.integrationId);
+      if (!manager) {
+        throw toIntegrationTRPCError(
+          new Error('Docker integration not found'),
+          'Docker operation failed',
+        );
+      }
+      return manager.getContainerStatsAsync(input.containerId);
+    }),
+
+  // New: Get system stats
+  getSystemStats: publicProcedure
+    .input(z.object({ integrationId: z.string().min(1) }))
+    .output(z.unknown())
+    .query(async ({ ctx, input }) => {
+      const manager = getDockerIntegration(ctx.integrations, input.integrationId);
+      if (!manager) {
+        throw toIntegrationTRPCError(
+          new Error('Docker integration not found'),
+          'Docker operation failed',
+        );
+      }
+      return manager.getSystemStatsAsync();
+    }),
+
   startAll: publicProcedure
-    .input(dockerContainerInput)
+    .input(z.object({
+      integrationId: z.string().min(1),
+      ids: z.array(z.string().min(1)),
+    }))
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const manager = getDockerIntegration(ctx.integrations, input.integrationId);
@@ -118,7 +190,10 @@ export const dockerRouter = createTRPCRouter({
     }),
 
   stopAll: publicProcedure
-    .input(dockerContainerInput)
+    .input(z.object({
+      integrationId: z.string().min(1),
+      ids: z.array(z.string().min(1)),
+    }))
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const manager = getDockerIntegration(ctx.integrations, input.integrationId);
@@ -138,7 +213,10 @@ export const dockerRouter = createTRPCRouter({
     }),
 
   restartAll: publicProcedure
-    .input(dockerContainerInput)
+    .input(z.object({
+      integrationId: z.string().min(1),
+      ids: z.array(z.string().min(1)),
+    }))
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const manager = getDockerIntegration(ctx.integrations, input.integrationId);
@@ -158,7 +236,10 @@ export const dockerRouter = createTRPCRouter({
     }),
 
   removeAll: publicProcedure
-    .input(dockerContainerInput)
+    .input(z.object({
+      integrationId: z.string().min(1),
+      ids: z.array(z.string().min(1)),
+    }))
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const manager = getDockerIntegration(ctx.integrations, input.integrationId);
@@ -177,3 +258,4 @@ export const dockerRouter = createTRPCRouter({
       );
     }),
 });
+

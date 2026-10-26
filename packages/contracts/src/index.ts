@@ -4,5 +4,6 @@ export * from './kinds';
 export * from './data-view';
 export * from './media-releases';
 export * from './integrations';
+export * from './docker';
 export * from './validation';
 export * from './download-client';

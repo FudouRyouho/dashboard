@@ -1,4 +1,7 @@
 import { Integration } from './integration';
+import type { DockerContainer, DockerSystemStats, DockerContainerStats, DockerContainerLogOptions } from '@dashboard/contracts';
+
+export type { DockerContainer, DockerSystemStats, DockerContainerStats, DockerContainerLogOptions };
 
 export interface DockerDashboardStats {
   containers: {
@@ -30,6 +33,10 @@ export interface IDockerIntegration {
   getDashboardStatsAsync(options?: {
     signal?: AbortSignal;
   }): Promise<DockerDashboardStats>;
+  getContainersAsync(): Promise<DockerContainer[]>;
+  getContainerLogsAsync(id: string, options?: DockerContainerLogOptions): Promise<string[]>;
+  getContainerStatsAsync(id: string): Promise<DockerContainerStats>;
+  getSystemStatsAsync(): Promise<DockerSystemStats>;
   startContainerAsync(id: string): Promise<void>;
   stopContainerAsync(id: string): Promise<void>;
   restartContainerAsync(id: string): Promise<void>;

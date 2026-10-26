@@ -1,16 +1,10 @@
 import { Integration } from '../base/integration';
-import { IDockerIntegration, DockerDashboardStats } from '../base/docker';
+import { IDockerIntegration, DockerDashboardStats, DockerContainer, DockerSystemStats, DockerContainerStats, DockerContainerLogOptions } from '../base/docker';
 import { z } from 'zod';
 import {
   dockerContainerSchema,
   dockerVolumeSchema,
   dockerNetworkSchema,
-} from './schemas/docker-dashboard';
-
-export type {
-  DockerContainer,
-  DockerVolume,
-  DockerNetwork,
 } from './schemas/docker-dashboard';
 
 export class DockerIntegration
@@ -144,5 +138,65 @@ export class DockerIntegration
 
   async removeContainerAsync(id: string): Promise<void> {
     await this.fetchDocker(`/containers/${id}`, { method: 'DELETE' });
+  }
+
+
+  async getContainersAsync(): Promise<DockerContainer[]> {
+    return this.fetchDocker<DockerContainer[]>('/containers/json?all=true');
+  }
+
+  async getContainerLogsAsync(
+    id: string,
+    options?: DockerContainerLogOptions,
+  ): Promise<string[]> {
+    const params = new URLSearchParams();
+    params.set('stdout', String(options?.stdout ?? true));
+    params.set('stderr', String(options?.stderr ?? true));
+    params.set('tail', options?.tail === 'all' ? 'all' : String(options?.tail ?? 100));
+    if (options?.since) params.set('since', String(options.since));
+    if (options?.until) params.set('until', String(options.until));
+    params.set('timestamps', String(options?.timestamps ?? false));
+    params.set('follow', String(options?.follow ?? false));
+
+    const raw = await this.fetchDocker<Uint8Array>(
+      `/containers/${id}/logs?${params.toString()}`,
+      { headers: { Accept: 'application/vnd.docker.raw-stream' } },
+    );
+
+    // Parse Docker's raw stream format (header + payload per frame)
+    return this.parseDockerLogStream(raw);
+  }
+
+  private parseDockerLogStream(buffer: Uint8Array): string[] {
+    const lines: string[] = [];
+    let offset = 0;
+    const decoder = new TextDecoder();
+    while (offset < buffer.length) {
+      // Docker log frame: [stream_type][3 bytes reserved][4 bytes size][payload]
+      // streamType = buffer[offset]  // stdout=1, stderr=2
+      const size = new DataView(
+        buffer.buffer,
+        buffer.byteOffset + offset + 4,
+        4,
+      ).getUint32(0, false);
+      offset += 8;
+      if (offset + size > buffer.length) break;
+      const payload = decoder.decode(
+        buffer.subarray(offset, offset + size),
+      );
+      if (payload.trim()) lines.push(payload.trim());
+      offset += size;
+    }
+    return lines;
+  }
+
+  async getContainerStatsAsync(id: string): Promise<DockerContainerStats> {
+    return this.fetchDocker<DockerContainerStats>(
+      `/containers/${id}/stats?stream=false`,
+    );
+  }
+
+  async getSystemStatsAsync(): Promise<DockerSystemStats> {
+    return this.fetchDocker<DockerSystemStats>('/info');
   }
 }
