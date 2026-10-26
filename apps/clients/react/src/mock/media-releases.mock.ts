@@ -1,26 +1,19 @@
-import type { MediaReleaseEvent } from '@dashboard/contracts';
+import type { MediaReleaseEvent, ResultStatus } from '@dashboard/contracts';
 
+import type { MediaReleasesGroupProps } from '../sections/media-releases/types';
 
-export const mediaReleasesMock: MediaReleaseEvent[] = [
-  {
-    type: 'movie',
-    id: 'radarr:movie:82',
-    title: 'Avatar: Aang, El último Maestro Aire',
-    description:
-      'Aang, el último Maestro Aire sobrevive a un ataque a su templo y despierta cien años después, donde el mundo ha sido destruido por la guerra del Fuego.',
-    releaseDate: '2026-07-24T00:00:00.000Z',
-    runtimeMs: 1_740_000_000, // ~290 min
-    studio: 'Paramount Pictures / Nickelodeon',
-    rating: 8.1,
-    genres: ['Animación', 'Aventura', 'Acción', 'Fantasía'],
-    imageUrls: {
-      poster:
-        'https://image.tmdb.org/t/p/original/3sgnSfNT27Bx5O5ukr7B26mhEQq.jpg',
-      backdrop:
-        'https://image.tmdb.org/t/p/original/ezbrL1dMymKQZw7mDEWa2ZTzN7d.jpg',
-    },
-    href: 'http://192.168.10.197:7878/movie/avatar-aang-el-ultimo-maestro-aire',
+/** Every group stands for the same thing: a snapshot task that ran and got data. */
+const SNAPSHOT: ResultStatus = {
+  data: {
+    obtainedAt: '2026-10-19T12:00:00.000Z',
+    from: '2026-10-12T00:00:00.000Z',
+    to: '2026-10-26T00:00:00.000Z',
   },
+  attempt: { outcome: 'success', at: '2026-10-19T12:00:00.000Z' },
+};
+
+/** Releases the Sonarr instance would emit (id prefix `sonarr:`). */
+const sonarrReleases: MediaReleaseEvent[] = [
   {
     type: 'episode',
     id: 'sonarr:episode:15841',
@@ -63,6 +56,33 @@ export const mediaReleasesMock: MediaReleaseEvent[] = [
     },
     href: 'http://192.168.10.197:8989/series/cyberpunk-edgerunners',
   },
+];
+
+/** Releases the Radarr instance would emit (id prefix `radarr:`). */
+const radarrReleases: MediaReleaseEvent[] = [
+  {
+    type: 'movie',
+    id: 'radarr:movie:82',
+    title: 'Avatar: Aang, El último Maestro Aire',
+    description:
+      'Aang, el último Maestro Aire sobrevive a un ataque a su templo y despierta cien años después, donde el mundo ha sido destruido por la guerra del Fuego.',
+    releaseDate: '2026-07-24T00:00:00.000Z',
+    runtimeMs: 1_740_000_000, // ~290 min
+    studio: 'Paramount Pictures / Nickelodeon',
+    rating: 8.1,
+    genres: ['Animación', 'Aventura', 'Acción', 'Fantasía'],
+    imageUrls: {
+      poster:
+        'https://image.tmdb.org/t/p/original/3sgnSfNT27Bx5O5ukr7B26mhEQq.jpg',
+      backdrop:
+        'https://image.tmdb.org/t/p/original/ezbrL1dMymKQZw7mDEWa2ZTzN7d.jpg',
+    },
+    href: 'http://192.168.10.197:7878/movie/avatar-aang-el-ultimo-maestro-aire',
+  },
+];
+
+/** Releases the Jellyfin instance would emit (id prefix `jellyfin:`). */
+const jellyfinReleases: MediaReleaseEvent[] = [
   {
     type: 'series',
     id: 'jellyfin:series:3c439490c8eccafcea6a492ecef6c2b8',
@@ -82,5 +102,29 @@ export const mediaReleasesMock: MediaReleaseEvent[] = [
       backdrop: null,
     },
     href: 'http://192.168.10.125:8096/web/index.html#!/details?id=3c439490c8eccafcea6a492ecef6c2b8',
+  },
+];
+
+/**
+ * One entry per media-releases integration, matching the real
+ * `mediaReleases.getLatest` shape: `{ integration, status, releases }`.
+ * Group order keeps the order the old flat list had by source (radarr, sonarr,
+ * jellyfin) and the ids/names match `integrations.mock`; card data is unchanged.
+ */
+export const mediaReleasesMock: MediaReleasesGroupProps[] = [
+  {
+    integration: { id: 'radarr-main', kind: 'radarr', name: 'Radarr (Películas)', url: 'http://192.168.10.197:7878' },
+    status: SNAPSHOT,
+    releases: radarrReleases,
+  },
+  {
+    integration: { id: 'sonarr-main', kind: 'sonarr', name: 'Sonarr (Series)', url: 'http://192.168.10.197:8989' },
+    status: SNAPSHOT,
+    releases: sonarrReleases,
+  },
+  {
+    integration: { id: 'jellyfin-main', kind: 'jellyfin', name: 'Jellyfin (Media Server)', url: 'http://192.168.10.125:8096' },
+    status: SNAPSHOT,
+    releases: jellyfinReleases,
   },
 ];

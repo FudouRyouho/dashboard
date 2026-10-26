@@ -4,15 +4,15 @@ export interface DockerContainerItem {
   image: string;
   command: string;
   created: number;
-  state: 'running' | 'exited' | 'paused' | 'restarting';
+  state: 'exited' | 'paused' | 'restarting' | 'running';
   status: string;
-  health?: 'healthy' | 'unhealthy' | 'starting' | 'none';
-  ports: Array<{
+  health?: 'healthy' | 'none' | 'starting' | 'unhealthy';
+  ports: {
     ip?: string;
     privatePort: number;
     publicPort?: number;
     type: string;
-  }>;
+  }[];
 }
 
 export interface DockerIntegrationMockData {
