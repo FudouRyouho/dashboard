@@ -9,14 +9,14 @@ export const systemHealthMock: ServerMetrics[] = [
     },
     memory: {
       totalBytes: 33_689_976_832,    // 32 GB
-      availableBytes: 18_450_123_456, // ~18.4 GB available
+      availableBytes: 18_450_123_456,
       usagePercent: 45.2,
     },
     disks: [
       {
         mountpoint: '/',
         totalBytes: 1_900_000_000_000,   // 1.9 TB
-        availableBytes: 1_250_000_000_000, // 1.25 TB free
+        availableBytes: 1_250_000_000_000,
         usagePercent: 34.2,
         readBytesPerSec: 125_000,
         writeBytesPerSec: 2_400_000,
@@ -26,7 +26,7 @@ export const systemHealthMock: ServerMetrics[] = [
       {
         mountpoint: '/mnt/media',
         totalBytes: 16_000_000_000_000,   // 16 TB
-        availableBytes: 3_800_000_000_000, // 3.8 TB free
+        availableBytes: 3_800_000_000_000,
         usagePercent: 76.25,
         readBytesPerSec: 28_000_000,
         writeBytesPerSec: 45_000_000,
@@ -37,8 +37,8 @@ export const systemHealthMock: ServerMetrics[] = [
     network: [
       {
         device: 'eth0',
-        rxBytesPerSec: 32_500_000, // ~32.5 MB/s incoming (descargas)
-        txBytesPerSec: 4_100_000,  // ~4.1 MB/s outgoing (seeding)
+        rxBytesPerSec: 32_500_000, // ~32.5 MB/s incoming
+        txBytesPerSec: 4_100_000,  // ~4.1 MB/s outgoing
       },
     ],
     sensors: [

@@ -1,4 +1,6 @@
 import { createTheme, type MantineColorsTuple } from '@mantine/core';
+import type { DefaultMantineColor, MantineColorShade } from "@mantine/core";
+import { DEFAULT_THEME } from "@mantine/core";
 
 const brandColor: MantineColorsTuple = [
   '#ffe9ff',
@@ -21,3 +23,6 @@ export const theme = createTheme({
   fontFamily: 'Inter, sans-serif',
   defaultRadius: 'md',
 });
+
+export const getMantineColor = (color: DefaultMantineColor, shade: MantineColorShade) =>
+  DEFAULT_THEME.colors[color]?.[shade] ?? "#fff";

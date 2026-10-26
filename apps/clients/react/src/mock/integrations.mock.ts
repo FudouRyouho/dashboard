@@ -1,95 +1,93 @@
-import type { IntegrationKind } from '@dashboard/contracts';
+import { integrationOutputSchema, type IntegrationOutput } from '@dashboard/contracts';
 
-export interface IntegrationConfigMock {
-  id: string;
-  kind: IntegrationKind;
-  name: string;
-  url: string;
-  port?: number;
-  apiKey?: string;
-  username?: string;
-  password?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+/**
+ * Mock for `integrations.list` — shape matches `integrationOutputSchema`
+ * exactly (packages/contracts/src/integrations.ts:82-91). The server NEVER
+ * returns secrets, so neither does this mock. There is no `status` field in
+ * the contract (the test-connection procedure does not exist yet), so the
+ * previous fake `status` is gone: the UI must not pretend to know it.
+ */
+export type { IntegrationOutput };
 
-export const integrationsMock: IntegrationConfigMock[] = [
+export const integrationsMock: IntegrationOutput[] = [
   {
     id: 'sonarr-main',
     kind: 'sonarr',
     name: 'Sonarr (Series)',
     url: 'http://192.168.10.197',
+    externalUrl: null,
     port: 8989,
-    apiKey: '1b69876fabd54fad8a796046009f9dc2',
-    createdAt: '2026-09-01T10:00:00.000Z',
-    updatedAt: '2026-10-15T12:00:00.000Z',
+    createdAt: new Date('2026-09-01T10:00:00.000Z'),
+    updatedAt: new Date('2026-10-15T12:00:00.000Z'),
   },
   {
     id: 'radarr-main',
     kind: 'radarr',
     name: 'Radarr (Películas)',
     url: 'http://192.168.10.197',
+    externalUrl: null,
     port: 7878,
-    apiKey: 'f2e083f421ac41859b7797a0a1b181b1',
-    createdAt: '2026-09-01T10:00:00.000Z',
-    updatedAt: '2026-10-15T12:00:00.000Z',
+    createdAt: new Date('2026-09-01T10:00:00.000Z'),
+    updatedAt: new Date('2026-10-15T12:00:00.000Z'),
   },
   {
     id: 'prowlarr-main',
     kind: 'prowlarr',
     name: 'Prowlarr (Indexadores)',
     url: 'http://192.168.10.197',
+    externalUrl: null,
     port: 9696,
-    apiKey: 'c0b8853885b143f59dce08036e367abe',
-    createdAt: '2026-09-05T14:00:00.000Z',
-    updatedAt: '2026-10-18T23:00:00.000Z',
+    createdAt: new Date('2026-09-05T14:00:00.000Z'),
+    updatedAt: new Date('2026-10-18T23:00:00.000Z'),
   },
   {
     id: 'qbittorrent-main',
     kind: 'qbittorrent',
     name: 'qBittorrent (Descargas)',
     url: 'http://192.168.10.197',
+    externalUrl: null,
     port: 8080,
-    username: 'FudouRyouho',
-    password: 'NOloliNOlife',
-    createdAt: '2026-09-01T10:00:00.000Z',
-    updatedAt: '2026-10-15T12:00:00.000Z',
+    createdAt: new Date('2026-09-01T10:00:00.000Z'),
+    updatedAt: new Date('2026-10-15T12:00:00.000Z'),
   },
   {
     id: 'jellyfin-main',
     kind: 'jellyfin',
     name: 'Jellyfin (Media Server)',
     url: 'http://192.168.10.125',
+    externalUrl: 'http://192.168.10.125:8096/web/',
     port: 8096,
-    apiKey: 'f4faf35855b340f4b6378ecea12df42a',
-    createdAt: '2026-09-02T11:00:00.000Z',
-    updatedAt: '2026-10-10T09:00:00.000Z',
+    createdAt: new Date('2026-09-02T11:00:00.000Z'),
+    updatedAt: new Date('2026-10-10T09:00:00.000Z'),
   },
   {
     id: 'docker-server-197',
     kind: 'docker',
     name: 'Docker Servidor (197)',
     url: 'http://192.168.10.197',
+    externalUrl: null,
     port: 2375,
-    createdAt: '2026-09-01T10:00:00.000Z',
-    updatedAt: '2026-10-15T12:00:00.000Z',
-  },
-  {
-    id: 'docker-local-125',
-    kind: 'docker',
-    name: 'Docker Local (125)',
-    url: 'http://192.168.10.125',
-    port: 2375,
-    createdAt: '2026-09-01T10:00:00.000Z',
-    updatedAt: '2026-10-15T12:00:00.000Z',
+    createdAt: new Date('2026-09-01T10:00:00.000Z'),
+    updatedAt: new Date('2026-10-15T12:00:00.000Z'),
   },
   {
     id: 'prometheus-main',
     kind: 'prometheus',
     name: 'Prometheus Metrics',
     url: 'http://192.168.10.197',
+    externalUrl: 'http://192.168.10.197:9090/graph',
     port: 9090,
-    createdAt: '2026-09-01T10:00:00.000Z',
-    updatedAt: '2026-10-15T12:00:00.000Z',
+    createdAt: new Date('2026-09-01T10:00:00.000Z'),
+    updatedAt: new Date('2026-10-15T12:00:00.000Z'),
   },
 ];
+
+/**
+ * Dev-only guard: the mock is parsed against the real contract schema so the
+ * section cannot silently diverge from `integrations.list`. The client has no
+ * test runner (no `vitest`/`jest` script in package.json), so this runs as a
+ * runtime assertion rather than a unit test.
+ */
+export function assertIntegrationsMockValid(): void {
+  integrationOutputSchema.array().parse(integrationsMock);
+}

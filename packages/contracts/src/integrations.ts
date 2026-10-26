@@ -89,6 +89,7 @@ export const integrationOutputSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+export type IntegrationOutput = z.infer<typeof integrationOutputSchema>;
 
 export const integrationPublicSchema = z.object({
   kind: z.enum(integrationKinds),

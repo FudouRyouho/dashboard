@@ -3,6 +3,7 @@ import { z } from 'zod';
 import {
   supportsSystemHealth,
   PrometheusNormalizer,
+  type PrometheusNormalized,
 } from '@dashboard/integrations';
 import type { ServerMetrics } from '@dashboard/integrations';
 
@@ -20,7 +21,7 @@ export const systemHealthRouter = createTRPCRouter({
             name: z.string(),
             kind: z.string(),
           }),
-          metrics: z.array(z.unknown()),
+          metrics: z.custom<PrometheusNormalized[]>(),
         }),
       ),
     )
@@ -30,7 +31,7 @@ export const systemHealthRouter = createTRPCRouter({
       }): Promise<
         Array<{
           integration: { id: string; name: string; kind: string };
-          metrics: unknown[];
+          metrics: PrometheusNormalized[];
         }>
       > => {
         const systemHealthIntegrations =
@@ -60,7 +61,7 @@ export const systemHealthRouter = createTRPCRouter({
                   name: integration.publicIntegration.name,
                   kind: integration.publicIntegration.kind as string,
                 },
-                metrics: metrics as unknown[],
+                metrics,
               };
             } catch (err) {
               ctx.logger.error(
@@ -73,7 +74,7 @@ export const systemHealthRouter = createTRPCRouter({
                   name: integration.publicIntegration.name,
                   kind: integration.publicIntegration.kind as string,
                 },
-                metrics: [] as unknown[],
+                metrics: [],
               };
             }
           }),
@@ -86,7 +87,7 @@ export const systemHealthRouter = createTRPCRouter({
               r,
             ): r is {
               integration: { id: string; name: string; kind: string };
-              metrics: unknown[];
+              metrics: PrometheusNormalized[];
             } =>
               r !== null &&
               typeof r.integration.id === 'string' &&
@@ -105,7 +106,7 @@ export const systemHealthRouter = createTRPCRouter({
             name: z.string(),
             kind: z.string(),
           }),
-          metrics: z.array(z.unknown()),
+          metrics: z.custom<ServerMetrics[]>(),
         })
         .nullable(),
     )
@@ -115,7 +116,7 @@ export const systemHealthRouter = createTRPCRouter({
         input,
       }): Promise<{
         integration: { id: string; name: string; kind: string };
-        metrics: unknown[];
+        metrics: ServerMetrics[];
       } | null> => {
         const integration = ctx.integrations.find(
           (i) => i.publicIntegration.id === input.server,
@@ -170,7 +171,7 @@ export const systemHealthRouter = createTRPCRouter({
             name: integration.publicIntegration.name,
             kind: integration.publicIntegration.kind as string,
           },
-          metrics: serverMetrics ? [serverMetrics as unknown] : [],
+          metrics: serverMetrics ? [serverMetrics] : [],
         };
       },
     ),

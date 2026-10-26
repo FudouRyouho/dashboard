@@ -1,24 +1,32 @@
 import { Calendar } from '@mantine/dates';
 import { useMemo, useState } from 'react';
-import { CalenderDay } from './CalendarDay';
-import { type CalendarEvent } from '@dashboard/contracts';
+import { CalendarDay } from './CalendarDay';
+import type { CalendarEvent, IntegrationKind, ResultStatus } from '@dashboard/contracts';
 import { splitMultiDayEvents, toLocalDay } from '@dashboard/core';
-import { integrationDefs } from '@dashboard/definitions';
+import { integrationIndicatorColor } from './calendar-colors';
+
+interface CalendarGroupProps {
+  /** `integrationPublicSchema` (`integration.publicIntegration`); `kind` feeds the source dot. */
+  integration: {
+    id: string;
+    kind: IntegrationKind;
+    name: string;
+    url: string;
+  };
+  /** Snapshot facts of the calendar task; no slot for it in the month grid yet. */
+  status: ResultStatus;
+  events: CalendarEvent[];
+}
 
 interface CalendarBaseProps {
   /**
    * Form del response real (calendar.getEvents): eventos agrupados por
-   * integracion. `kind` alimenta el dot de "app de origen" vía definitions.
+   * integracion, cada grupo con su propio `status`.
    */
-  groups: Array<{ kind: string; events: CalendarEvent[] }>;
+  groups: CalendarGroupProps[];
 }
 
-export const integrationIndicatorColor = (
-  kind: string,
-): string | undefined =>
-  (integrationDefs as Record<string, { color: string }>)[kind]?.color;
-
-export function CalenderBase({ groups }: CalendarBaseProps) {
+export function CalendarBase({ groups }: CalendarBaseProps) {
   const normalizedEvents = useMemo(
     () => splitMultiDayEvents(groups.flatMap((g) => g.events)),
     [groups],
@@ -51,9 +59,9 @@ export function CalenderBase({ groups }: CalendarBaseProps) {
         const kind =
           groups.find((g) =>
             g.events.some((e) => e.id === eventsForDate[0]?.id),
-          )?.kind ?? '';
+          )?.integration.kind ?? '';
         return (
-          <CalenderDay
+          <CalendarDay
             date={tileDate}
             events={eventsForDate}
             kindColor={integrationIndicatorColor(kind)}

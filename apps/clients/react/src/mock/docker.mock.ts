@@ -4,15 +4,15 @@ export interface DockerContainerItem {
   image: string;
   command: string;
   created: number;
-  state: 'running' | 'exited' | 'paused' | 'restarting';
+  state: 'exited' | 'paused' | 'restarting' | 'running';
   status: string;
-  health?: 'healthy' | 'unhealthy' | 'starting' | 'none';
-  ports: Array<{
+  health?: 'healthy' | 'none' | 'starting' | 'unhealthy';
+  ports: {
     ip?: string;
     privatePort: number;
     publicPort?: number;
     type: string;
-  }>;
+  }[];
 }
 
 export interface DockerIntegrationMockData {
@@ -52,21 +52,21 @@ export const dockerMock: DockerIntegrationMockData[] = [
     },
     stats: {
       containers: {
-        running: 6,
-        stopped: 1,
-        healthy: 5,
+        running: 9,
+        stopped: 2,
+        healthy: 3,
         unhealthy: 0,
-        total: 7,
+        total: 11,
       },
       images: {
-        total: 14,
-        size: 18_400_000_000, // 18.4 GB
+        total: 22,
+        size: 45_000_000_000, // 45 GB
       },
       networks: {
-        total: 4,
+        total: 3,
       },
       volumes: {
-        total: 8,
+        total: 10,
       },
     },
     containersList: [
@@ -139,6 +139,50 @@ export const dockerMock: DockerIntegrationMockData[] = [
         health: 'healthy',
         ports: [{ ip: '0.0.0.0', privatePort: 9000, publicPort: 9000, type: 'tcp' }],
       },
+      {
+        id: 'a6df8c1a7330',
+        names: ['/homarr'],
+        image: 'ghcr.io/homarr-labs/homarr:latest',
+        command: '/bin/sh -c "sleep 30"',
+        created: 1726290000,
+        state: 'running',
+        status: 'Up About an hour',
+        health: 'none',
+        ports: [{ ip: '0.0.0.0', privatePort: 7575, publicPort: 7575, type: 'tcp' }],
+      },
+      {
+        id: '915ef8c1a734',
+        names: ['/bazarr'],
+        image: 'lscr.io/linuxserver/bazarr:latest',
+        command: '/init',
+        created: 1726280000,
+        state: 'running',
+        status: 'Up 2 days',
+        health: 'none',
+        ports: [{ ip: '0.0.0.0', privatePort: 6767, publicPort: 6767, type: 'tcp' }],
+      },
+      {
+        id: '805ef8c1a735',
+        names: ['/lidarr'],
+        image: 'lscr.io/linuxserver/lidarr:latest',
+        command: '/init',
+        created: 1726270000,
+        state: 'running',
+        status: 'Up 2 days',
+        health: 'none',
+        ports: [{ ip: '0.0.0.0', privatePort: 8686, publicPort: 8686, type: 'tcp' }],
+      },
+      {
+        id: '705ef8c1a736',
+        names: ['/kapowarr'],
+        image: 'mrcas/kapowarr:latest',
+        command: '/init',
+        created: 1726260000,
+        state: 'exited',
+        status: 'Exited (0) 4 weeks ago',
+        health: 'none',
+        ports: [],
+      },
     ],
   },
   {
@@ -149,21 +193,21 @@ export const dockerMock: DockerIntegrationMockData[] = [
     },
     stats: {
       containers: {
-        running: 4,
-        stopped: 1,
-        healthy: 3,
+        running: 2,
+        stopped: 0,
+        healthy: 0,
         unhealthy: 0,
-        total: 5,
+        total: 2,
       },
       images: {
-        total: 8,
-        size: 9_200_000_000,
+        total: 3,
+        size: 3_000_000_000,
       },
       networks: {
-        total: 3,
+        total: 1,
       },
       volumes: {
-        total: 4,
+        total: 2,
       },
     },
     containersList: [
@@ -196,6 +240,7 @@ export const dockerMock: DockerIntegrationMockData[] = [
         created: 1726320000,
         state: 'running',
         status: 'Up 5 hours',
+        health: 'none',
         ports: [{ ip: '0.0.0.0', privatePort: 9090, publicPort: 9090, type: 'tcp' }],
       },
     ],
