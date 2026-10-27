@@ -3,7 +3,7 @@ import { IDockerIntegration, DockerDashboardStats, DockerContainer, DockerSystem
 import { z } from 'zod';
 import {
   dockerContainerSchema,
-  dockerVolumeSchema,
+  dockerVolumesResponseSchema,
   dockerNetworkSchema,
 } from './schemas/docker-dashboard';
 
@@ -31,7 +31,7 @@ export class DockerIntegration
       this.fetchDocker<z.infer<typeof dockerNetworkSchema>[]>('/networks', {
         signal: options?.signal,
       }),
-      this.fetchDocker<z.infer<typeof dockerVolumeSchema>[]>('/volumes', {
+      this.fetchDocker<z.infer<typeof dockerVolumesResponseSchema>>('/volumes', {
         signal: options?.signal,
       }),
     ]);
@@ -40,7 +40,8 @@ export class DockerIntegration
       results[0].status === 'fulfilled' ? results[0].value : [];
     const images = results[1].status === 'fulfilled' ? results[1].value : [];
     const networks = results[2].status === 'fulfilled' ? results[2].value : [];
-    const volumes = results[3].status === 'fulfilled' ? results[3].value : [];
+    const volumes =
+      results[3].status === 'fulfilled' ? results[3].value.Volumes : [];
 
     if (results[0].status === 'rejected') {
       this.log('Docker containers fetch failed', { error: results[0].reason });

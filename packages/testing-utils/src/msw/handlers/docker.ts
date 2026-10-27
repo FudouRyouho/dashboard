@@ -44,7 +44,7 @@ export const dockerHandlers = (config: DockerHandlerConfig) => {
         },
       ]);
     }),
-    http.get(`${baseUrl}/volumes/json`, () => {
+    http.get(`${baseUrl}/volumes`, () => {
       const m = config.responses?.volumes ?? 'success';
       if (m === 'error_500')
         return HttpResponse.json(
@@ -68,7 +68,7 @@ export const dockerHandlers = (config: DockerHandlerConfig) => {
         Warnings: null,
       });
     }),
-    http.get(`${baseUrl}/networks/json`, () => {
+    http.get(`${baseUrl}/networks`, () => {
       const m = config.responses?.networks ?? 'success';
       if (m === 'error_500')
         return HttpResponse.json(
@@ -97,20 +97,20 @@ export const dockerHandlers = (config: DockerHandlerConfig) => {
       ]);
     }),
     http.post(
-      `${baseUrl}/containers/${'{{id}}'}/start`,
-      () => new Response('', { status: 204 }),
+      `${baseUrl}/containers/:id/start`,
+      () => new Response(null, { status: 204 }),
     ),
     http.post(
-      `${baseUrl}/containers/${'{{id}}'}/stop`,
-      () => new Response('', { status: 204 }),
+      `${baseUrl}/containers/:id/stop`,
+      () => new Response(null, { status: 204 }),
     ),
     http.post(
-      `${baseUrl}/containers/${'{{id}}'}/restart`,
-      () => new Response('', { status: 204 }),
+      `${baseUrl}/containers/:id/restart`,
+      () => new Response(null, { status: 204 }),
     ),
     http.delete(
-      `${baseUrl}/containers/${'{{id}}'}`,
-      () => new Response('', { status: 204 }),
+      `${baseUrl}/containers/:id`,
+      () => new Response(null, { status: 204 }),
     ),
   ];
 };

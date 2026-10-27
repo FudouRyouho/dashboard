@@ -62,6 +62,10 @@ export interface IntegrationFactoryOverrides extends IntegrationOverrides {
   stopContainerAsync?: (id: string) => Promise<void>;
   restartContainerAsync?: (id: string) => Promise<void>;
   removeContainerAsync?: (id: string) => Promise<void>;
+  getContainersAsync?: () => Promise<unknown[]>;
+  getContainerLogsAsync?: (id: string, options?: any) => Promise<string[]>;
+  getContainerStatsAsync?: (id: string) => Promise<unknown>;
+  getSystemStatsAsync?: () => Promise<unknown>;
   getClientJobsAndStatusAsync?: () => Promise<any>;
   pauseQueueAsync?: () => Promise<void>;
   pauseItemAsync?: (item: any) => Promise<void>;
@@ -106,6 +110,10 @@ export function createTestIntegration<K extends IntegrationKind>(
     result.stopContainerAsync = vi.fn();
     result.restartContainerAsync = vi.fn();
     result.removeContainerAsync = vi.fn();
+    result.getContainersAsync = vi.fn().mockResolvedValue([]);
+    result.getContainerLogsAsync = vi.fn().mockResolvedValue([]);
+    result.getContainerStatsAsync = vi.fn().mockResolvedValue({});
+    result.getSystemStatsAsync = vi.fn().mockResolvedValue({});
   }
   if (kind === 'qbittorrent') {
     result.getClientJobsAndStatusAsync = vi

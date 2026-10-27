@@ -125,6 +125,10 @@ export abstract class Integration {
     }
     // Note: some APIs (Sonarr, Radarr, Prowlarr) don't send Content-Length headers.
     // We still attempt to parse the response as JSON even when content-length is missing.
+    // 204 No Content has an empty body (action endpoints like Docker container start/stop).
+    if (res.status === 204) {
+      return undefined as T;
+    }
     return (await res.json()) as T;
   }
 

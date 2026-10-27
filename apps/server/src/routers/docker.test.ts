@@ -235,4 +235,142 @@ describe('dockerRouter', () => {
       expect(integration.startContainerAsync).toHaveBeenCalledTimes(2);
     });
   });
+
+  describe('getContainerList', () => {
+    test('returns container list for valid integration', async () => {
+      const containers = [
+        { Id: 'abc123', Names: ['/test-container'], Image: 'nginx:latest', State: 'running', Status: 'Up 2 hours', Health: { Status: 'healthy' } },
+        { Id: 'def456', Names: ['/another'], Image: 'redis:alpine', State: 'exited', Status: 'Exited (0)' },
+      ];
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+        getContainersAsync: vi.fn().mockResolvedValue(containers),
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      const result = await caller.getContainerList({ integrationId: 'docker-1' });
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual(containers[0]);
+      expect(result[1]).toEqual(containers[1]);
+      expect(integration.getContainersAsync).toHaveBeenCalledTimes(1);
+    });
+
+    test('throws when integration not found', async () => {
+      const ctx = createTestTRPCContext({ integrations: [] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(caller.getContainerList({ integrationId: 'not-found' })).rejects.toThrow('Docker operation failed');
+    });
+  });
+
+  describe('getContainerLogs', () => {
+    test('returns log lines for valid container', async () => {
+      const logLines = ['Application started', 'Listening on port 80', 'Ready'];
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+        getContainerLogsAsync: vi.fn().mockResolvedValue(logLines),
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      const logs = await caller.getContainerLogs({
+        integrationId: 'docker-1',
+        containerId: 'abc123',
+        tail: 50,
+      });
+
+      expect(logs).toEqual(logLines);
+      expect(integration.getContainerLogsAsync).toHaveBeenCalledWith('abc123', expect.objectContaining({
+        stdout: true,
+        stderr: true,
+        tail: 50,
+      }));
+    });
+
+    test('uses default tail=100 when not provided', async () => {
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+        getContainerLogsAsync: vi.fn().mockResolvedValue(['log']),
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      await caller.getContainerLogs({ integrationId: 'docker-1', containerId: 'abc123' });
+      expect(integration.getContainerLogsAsync).toHaveBeenCalledWith('abc123', expect.objectContaining({ tail: 100 }));
+    });
+
+    test('throws when integration not found', async () => {
+      const ctx = createTestTRPCContext({ integrations: [] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(caller.getContainerLogs({ integrationId: 'not-found', containerId: 'abc123' })).rejects.toThrow('Docker operation failed');
+    });
+  });
+
+  describe('getContainerStats', () => {
+    test('returns container stats for valid container', async () => {
+      const stats = {
+        id: 'abc123',
+        name: '/test-container',
+        read: '2026-01-01T00:00:00Z',
+        cpu_stats: { cpu_usage: { total_usage: 1000000 } },
+        memory_stats: { usage: 1024 * 1024 * 100 },
+      };
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+        getContainerStatsAsync: vi.fn().mockResolvedValue(stats),
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      const result = await caller.getContainerStats({ integrationId: 'docker-1', containerId: 'abc123' });
+
+      expect(result).toEqual(stats);
+      expect(integration.getContainerStatsAsync).toHaveBeenCalledWith('abc123');
+    });
+
+    test('throws when integration not found', async () => {
+      const ctx = createTestTRPCContext({ integrations: [] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(caller.getContainerStats({ integrationId: 'not-found', containerId: 'abc123' })).rejects.toThrow('Docker operation failed');
+    });
+  });
+
+  describe('getSystemStats', () => {
+    test('returns system stats for valid integration', async () => {
+      const systemStats = {
+        Containers: 10,
+        ContainersRunning: 5,
+        ContainersStopped: 2,
+        NCPU: 4,
+        MemTotal: 8 * 1024 * 1024 * 1024,
+      };
+      const integration = createTestIntegration('docker', {
+        id: 'docker-1',
+        name: 'Docker Host 1',
+        getSystemStatsAsync: vi.fn().mockResolvedValue(systemStats),
+      });
+      const ctx = createTestTRPCContext({ integrations: [integration] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      const result = await caller.getSystemStats({ integrationId: 'docker-1' });
+
+      expect(result).toEqual(systemStats);
+      expect(integration.getSystemStatsAsync).toHaveBeenCalledTimes(1);
+    });
+
+    test('throws when integration not found', async () => {
+      const ctx = createTestTRPCContext({ integrations: [] });
+      const caller = dockerRouter.createCaller(ctx);
+
+      await expect(caller.getSystemStats({ integrationId: 'not-found' })).rejects.toThrow('Docker operation failed');
+    });
+  });
 });

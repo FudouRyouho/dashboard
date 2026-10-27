@@ -34,6 +34,10 @@ export interface TestIntegration<K extends IntegrationKind> {
   stopContainerAsync?: (id: string) => Promise<void>;
   restartContainerAsync?: (id: string) => Promise<void>;
   removeContainerAsync?: (id: string) => Promise<void>;
+  getContainersAsync?: () => Promise<unknown[]>;
+  getContainerLogsAsync?: (id: string, options?: any) => Promise<string[]>;
+  getContainerStatsAsync?: (id: string) => Promise<unknown>;
+  getSystemStatsAsync?: () => Promise<unknown>;
 
   // Download client capability
   getClientJobsAndStatusAsync?: (
