@@ -100,7 +100,7 @@ export const dockerSystemStatsSchema = z.object({
   CgroupVersion: z.string().optional(),
   IndexServerAddress: z.string().optional(),
   RegistryConfig: z.object({}).optional(),
-  GenericResources: z.array(z.unknown()).optional(),
+  GenericResources: z.array(z.unknown()).nullable().optional(),
   DockerRootDir: z.string().optional(),
   HttpProxy: z.string().optional(),
   HttpsProxy: z.string().optional(),
@@ -151,10 +151,15 @@ export const dockerContainerStatsSchema = z.object({
     tx_errors: z.number(),
     tx_dropped: z.number(),
   })).optional(),
-  pids_stats: z.object({
-    current: z.number(),
-    limit: z.number(),
-  }).optional(),
+  pids_stats: z
+    .object({
+      // Both are Go `omitempty` uint64: the daemon drops the key when the value is 0,
+      // so `limit` is absent when there is no pid limit and `current` when the cgroup
+      // reports none. Absence is not a malformed reply.
+      current: z.number().optional(),
+      limit: z.number().optional(),
+    })
+    .optional(),
   blkio_stats: z.object({
     io_service_bytes_recursive: z.array(z.object({
       major: z.number(),
