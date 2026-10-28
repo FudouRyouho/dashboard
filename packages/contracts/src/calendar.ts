@@ -71,3 +71,6 @@ export const calendarResultGroupSchema = withResultStatus(
 export const calendarResultSchema = z.array(calendarResultGroupSchema);
 
 export type CalendarEvent = z.infer<typeof calendarEventSchema>;
+
+export type CalendarResult = z.infer<typeof calendarResultGroupSchema>;
+export type CalendarResultArray = z.infer<typeof calendarResultSchema>;

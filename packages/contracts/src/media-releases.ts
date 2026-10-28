@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { withResultStatus } from './result';
+import { integrationPublicSchema } from './integrations';
 
 const mediaReleaseMovieSchema = z.object({
   type: z.literal('movie'),
@@ -66,3 +68,18 @@ export const mediaReleasesResponseSchema = z.array(mediaReleaseSchema);
 
 export type MediaReleaseEvent = z.infer<typeof mediaReleaseSchema>;
 export type MediaReleasesResponse = z.infer<typeof mediaReleasesResponseSchema>;
+
+/**
+ * Un grupo de `mediaReleases.getLatest`: la integración pública, su snapshot `status` y
+ * su payload. El cliente tipa contra este schema (la API estructura; el cliente consume).
+ */
+export const mediaReleasesResultSchema = withResultStatus(
+  z.object({
+    integration: integrationPublicSchema,
+    releases: mediaReleasesResponseSchema,
+  }),
+);
+
+export const mediaReleasesResultArraySchema = z.array(mediaReleasesResultSchema);
+
+export type MediaReleasesResult = z.infer<typeof mediaReleasesResultSchema>;

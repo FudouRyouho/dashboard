@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { integrationPublicSchema } from './integrations';
 
 /** Normalized canonical states (5 states) */
 export type DownloadClientItemState =
@@ -43,6 +44,19 @@ export type DownloadClientItem = z.infer<typeof downloadClientItemSchema>;
 export type DownloadClientStatus = z.infer<typeof downloadClientStatusSchema>;
 export type DownloadClientJobsAndStatus = z.infer<
   typeof downloadClientJobsAndStatusSchema
+>;
+
+/**
+ * Un grupo de `downloads.getAllJobs`: la integración pública + su estado y cola.
+ * El cliente tipa contra este schema (la API estructura; el cliente consume).
+ */
+export const downloadClientJobsWithIntegrationSchema =
+  downloadClientJobsAndStatusSchema.extend({
+    integration: integrationPublicSchema,
+  });
+
+export type DownloadClientJobsWithIntegration = z.infer<
+  typeof downloadClientJobsWithIntegrationSchema
 >;
 
 export interface GetClientJobsAndStatusInput {
