@@ -25,7 +25,7 @@ export function DockerContainerTable({ containers, onContextMenu }: DockerContai
       </Table.Thead>
       <Table.Tbody>
         {containers.map((container) => (
-          <DockerContainerRow key={container.id} container={container} onContextMenu={onContextMenu} />
+          <DockerContainerRow key={container.Id} container={container} onContextMenu={onContextMenu} />
         ))}
       </Table.Tbody>
     </Table>

@@ -44,7 +44,7 @@ export function DockerContainerContextMenu({
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Label>
-              {contextMenu.container.names[0] || contextMenu.container.id}
+              {contextMenu.container.Names[0] || contextMenu.container.Id}
             </Menu.Label>
 
             <Menu.Item leftSection={<IconFileText size={14} />} onClick={onClose}>

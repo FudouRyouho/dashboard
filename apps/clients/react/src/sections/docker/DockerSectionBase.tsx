@@ -35,7 +35,7 @@ export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
 
   const filteredContainers = useMemo(() => {
     if (stateFilter.length === 0) return allContainers;
-    return allContainers.filter(({ state }) => stateFilter.includes(state));
+    return allContainers.filter(({ State }) => stateFilter.includes(State));
   }, [allContainers, stateFilter]);
 
   const totals = useMemo(() => {

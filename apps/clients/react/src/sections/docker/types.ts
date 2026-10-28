@@ -1,22 +1,27 @@
+import type { DockerContainer } from '@dashboard/contracts';
 import type { DockerDashboardStats } from '@dashboard/integrations';
 
-export interface DockerContainerItem {
-  id: string;
-  names: string[];
-  image: string;
-  command: string;
-  created: number;
-  state: 'exited' | 'paused' | 'restarting' | 'running';
-  status: string;
-  health?: 'healthy' | 'none' | 'starting' | 'unhealthy';
-  ports: {
-    ip?: string;
-    privatePort: number;
-    publicPort?: number;
-    type: string;
-  }[];
+/** Real API shape from router.getContainers */
+export interface DockerIntegrationServer {
+  integration: {
+    id: string;
+    name: string;
+    kind: 'docker';
+  };
+  stats: DockerDashboardStats;
 }
 
+/** Real API shape from router.getContainerList - matches DockerContainer from contracts */
+export type DockerContainerItem = DockerContainer;
+
+/** Extended with server reference for cross-server operations */
+export interface DockerContainerEntry extends DockerContainer {
+  serverIndex: number;
+  serverName: string;
+  serverId: string;
+}
+
+/** Combined mock data structure for backward compatibility */
 export interface DockerIntegrationMockData {
   integration: {
     id: string;
@@ -25,10 +30,4 @@ export interface DockerIntegrationMockData {
   };
   stats: DockerDashboardStats;
   containersList: DockerContainerItem[];
-}
-
-export interface DockerContainerEntry extends DockerContainerItem {
-  serverIndex: number;
-  serverName: string;
-  serverId: string;
 }

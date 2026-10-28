@@ -12,14 +12,14 @@ interface DockerContainerRowProps {
 }
 
 export function DockerContainerRow({ container, onContextMenu }: DockerContainerRowProps) {
-  const name = container.names[0] || container.id;
-  const stateLabel = containerStateLabel[container.state] || container.state;
-  const stateColor = containerStateColorMap[container.state] || 'gray';
+  const name = container.Names[0] || container.Id;
+  const stateLabel = containerStateLabel[container.State] || container.State;
+  const stateColor = containerStateColorMap[container.State] || 'gray';
 
   return (
     <Table.Tr
       style={{
-        backgroundColor: rowBgAlpha[container.state],
+        backgroundColor: rowBgAlpha[container.State],
         cursor: 'context-menu',
       }}
       onContextMenu={(e) => {
@@ -40,7 +40,7 @@ export function DockerContainerRow({ container, onContextMenu }: DockerContainer
                   Image
                 </Text>
                 <Text size="xs" fw={500}>
-                  {container.image}
+                  {container.Image}
                 </Text>
               </Group>
               <Group gap={4} justify="space-between">
@@ -56,7 +56,7 @@ export function DockerContainerRow({ container, onContextMenu }: DockerContainer
                   Status
                 </Text>
                 <Text size="xs" fw={500}>
-                  {container.status}
+                  {container.Status}
                 </Text>
               </Group>
             </Stack>
@@ -70,7 +70,7 @@ export function DockerContainerRow({ container, onContextMenu }: DockerContainer
         >
           <Group gap={6} wrap="nowrap" style={{ overflow: 'hidden' }}>
             <Avatar variant="outline" radius="sm" size={20} styles={{ image: { objectFit: 'contain' } }}>
-              {getContainerIcon(container.image)}
+              {getContainerIcon(container.Image)}
             </Avatar>
             <Text size="sm" truncate fw={500}>
               {name}
@@ -94,15 +94,15 @@ export function DockerContainerRow({ container, onContextMenu }: DockerContainer
       </Table.Td>
 
       <Table.Td>
-        <Tooltip label={container.image} multiline maw={200} withArrow>
+        <Tooltip label={container.Image} multiline maw={200} withArrow>
           <Text size="xs" truncate maw={150}>
-            {container.image}
+            {container.Image}
           </Text>
         </Tooltip>
       </Table.Td>
 
       <Table.Td>
-        <Text size="xs">{formatTimeAgo(container.created)}</Text>
+        <Text size="xs">{formatTimeAgo(container.Created)}</Text>
       </Table.Td>
 
       <Table.Td>
