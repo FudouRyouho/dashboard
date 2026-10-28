@@ -238,9 +238,11 @@ describe('dockerRouter', () => {
 
   describe('getContainerList', () => {
     test('returns container list for valid integration', async () => {
+      // Shape must satisfy dockerContainerSchema: the procedure validates its output,
+      // so a fixture missing a required field (Created) fails at the boundary on purpose.
       const containers = [
-        { Id: 'abc123', Names: ['/test-container'], Image: 'nginx:latest', State: 'running', Status: 'Up 2 hours', Health: { Status: 'healthy' } },
-        { Id: 'def456', Names: ['/another'], Image: 'redis:alpine', State: 'exited', Status: 'Exited (0)' },
+        { Id: 'abc123', Names: ['/test-container'], Image: 'nginx:latest', Created: 1_726_329_200, State: 'running', Status: 'Up 2 hours', Health: { Status: 'healthy' } },
+        { Id: 'def456', Names: ['/another'], Image: 'redis:alpine', Created: 1_726_329_100, State: 'exited', Status: 'Exited (0)' },
       ];
       const integration = createTestIntegration('docker', {
         id: 'docker-1',

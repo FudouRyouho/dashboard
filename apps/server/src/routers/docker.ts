@@ -1,6 +1,7 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import { toIntegrationTRPCError } from '../integration-errors';
+import { dockerContainerSchema, integrationPublicSchema } from '@dashboard/contracts';
 import {
   supportsDocker,
   IDockerIntegration,
@@ -71,11 +72,7 @@ export const dockerRouter = createTRPCRouter({
     .output(
       z.array(
         z.object({
-          integration: z.object({
-            id: z.string(),
-            name: z.string(),
-            kind: z.string(),
-          }),
+          integration: integrationPublicSchema,
           stats: z.custom<DockerDashboardStats>(),
         }),
       ),
@@ -95,7 +92,9 @@ export const dockerRouter = createTRPCRouter({
   // New: Get detailed container list for an integration
   getContainerList: publicProcedure
     .input(z.object({ integrationId: z.string().min(1) }))
-    .output(z.array(z.record(z.unknown())))
+    // Validated against the contract: `z.record(z.unknown())` erased DockerContainer at
+    // the boundary, so the client had to cast back to the type it just lost.
+    .output(z.array(dockerContainerSchema))
     .query(async ({ ctx, input }) => {
       const manager = getDockerIntegration(ctx.integrations, input.integrationId);
       if (!manager) {

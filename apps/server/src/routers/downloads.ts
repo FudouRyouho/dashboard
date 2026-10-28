@@ -5,6 +5,7 @@ import { supportsDownloadClient } from '@dashboard/integrations';
 import {
   downloadClientJobsAndStatusSchema,
   type DownloadClientItem,
+  integrationPublicSchema,
 } from '@dashboard/contracts';
 
 const downloadJobsInput = z.object({
@@ -38,11 +39,7 @@ function buildDownloadClientItemFromHash(
 
 const downloadClientJobsWithIntegrationSchema =
   downloadClientJobsAndStatusSchema.extend({
-    integration: z.object({
-      id: z.string(),
-      name: z.string(),
-      kind: z.string(),
-    }),
+    integration: integrationPublicSchema,
   });
 
 export const downloadsRouter = createTRPCRouter({
@@ -62,11 +59,7 @@ export const downloadsRouter = createTRPCRouter({
             limit: input.limit,
           });
           return {
-            integration: {
-              id: integration.publicIntegration.id,
-              name: integration.publicIntegration.name,
-              kind: integration.publicIntegration.kind as string,
-            },
+            integration: integration.publicIntegration,
             ...jobsAndStatus,
           };
         }),

@@ -9,16 +9,35 @@ import {
 describe('systemHealthRouter', () => {
   describe('getAllMetrics', () => {
     test('returns metrics from all system health integrations', async () => {
+      const queryResults = new Map<string, unknown>();
+      queryResults.set('cpuUsage', {
+        data: {
+          result: [
+            {
+              metric: { instance: '10.0.0.1:9100', job: 'node' },
+              value: [1_700_000_000, '42.5'],
+            },
+          ],
+        },
+      });
       const integration = createTestIntegration('prometheus', {
         id: 'prom-1',
         name: 'Prometheus',
+        getDiscoveredDataAsync: vi.fn().mockResolvedValue({
+          instances: ['10.0.0.1:9100'],
+          queryResults,
+        }),
       });
       const ctx = createTestTRPCContext({ integrations: [integration] });
       const caller = systemHealthRouter.createCaller(ctx);
 
       const result = await caller.getAllMetrics();
+      // Una instancia con datos = una entrada, con su agregado por servidor.
       expect(result).toHaveLength(1);
       expect(result[0]!.integration.id).toBe('prom-1');
+      expect(result[0]!.server).toBe('10.0.0.1:9100');
+      expect(result[0]!.metrics).toHaveLength(1);
+      expect(result[0]!.metrics[0]!.server).toBe('10.0.0.1:9100');
     });
 
     test('returns empty array when no integrations support system health', async () => {
@@ -56,7 +75,7 @@ describe('systemHealthRouter', () => {
   });
 
   describe('Edge cases (QA validation)', () => {
-    test('getAllMetrics when getDiscoveredDataAsync rejects still returns an entry with empty metrics', async () => {
+    test('getAllMetrics when getDiscoveredDataAsync rejects still returns empty', async () => {
       const integration = createTestIntegration('prometheus', {
         id: 'prom-fail',
         name: 'Failing Prometheus',
@@ -72,9 +91,8 @@ describe('systemHealthRouter', () => {
       const caller = systemHealthRouter.createCaller(ctx);
 
       const result = await caller.getAllMetrics();
-      expect(result).toHaveLength(1);
-      expect(result[0]!.integration.id).toBe('prom-fail');
-      expect(result[0]!.metrics).toEqual([]);
+      // Una integración caída no produce instancias: el array queda vacío.
+      expect(result).toEqual([]);
     });
 
     test('getMetrics when getDiscoveredDataAsync rejects returns entry with empty metrics', async () => {

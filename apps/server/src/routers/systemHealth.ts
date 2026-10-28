@@ -3,9 +3,9 @@ import { z } from 'zod';
 import {
   supportsSystemHealth,
   PrometheusNormalizer,
-  type PrometheusNormalized,
 } from '@dashboard/integrations';
 import type { ServerMetrics } from '@dashboard/integrations';
+import { integrationPublicSchema } from '@dashboard/contracts';
 
 const serverMetricsInput = z.object({
   server: z.string().min(1),
@@ -13,27 +13,19 @@ const serverMetricsInput = z.object({
 
 export const systemHealthRouter = createTRPCRouter({
   getAllMetrics: publicProcedure
+    // La API devuelve lo ya masticado: una entrada por instancia (servidor), con su agregado.
+    // El servidor digiere (descubre, normaliza, agrega); el cliente consume sin transformar.
     .output(
       z.array(
         z.object({
-          integration: z.object({
-            id: z.string(),
-            name: z.string(),
-            kind: z.string(),
-          }),
-          metrics: z.custom<PrometheusNormalized[]>(),
+          integration: integrationPublicSchema,
+          server: z.string(),
+          metrics: z.custom<ServerMetrics[]>(),
         }),
       ),
     )
     .query(
-      async ({
-        ctx,
-      }): Promise<
-        Array<{
-          integration: { id: string; name: string; kind: string };
-          metrics: PrometheusNormalized[];
-        }>
-      > => {
+      async ({ ctx }) => {
         const systemHealthIntegrations =
           ctx.integrations.filter(supportsSystemHealth);
 
@@ -51,48 +43,40 @@ export const systemHealthRouter = createTRPCRouter({
             try {
               const { instances, queryResults } =
                 await typedIntegration.getDiscoveredDataAsync();
-              const metrics = PrometheusNormalizer.normalize(
+              const normalized = PrometheusNormalizer.normalize(
                 queryResults,
                 instances,
               );
-              return {
-                integration: {
-                  id: integration.publicIntegration.id,
-                  name: integration.publicIntegration.name,
-                  kind: integration.publicIntegration.kind as string,
-                },
-                metrics,
-              };
+              // Aplanar por instancia: cada servidor es una entrada con su agregado.
+              return normalized.map((entry) => ({
+                integration: integration.publicIntegration,
+                server: entry.server,
+                metrics: [PrometheusNormalizer.toServerMetrics(entry)],
+              }));
             } catch (err) {
               ctx.logger.error(
                 { integrationId: integration.publicIntegration.id },
                 `System health integration failed: ${err instanceof Error ? err.message : String(err)}`,
               );
-              return {
-                integration: {
-                  id: integration.publicIntegration.id,
-                  name: integration.publicIntegration.name,
-                  kind: integration.publicIntegration.kind as string,
-                },
-                metrics: [],
-              };
+              return [];
             }
           }),
         );
 
         return results
-          .map((r) => (r.status === 'fulfilled' ? r.value : null))
           .filter(
             (
               r,
-            ): r is {
-              integration: { id: string; name: string; kind: string };
-              metrics: PrometheusNormalized[];
-            } =>
-              r !== null &&
-              typeof r.integration.id === 'string' &&
-              r.integration.id !== '',
-          );
+            ): r is PromiseFulfilledResult<
+              {
+                integration: z.infer<typeof integrationPublicSchema>;
+                server: string;
+                metrics: ServerMetrics[];
+              }[]
+            > => r.status === 'fulfilled',
+          )
+          .map((r) => r.value)
+          .flat();
       },
     ),
 
@@ -101,23 +85,13 @@ export const systemHealthRouter = createTRPCRouter({
     .output(
       z
         .object({
-          integration: z.object({
-            id: z.string(),
-            name: z.string(),
-            kind: z.string(),
-          }),
+          integration: integrationPublicSchema,
           metrics: z.custom<ServerMetrics[]>(),
         })
         .nullable(),
     )
     .query(
-      async ({
-        ctx,
-        input,
-      }): Promise<{
-        integration: { id: string; name: string; kind: string };
-        metrics: ServerMetrics[];
-      } | null> => {
+      async ({ ctx, input }) => {
         const integration = ctx.integrations.find(
           (i) => i.publicIntegration.id === input.server,
         );
@@ -166,11 +140,7 @@ export const systemHealthRouter = createTRPCRouter({
         }
 
         return {
-          integration: {
-            id: integration.publicIntegration.id,
-            name: integration.publicIntegration.name,
-            kind: integration.publicIntegration.kind as string,
-          },
+          integration: integration.publicIntegration,
           metrics: serverMetrics ? [serverMetrics] : [],
         };
       },
