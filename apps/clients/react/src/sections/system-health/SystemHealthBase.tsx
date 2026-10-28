@@ -1,8 +1,9 @@
 import { Badge, Box, Card, Group, Stack, Text, Tooltip } from '@mantine/core';
-import { IconCpu, IconDatabase, IconServer, IconTemperature } from '@tabler/icons-react';
+import { IconCpu, IconDatabase, IconHeart, IconServer, IconTemperature } from '@tabler/icons-react';
 
 import type { ServerMetrics } from '@dashboard/integrations';
 import { formatBytes } from '@dashboard/core';
+import { EmptyState } from '../../components/EmptyState';
 
 import { CpuMemoryRings } from './CpuMemoryRings';
 import { DiskUsageList } from './DiskUsageList';
@@ -20,12 +21,7 @@ export function SystemHealthBase({ metrics }: SystemHealthBaseProps) {
   if (metrics.length === 0) {
     return (
       <Card withBorder p="md">
-        <Stack gap="sm">
-          <Text fw={600}>System Health</Text>
-          <Text size="xs" c="dimmed">
-            No metrics available (mock)
-          </Text>
-        </Stack>
+        <EmptyState icon={<IconHeart size={36} />} filtered={false} />
       </Card>
     );
   }
@@ -33,8 +29,6 @@ export function SystemHealthBase({ metrics }: SystemHealthBaseProps) {
   return (
     <Card withBorder p="md">
       <Stack gap="sm">
-        <Text fw={600}>System Health</Text>
-
         {metrics.map((metric) => (
           <ServerMetricsCard key={metric.server} metric={metric} />
         ))}

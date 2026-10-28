@@ -11,8 +11,9 @@ import {
   Text,
   useMantineColorScheme,
 } from '@mantine/core';
-import { IconPin } from '@tabler/icons-react';
+import { IconCalendarEvent, IconPin } from '@tabler/icons-react';
 import { type CalendarEvent } from '@dashboard/contracts';
+import { EmptyState } from '../../components/EmptyState';
 
 export function CalendarEventList({ events: unsortedEvents }: { events: CalendarEvent[] }) {
   const { colorScheme } = useMantineColorScheme();
@@ -32,6 +33,7 @@ export function CalendarEventList({ events: unsortedEvents }: { events: Calendar
       }}
     >
       <Stack>
+        {sortedEvents.length === 0 && <EmptyState icon={<IconCalendarEvent size={36} />} filtered={false} />}
         {sortedEvents.map((event) => (
           <Group key={`event-${event.id}`} align="start" wrap="nowrap">
             {event.image !== null && (
