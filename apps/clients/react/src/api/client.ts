@@ -153,20 +153,3 @@ export const fetchSystemHealth = () =>
 // ─── Integrations ────────────────────────────────────────────
 export const fetchIntegrations = () =>
   callProcedure<IntegrationOutput[]>('integrations.list');
-
-export const addIntegration = (data: {
-  name: string;
-  kind: string;
-  url: string;
-  api_key?: string;
-}) => callProcedure<IntegrationPublic>('integrations.add', data, 'mutation');
-
-export const updateIntegration = (data: {
-  id: string;
-  name?: string;
-  url?: string;
-  api_key?: string;
-}) => callProcedure<IntegrationPublic>('integrations.update', data, 'mutation');
-
-export const deleteIntegration = (id: string) =>
-  callProcedure<void>('integrations.remove', { id }, 'mutation');
