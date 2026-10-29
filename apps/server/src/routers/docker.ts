@@ -1,13 +1,13 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import { toIntegrationTRPCError } from '../integration-errors';
-import { dockerContainerSchema, integrationPublicSchema } from '@dashboard/contracts';
+import { dockerContainerSchema, dockerContainersResultArraySchema } from '@dashboard/contracts';
 import {
   supportsDocker,
   IDockerIntegration,
   Integration,
-  type DockerDashboardStats,
 } from '@dashboard/integrations';
+import type { DockerDashboardStats } from '@dashboard/contracts';
 import { dockerSnapshot } from '../tasks/task-ids';
 
 function emptyStats(): DockerDashboardStats {
@@ -69,24 +69,27 @@ async function executeDockerOperation(
 
 export const dockerRouter = createTRPCRouter({
   getContainers: publicProcedure
-    .output(
-      z.array(
-        z.object({
-          integration: integrationPublicSchema,
-          stats: z.custom<DockerDashboardStats>(),
-        }),
-      ),
-    )
-    .query(({ ctx }) => {
-      return ctx.integrations.filter(supportsDocker).map((integration) => {
-        const key = dockerSnapshot(integration.publicIntegration.id);
-        const snapshot = ctx.store.get<DockerDashboardStats>(key);
+    .output(dockerContainersResultArraySchema)
+    .query(async ({ ctx }) => {
+      const results = await Promise.allSettled(
+        ctx.integrations
+          .filter(supportsDocker)
+          .map(async (integration) => {
+            const key = dockerSnapshot(integration.publicIntegration.id);
+            const snapshot = ctx.store.get<DockerDashboardStats>(key);
+            const containers = await (integration as IDockerIntegration).getContainersAsync();
 
-        return {
-          integration: integration.publicIntegration,
-          stats: snapshot?.data ?? emptyStats(),
-        };
-      });
+            return {
+              integration: integration.publicIntegration,
+              stats: snapshot?.data ?? emptyStats(),
+              containers,
+            };
+          }),
+      );
+
+      return results
+        .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
+        .map((r) => r.value);
     }),
 
   // New: Get detailed container list for an integration

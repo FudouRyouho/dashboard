@@ -5,7 +5,7 @@ import {
   PrometheusNormalizer,
 } from '@dashboard/integrations';
 import type { ServerMetrics } from '@dashboard/integrations';
-import { integrationPublicSchema } from '@dashboard/contracts';
+import { integrationPublicSchema, systemHealthEntryArraySchema } from '@dashboard/contracts';
 
 const serverMetricsInput = z.object({
   server: z.string().min(1),
@@ -15,15 +15,7 @@ export const systemHealthRouter = createTRPCRouter({
   getAllMetrics: publicProcedure
     // La API devuelve lo ya masticado: una entrada por instancia (servidor), con su agregado.
     // El servidor digiere (descubre, normaliza, agrega); el cliente consume sin transformar.
-    .output(
-      z.array(
-        z.object({
-          integration: integrationPublicSchema,
-          server: z.string(),
-          metrics: z.custom<ServerMetrics[]>(),
-        }),
-      ),
-    )
+    .output(systemHealthEntryArraySchema)
     .query(
       async ({ ctx }) => {
         const systemHealthIntegrations =

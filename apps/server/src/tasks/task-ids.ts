@@ -1,6 +1,6 @@
 import type { SnapshotKey } from '@dashboard/tasks';
 import type { CalendarEvent, MediaReleaseEvent } from '@dashboard/contracts';
-import type { DockerDashboardStats } from '@dashboard/integrations';
+import type { DockerDashboardStats } from '@dashboard/contracts';
 
 // Task ID suffix constants — use these instead of raw strings to prevent typos
 export const TASK_ID_SUFFIX = {

@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest';
-import type { DockerDashboardStats } from '@dashboard/integrations';
+import type { DockerDashboardStats } from '@dashboard/contracts';
 import { dockerRouter } from './docker';
 import {
   createTestIntegration,
