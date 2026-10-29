@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { integrationPublicSchema } from './integrations';
 import type { DockerDashboardStats } from './docker-stats';
+import { withResultStatus } from './result';
 
 /**
  * Docker container as returned by `/containers/json?all=true`.
@@ -185,12 +186,14 @@ export const dockerLogLineSchema = z.object({
 
 export type DockerLogLine = z.infer<typeof dockerLogLineSchema>;
 
-/** Un grupo de `docker.getContainers`: la integración pública + snapshot de stats + lista de contenedores. */
-export const dockerContainersResultSchema = z.object({
-  integration: integrationPublicSchema,
-  stats: z.custom<DockerDashboardStats>(),
-  containers: z.array(dockerContainerSchema),
-});
+/** Un grupo de `docker.getContainers`: la integración pública + snapshot de stats + lista de contenedores + status del intento. */
+export const dockerContainersResultSchema = withResultStatus(
+  z.object({
+    integration: integrationPublicSchema,
+    stats: z.custom<DockerDashboardStats>(),
+    containers: z.array(dockerContainerSchema),
+  }),
+);
 
 export const dockerContainersResultArraySchema = z.array(dockerContainersResultSchema);
 

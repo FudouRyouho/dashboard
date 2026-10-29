@@ -47,7 +47,8 @@ export async function startServer(appConfig: Config) {
   const runLog = createRunLogDB<IntegrationErrorReason>(db);
 
   const registry = await createIntegrationRegistry(db, (msg, meta) => {
-    server.log.info(meta ?? {}, msg);
+    // Use 'err' key so pino's default error serializer picks it up
+    server.log.info({ err: meta?.err ?? meta }, msg);
   });
 
   // Build policies map for task definitions

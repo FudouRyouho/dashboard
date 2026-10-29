@@ -68,16 +68,21 @@ async function callProcedure<TData>(
   const response = await fetch(url, options);
 
   if (!response.ok) {
-    throw new Error(`tRPC request failed: ${response.status} ${response.statusText}`);
+    const err = new Error(`tRPC request failed: ${response.status} ${response.statusText}`);
+    console.debug('[tRPC] %s %s → %s', method, path, err.message);
+    throw err;
   }
 
   const data = (await response.json()) as TRPCResponseError | TRPCResponseSuccess<TData>;
 
   if ('error' in data.result) {
     const { code, message } = data.result.error;
-    throw new Error(`tRPC error (${code}): ${message}`);
+    const err = new Error(`tRPC error (${code}): ${message}`);
+    console.debug('[tRPC] %s %s → %s', method, path, err.message);
+    throw err;
   }
 
+  console.debug('[tRPC] %s %s → ok', method, path);
   return data.result.data;
 }
 

@@ -22,7 +22,7 @@ export class DockerIntegration
   async getDashboardStatsAsync(options?: {
     signal?: AbortSignal;
   }): Promise<DockerDashboardStats> {
-    const results = await Promise.allSettled([
+    const [containersResult, imagesResult, networksResult, volumesResult] = await Promise.allSettled([
       this.fetchDocker<z.infer<typeof dockerContainerSchema>[]>(
         '/containers/json?all=true',
         { signal: options?.signal },
@@ -36,25 +36,27 @@ export class DockerIntegration
       }),
     ]);
 
-    const containers =
-      results[0].status === 'fulfilled' ? results[0].value : [];
-    const images = results[1].status === 'fulfilled' ? results[1].value : [];
-    const networks = results[2].status === 'fulfilled' ? results[2].value : [];
-    const volumes =
-      results[3].status === 'fulfilled' ? results[3].value.Volumes : [];
+    // Collect all rejection reasons for the caller to classify
+    const rejections = [
+      containersResult.status === 'rejected' ? containersResult.reason : null,
+      imagesResult.status === 'rejected' ? imagesResult.reason : null,
+      networksResult.status === 'rejected' ? networksResult.reason : null,
+      volumesResult.status === 'rejected' ? volumesResult.reason : null,
+    ].filter((r): r is Error => r !== null);
 
-    if (results[0].status === 'rejected') {
-      this.log('Docker containers fetch failed', { error: results[0].reason });
+    if (rejections.length > 0) {
+      for (const reason of rejections) {
+        this.log('Docker fetch failed', { err: reason });
+      }
+      // Throw the first rejection so the scheduler sees the failure and can classify it
+      throw rejections[0];
     }
-    if (results[1].status === 'rejected') {
-      this.log('Docker images fetch failed', { error: results[1].reason });
-    }
-    if (results[2].status === 'rejected') {
-      this.log('Docker networks fetch failed', { error: results[2].reason });
-    }
-    if (results[3].status === 'rejected') {
-      this.log('Docker volumes fetch failed', { error: results[3].reason });
-    }
+
+    // All fulfilled - safe to access .value
+    const containers = containersResult.status === 'fulfilled' ? containersResult.value : [];
+    const images = imagesResult.status === 'fulfilled' ? imagesResult.value : [];
+    const networks = networksResult.status === 'fulfilled' ? networksResult.value : [];
+    const volumes = volumesResult.status === 'fulfilled' ? volumesResult.value.Volumes : [];
 
     let running = 0;
     let stopped = 0;

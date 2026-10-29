@@ -15,13 +15,14 @@ import { SensorList } from './SensorList';
 
 interface SystemHealthBaseProps {
   metrics: ServerMetrics[];
+  error?: { message: string; reason?: string } | null;
 }
 
-export function SystemHealthBase({ metrics }: SystemHealthBaseProps) {
+export function SystemHealthBase({ metrics, error }: SystemHealthBaseProps) {
   if (metrics.length === 0) {
     return (
       <Card withBorder p="md">
-        <EmptyState icon={<IconHeart size={36} />} filtered={false} />
+        <EmptyState icon={<IconHeart size={36} />} filtered={false} error={error} />
       </Card>
     );
   }

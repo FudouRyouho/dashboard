@@ -22,6 +22,7 @@ import type { DockerContainerEntry, DockerContainersResultEntry } from './types'
 interface DockerSectionBaseProps {
   /** One per Docker integration (stats + container list) - from `docker.getContainers` */
   servers: DockerContainersResultEntry[];
+  error?: { message: string; reason?: string } | null;
 }
 
 const EMPTY_FILTERS: Record<'Health' | 'Host' | 'State', string | undefined> = {
@@ -127,7 +128,7 @@ export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
     <Card withBorder p="md">
       <Stack gap="sm">
         {visibleContainers.length === 0 ? (
-          <EmptyState icon={<IconBrandDocker size={36} />} filtered={active} />
+          <EmptyState icon={<IconBrandDocker size={36} />} filtered={active} error={error} />
         ) : (
           <DockerContainerTable
             containers={visibleContainers}

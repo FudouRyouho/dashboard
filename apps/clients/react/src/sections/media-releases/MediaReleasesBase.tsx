@@ -12,9 +12,10 @@ import type { MediaReleaseSourceProps } from './types';
 
 interface MediaReleasesBaseProps {
   groups: MediaReleasesResult[];
+  error?: { message: string; reason?: string } | null;
 }
 
-export function MediaReleasesBase({ groups }: MediaReleasesBaseProps) {
+export function MediaReleasesBase({ groups, error }: MediaReleasesBaseProps) {
   const [imgDisplay] = useState<keyof MediaReleaseEvent['imageUrls']>('backdrop');
   const [showDescriptionTooltip] = useState(true);
   const [showType] = useState(true);
@@ -26,7 +27,7 @@ export function MediaReleasesBase({ groups }: MediaReleasesBaseProps) {
     <Card withBorder p="md">
       <Stack gap="sm">
         {releases.length === 0 ? (
-          <EmptyState icon={<IconPhoto size={36} />} filtered={false} />
+          <EmptyState icon={<IconPhoto size={36} />} filtered={false} error={error} />
         ) : (
           groups.map((group) => {
             const def = integrationDefs[group.integration.kind];

@@ -38,9 +38,10 @@ import { useIntegrationsState } from './useIntegrationsState';
 
 interface IntegrationsBaseProps {
   integrations: IntegrationOutput[];
+  error?: { message: string; reason?: string } | null;
 }
 
-export function IntegrationsBase({ integrations }: IntegrationsBaseProps) {
+export function IntegrationsBase({ integrations, error }: IntegrationsBaseProps) {
   if (typeof import.meta !== "undefined" && import.meta.env?.DEV) assertIntegrationsMockValid();
   const { rows, upsert, remove } = useIntegrationsState(integrations);
 
@@ -83,12 +84,7 @@ export function IntegrationsBase({ integrations }: IntegrationsBaseProps) {
       </Group>
 
       {visible.length === 0 ? (
-        <Stack align="center" gap="xs" py="xl">
-          <IconPlugX size={36} color="var(--mantine-color-dimmed)" />
-          <Text c="dimmed" size="sm">
-            No integrations for this filter.
-          </Text>
-        </Stack>
+        <EmptyState icon={<IconPlugX size={36} />} error={error} />
       ) : (
         <SimpleGrid
           mt="md"

@@ -17,6 +17,7 @@ import { type DownloadState, stateColorMap } from './downloads-colors';
 interface DownloadsSectionBaseProps {
   /** One per download-client integration (router groups by `integration`) */
   clients: DownloadClientJobsAndStatus[];
+  error?: { message: string; reason?: string } | null;
 }
 
 /** Estados canónicos del contract: el universo de filtro nunca sale de la data visible. */
@@ -85,7 +86,7 @@ export function DownloadsSectionBase({ clients }: DownloadsSectionBaseProps) {
     <Card withBorder p="md">
       <Stack gap="sm">
         {visibleItems.length === 0 ? (
-          <EmptyState icon={<IconDownload size={36} />} filtered={filtered || search !== ''} />
+          <EmptyState icon={<IconDownload size={36} />} filtered={filtered || search !== ''} error={error} />
         ) : (
           <DownloadTable
             items={visibleItems}

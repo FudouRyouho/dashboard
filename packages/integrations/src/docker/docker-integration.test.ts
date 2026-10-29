@@ -90,7 +90,7 @@ describe('DockerIntegration', () => {
       expect(stats.volumes.total).toBe(2);
     });
 
-    test('returns zero-filled stats when every endpoint fails', async () => {
+    test('throws on fetch failures so scheduler can classify them', async () => {
       server.use(
         http.get(`${BASE}/containers/json`, () => new HttpResponse(null, { status: 500 })),
         http.get(`${BASE}/images/json`, () => new HttpResponse(null, { status: 500 })),
@@ -98,15 +98,7 @@ describe('DockerIntegration', () => {
         http.get(`${BASE}/volumes`, () => new HttpResponse(null, { status: 500 })),
       );
 
-      const stats = await makeIntegration().getDashboardStatsAsync();
-
-      expect(stats.containers.running).toBe(0);
-      expect(stats.containers.stopped).toBe(0);
-      expect(stats.containers.total).toBe(0);
-      expect(stats.images.total).toBe(0);
-      expect(stats.images.size).toBe(0);
-      expect(stats.networks.total).toBe(0);
-      expect(stats.volumes.total).toBe(0);
+      await expect(makeIntegration().getDashboardStatsAsync()).rejects.toThrow();
     });
   });
 

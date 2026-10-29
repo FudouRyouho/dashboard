@@ -9,6 +9,7 @@ import {
 } from '@dashboard/integrations';
 import type { DockerDashboardStats } from '@dashboard/contracts';
 import { dockerSnapshot } from '../tasks/task-ids';
+import { toStatus } from '../tasks/to-status';
 
 function emptyStats(): DockerDashboardStats {
   return {
@@ -77,10 +78,12 @@ export const dockerRouter = createTRPCRouter({
           .map(async (integration) => {
             const key = dockerSnapshot(integration.publicIntegration.id);
             const snapshot = ctx.store.get<DockerDashboardStats>(key);
+            const lastRun = ctx.runLog.last(key.taskId);
             const containers = await (integration as IDockerIntegration).getContainersAsync();
 
             return {
               integration: integration.publicIntegration,
+              status: toStatus(snapshot, lastRun),
               stats: snapshot?.data ?? emptyStats(),
               containers,
             };

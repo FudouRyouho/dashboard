@@ -1,9 +1,11 @@
 import { Calendar } from '@mantine/dates';
 import { useMemo, useState } from 'react';
 import { CalendarDay } from './CalendarDay';
-import type { CalendarResult } from '@dashboard/contracts';
+import type { CalendarResult, ResultStatus } from '@dashboard/contracts';
 import { splitMultiDayEvents, toLocalDay } from '@dashboard/core';
 import { integrationIndicatorColor } from './calendar-colors';
+import { EmptyState } from '../../components/EmptyState';
+import { IconCalendar } from '@tabler/icons-react';
 
 interface CalendarBaseProps {
   /**
@@ -11,15 +13,21 @@ interface CalendarBaseProps {
    * integracion, cada grupo con su propio `status`.
    */
   groups: CalendarResult[];
+  error?: { message: string; reason?: string } | null;
 }
 
-export function CalendarBase({ groups }: CalendarBaseProps) {
+export function CalendarBase({ groups, error }: CalendarBaseProps) {
   const normalizedEvents = useMemo(
     () => splitMultiDayEvents(groups.flatMap((g) => g.events)),
     [groups],
   );
 
   const [month, setMonth] = useState(new Date());
+
+  if (groups.length === 0) {
+    return <EmptyState icon={<IconCalendar size={36} />} error={error} />;
+  }
+
   return (
     <Calendar
       defaultDate={new Date()}
