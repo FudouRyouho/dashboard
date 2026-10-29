@@ -17,12 +17,18 @@ import {
   containerStateLabel,
   HEALTH_STATUSES,
 } from './docker-colors';
-import type { DockerContainerEntry, DockerIntegrationMockData } from './types';
+import type { DockerContainerEntry, DockerContainersResultEntry } from './types';
 
 interface DockerSectionBaseProps {
-  /** One per Docker integration (stats + container list) */
-  servers: DockerIntegrationMockData[];
+  /** One per Docker integration (stats + container list) - from `docker.getContainers` */
+  servers: DockerContainersResultEntry[];
 }
+
+const EMPTY_FILTERS: Record<'Health' | 'Host' | 'State', string | undefined> = {
+  Host: undefined,
+  Health: undefined,
+  State: undefined,
+};
 
 /**
  * D4.9 (provisional): nombre ascendente. El estado de los contenedores es estable, así que
@@ -30,16 +36,12 @@ interface DockerSectionBaseProps {
  */
 const DEFAULT_SORT: DockerSort = { key: 'name', dir: 'asc' };
 
-/** Claves = etiquetas de las dimensiones de abajo (State / Health / Host). */
-type DockerFilters = Record<'Health' | 'Host' | 'State', string | undefined>;
-
-const EMPTY_FILTERS: DockerFilters = { Host: undefined, Health: undefined, State: undefined };
-
+/** Health value → Mantine color name; callers fall back to 'gray' on unknowns. */
 function healthOf(container: DockerContainerEntry): string {
   return container.Health?.Status ?? 'none';
 }
 
-function value(container: DockerContainerEntry, key: DockerSortKey ): number | string {
+function value(container: DockerContainerEntry, key: DockerSortKey): number | string {
   switch (key) {
     case 'created':
       return container.Created;
@@ -58,7 +60,7 @@ export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
   const allContainers = useMemo<DockerContainerEntry[]>(
     () =>
       servers.flatMap((server, serverIndex) =>
-        server.containersList.map((container) => ({
+        server.containers.map((container) => ({
           ...container,
           serverIndex,
           serverName: server.integration.name,
@@ -69,7 +71,7 @@ export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
   );
 
   const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState<DockerFilters>(EMPTY_FILTERS);
+  const [filters, setFilters] = useState<Record<'Health' | 'Host' | 'State', string | undefined>>(EMPTY_FILTERS);
   const [sort, setSort] = useState<DockerSort>(DEFAULT_SORT);
   const [filterOpen, setFilterOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState<{
@@ -78,7 +80,7 @@ export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
     container: DockerContainerEntry;
   } | null>(null);
 
-  const filtered = isFilterActive(filters) || search.trim() !== '';
+  const active = isFilterActive(filters) || search.trim() !== '';
 
   const visibleContainers = useMemo(() => {
     const needle = search.trim().toLowerCase();
@@ -125,7 +127,7 @@ export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
     <Card withBorder p="md">
       <Stack gap="sm">
         {visibleContainers.length === 0 ? (
-          <EmptyState icon={<IconBrandDocker size={36} />} filtered={filtered} />
+          <EmptyState icon={<IconBrandDocker size={36} />} filtered={active} />
         ) : (
           <DockerContainerTable
             containers={visibleContainers}
@@ -140,7 +142,7 @@ export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
             <Tooltip label="Filter">
               <ActionIcon
                 size="xs"
-                variant={isFilterActive(filters) ? 'filled' : 'subtle'}
+                variant={active ? 'filled' : 'subtle'}
                 onClick={() => setFilterOpen(true)}
                 aria-label="Filter"
               >
@@ -170,10 +172,10 @@ export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
             },
             {
               label: 'Health',
-              options: HEALTH_STATUSES.map((health) => ({
-                value: health,
-                label: health,
-                color: containerHealthColorMap[health],
+              options: HEALTH_STATUSES.map((status) => ({
+                value: status,
+                label: status,
+                color: containerHealthColorMap[status],
               })),
             },
             {
@@ -185,7 +187,7 @@ export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
             },
           ]}
           selection={filters}
-          onChange={(next) => setFilters({ ...EMPTY_FILTERS, ...next })}
+          onChange={(next) => setFilters(next as Record<'Health' | 'Host' | 'State', string | undefined>)}
         />
 
         <DockerContainerContextMenu contextMenu={contextMenu} onClose={closeContextMenu} />

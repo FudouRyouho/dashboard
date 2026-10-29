@@ -6,6 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      '/trpc': {
+        target: `http://127.0.0.1:${process.env.DASHBOARD_SERVER_PORT || 3050}`,
+        changeOrigin: true,
+      },
       '/api': {
         target: `http://127.0.0.1:${process.env.DASHBOARD_SERVER_PORT || 3050}`,
         changeOrigin: true,

@@ -1,66 +1,96 @@
+import { useEffect, useState } from 'react';
 import { SimpleGrid } from '@mantine/core';
+import type {
+  CalendarResult,
+  DockerContainersResult,
+  IntegrationOutput,
+  MediaReleasesResult,
+  SystemHealthEntry,
+} from '@dashboard/contracts';
+import type { ServerMetrics } from '@dashboard/contracts';
+
 import { CalendarBase } from '../sections/calendar/CalendarBase';
-import { mediaReleasesMock } from '../mock/media-releases.mock'
-import { MediaReleasesBase } from '../sections/media-releases/MediaReleasesBase'
-
-import { calendarGroupsMock } from '../mock/calendar.mock'
+import { MediaReleasesBase } from '../sections/media-releases/MediaReleasesBase';
 import { CalendarEventList } from '../sections/calendar/CalendarEventList';
-
-import { downloadsMock } from '../mock/downloads.mock'
 import { DownloadsSectionBase } from '../sections/downloads/DownloadsSectionBase';
-
-import { dockerMock } from '../mock/docker.mock'
 import { DockerSectionBase } from '../sections/docker/DockerSectionBase';
-
-import { systemHealthMock } from '../mock/system-health.mock'
 import { SystemHealthBase } from '../sections/system-health/SystemHealthBase';
-
-import { integrationsMock } from '../mock/integrations.mock'
 import { IntegrationsBase } from '../sections/integrations/IntegrationsBase';
+import { downloadsMock } from '../mock/downloads.mock';
 
-/** Groups mock events by kind (mirrors the real calendar.getEvents response). */
-/** Wrap single mock in array to match DownloadsSectionBaseProps.clients type. */
+import * as api from '../api/client';
+
 const downloadsClients = [downloadsMock];
 
 export function MainBody() {
-  return (<>
-    <SimpleGrid cols={{ xs: 2, lg: 2 }}>
-      <div>
-        <CalendarBase groups={calendarGroupsMock} />
-      </div>
-      <div>
-        <CalendarEventList events={calendarGroupsMock[0]?.events ?? []} />
-      </div>
-    </SimpleGrid>
-    <SimpleGrid cols={{ xs: 2, lg: 2 }}>
-      <div>
-        <MediaReleasesBase groups={mediaReleasesMock} />
-      </div>
-      <div>
-      </div>
-    </SimpleGrid>
-    <SimpleGrid cols={{ xs: 2, lg: 2 }}>
-      <div>
-        <DownloadsSectionBase clients={downloadsClients} />
-      </div>
-      <div>
-      </div>
-    </SimpleGrid>
-    <SimpleGrid cols={{ xs: 2, lg: 2 }}>
-      <div>
-        <DockerSectionBase servers={dockerMock} />
-      </div>
-      <div>
-      </div>
-    </SimpleGrid>
-    <SimpleGrid cols={{ xs: 2, lg: 2 }}>
-      <div>
-        <SystemHealthBase metrics={systemHealthMock} />
-      </div>
-      <div>
-      </div>
-    </SimpleGrid>
-    <IntegrationsBase integrations={integrationsMock} />
-  </>
+  const [calGroups, setCalGroups] = useState<CalendarResult[]>([]);
+  const [mediaGroups, setMediaGroups] = useState<MediaReleasesResult[]>([]);
+  const [dockerServers, setDockerServers] = useState<DockerContainersResult[]>([]);
+  const [healthMetrics, setHealthMetrics] = useState<ServerMetrics[]>([]);
+  const [ints, setInts] = useState<IntegrationOutput[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    void Promise.allSettled([
+      api.fetchCalendarEvents().then((r) => {
+        if (r) setCalGroups(r);
+      }),
+      api.fetchMediaReleases().then((r) => {
+        if (r) setMediaGroups(r);
+      }),
+      api.fetchDockerContainers().then((r) => {
+        if (r) setDockerServers(r);
+      }),
+      api.fetchSystemHealth().then((r) => {
+        if (r) setHealthMetrics((r as SystemHealthEntry[]).flatMap((e) => e.metrics));
+      }),
+      api.fetchIntegrations().then((r) => {
+        if (r) setInts(r);
+      }),
+    ]).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>
+    );
+  }
+
+  return (
+    <>
+      <SimpleGrid cols={{ xs: 2, lg: 2 }}>
+        <div>
+          <CalendarBase groups={calGroups} />
+        </div>
+        <div>
+          <CalendarEventList events={calGroups[0]?.events ?? []} />
+        </div>
+      </SimpleGrid>
+      <SimpleGrid cols={{ xs: 2, lg: 2 }}>
+        <div>
+          <MediaReleasesBase groups={mediaGroups} />
+        </div>
+        <div />
+      </SimpleGrid>
+      <SimpleGrid cols={{ xs: 2, lg: 2 }}>
+        <div>
+          <DownloadsSectionBase clients={downloadsClients} />
+        </div>
+        <div />
+      </SimpleGrid>
+      <SimpleGrid cols={{ xs: 2, lg: 2 }}>
+        <div>
+          <DockerSectionBase servers={dockerServers} />
+        </div>
+        <div />
+      </SimpleGrid>
+      <SimpleGrid cols={{ xs: 2, lg: 2 }}>
+        <div>
+          <SystemHealthBase metrics={healthMetrics} />
+        </div>
+        <div />
+      </SimpleGrid>
+      <IntegrationsBase integrations={ints} />
+    </>
   );
 }

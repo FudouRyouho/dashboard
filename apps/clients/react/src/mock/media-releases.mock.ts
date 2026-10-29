@@ -92,7 +92,6 @@ const jellyfinReleases: MediaReleaseEvent[] = [
     releaseDate: '2026-04-04T03:00:00.000Z',
     firstAired: '2026-04-04T03:00:00.000Z',
     childCount: 12,
-    status: 'Continuing',
     studio: 'bones film',
     rating: 7.8,
     genres: ['Action', 'Adventure', 'Anime', 'Comedy', 'Fantasy'],

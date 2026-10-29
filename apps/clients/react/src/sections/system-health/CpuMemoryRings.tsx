@@ -1,7 +1,7 @@
 import { Group } from '@mantine/core';
 import { IconCpu, IconDatabase, IconTemperature } from '@tabler/icons-react';
 
-import type { ServerMetrics } from '@dashboard/integrations';
+import type { ServerMetrics } from '@dashboard/contracts';
 
 import { formatTemp } from './format';
 import { progressColor } from './health-colors';

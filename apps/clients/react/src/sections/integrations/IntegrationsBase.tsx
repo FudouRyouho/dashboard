@@ -30,7 +30,7 @@ import {
 } from '@tabler/icons-react';
 import { integrationDefs } from '@dashboard/definitions';
 
-import type { IntegrationOutput } from '../../mock/integrations.mock';
+import type { IntegrationOutput } from '@dashboard/contracts';
 import { assertIntegrationsMockValid } from '../../mock/integrations.mock';
 
 import { IntegrationCard } from './IntegrationCard';

@@ -1,7 +1,7 @@
 import { Box, Group, Text, Tooltip } from '@mantine/core';
 import { IconDownload, IconUpload } from '@tabler/icons-react';
 
-import type { ServerMetrics } from '@dashboard/integrations';
+import type { ServerMetrics } from '@dashboard/contracts';
 
 import { formatBytesPerSec } from './format';
 

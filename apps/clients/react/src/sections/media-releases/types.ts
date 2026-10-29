@@ -1,27 +1,12 @@
-import type {
-  IntegrationKind,
-  MediaReleaseEvent,
-  ResultStatus,
-} from '@dashboard/contracts';
+import type { MediaReleasesResult } from '@dashboard/contracts';
 
 /**
- * One entry of `mediaReleases.getLatest`
- * (`apps/server/src/routers/media-releases.ts:12-44`): the public integration
- * that produced the releases, the snapshot `status`, and its payload.
- * `integration.kind` is what feeds `integrationDefs` for the source avatar.
+ * Un elemento de `mediaReleases.getLatest` - tipa contra el schema de contracts.
+ * `integration.kind` alimenta `integrationDefs` para el avatar de la fuente.
  */
-export interface MediaReleasesGroupProps {
-  integration: {
-    id: string;
-    kind: IntegrationKind;
-    name: string;
-    url: string;
-  };
-  releases: MediaReleaseEvent[];
-  status: ResultStatus;
-}
+export type MediaReleasesGroupProps = MediaReleasesResult;
 
-/** Source avatar, resolved from `integrationDefs` by the Base. */
+/** Source avatar, resuelto desde `integrationDefs` por la Base. */
 export interface MediaReleaseSourceProps {
   iconUrl: string;
   name: string;

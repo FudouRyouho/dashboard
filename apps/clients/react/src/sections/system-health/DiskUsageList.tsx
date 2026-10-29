@@ -1,7 +1,7 @@
 import { Badge, Box, Divider, Group, Progress, Stack, Text } from '@mantine/core';
 import { IconServer } from '@tabler/icons-react';
 
-import type { ServerMetrics } from '@dashboard/integrations';
+import type { ServerMetrics } from '@dashboard/contracts';
 import { formatBytes } from '@dashboard/core';
 
 import { formatBytesPerSec } from './format';

@@ -2,24 +2,18 @@ import { Box, Card, Group, Stack, Text } from '@mantine/core';
 import { useState } from 'react';
 import { IconPhoto } from '@tabler/icons-react';
 
-import type { MediaReleaseEvent } from '@dashboard/contracts';
+import type { MediaReleaseEvent, MediaReleasesResult } from '@dashboard/contracts';
 import { integrationDefs } from '@dashboard/definitions';
 
 import { EmptyState } from '../../components/EmptyState';
 import { MediaReleaseItem } from './MediaReleaseItem';
 import { statusDotColor } from './media-releases-colors';
-import type { MediaReleasesGroupProps, MediaReleaseSourceProps } from './types';
+import type { MediaReleaseSourceProps } from './types';
 
 interface MediaReleasesBaseProps {
-  /** One entry per media-releases integration, exactly as `mediaReleases.getLatest` returns it. */
-  groups: MediaReleasesGroupProps[];
+  groups: MediaReleasesResult[];
 }
 
-/**
- * Section interactiva (D4.3): sin encabezado, sin filtro, sin gestión. Se entra a mirar,
- * y el único cromo que queda es la fila de Releases. Sin barra: el cuerpo (posters)
- * ya dice todo; no hay estado agregado que el cuerpo no muestre (R-resumen · 1).
- */
 export function MediaReleasesBase({ groups }: MediaReleasesBaseProps) {
   const [imgDisplay] = useState<keyof MediaReleaseEvent['imageUrls']>('backdrop');
   const [showDescriptionTooltip] = useState(true);
@@ -55,7 +49,7 @@ export function MediaReleasesBase({ groups }: MediaReleasesBaseProps) {
                     {def.name}
                   </Text>
                 </Group>
-                {group.releases.map((release) => (
+                {group.releases.map((release: MediaReleaseEvent) => (
                   <MediaReleaseItem
                     key={`${group.integration.id}-${release.id}`}
                     release={release}

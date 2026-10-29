@@ -1,7 +1,7 @@
 import { Badge, Box, Divider, Group, Stack, Text, Tooltip } from '@mantine/core';
 import { IconDeviceMobile, IconThermometer } from '@tabler/icons-react';
 
-import type { ServerMetrics } from '@dashboard/integrations';
+import type { ServerMetrics } from '@dashboard/contracts';
 
 import { formatTemp } from './format';
 import { progressColor } from './health-colors';

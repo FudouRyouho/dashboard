@@ -1,7 +1,7 @@
 import { Badge, Box, Card, Group, Stack, Text, Tooltip } from '@mantine/core';
 import { IconCpu, IconDatabase, IconHeart, IconServer, IconTemperature } from '@tabler/icons-react';
 
-import type { ServerMetrics } from '@dashboard/integrations';
+import type { ServerMetrics } from '@dashboard/contracts';
 import { formatBytes } from '@dashboard/core';
 import { EmptyState } from '../../components/EmptyState';
 
@@ -29,8 +29,8 @@ export function SystemHealthBase({ metrics }: SystemHealthBaseProps) {
   return (
     <Card withBorder p="md">
       <Stack gap="sm">
-        {metrics.map((metric) => (
-          <ServerMetricsCard key={metric.server} metric={metric} />
+        {metrics.map((metric, index) => (
+          <ServerMetricsCard key={`${metric.server}-${index}`} metric={metric} />
         ))}
       </Stack>
     </Card>

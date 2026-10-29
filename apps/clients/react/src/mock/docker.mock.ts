@@ -1,10 +1,11 @@
-import type { DockerIntegrationMockData } from '../sections/docker/types';
+import type { DockerContainersResultEntry } from '../sections/docker/types';
 
-export const dockerMock: DockerIntegrationMockData[] = [
+export const dockerMock: DockerContainersResultEntry[] = [
   {
     integration: {
       id: 'docker:server:197',
       name: 'Docker Servidor (192.168.10.197)',
+      url: 'http://192.168.10.197:2375',
       kind: 'docker',
     },
     stats: {
@@ -28,7 +29,7 @@ export const dockerMock: DockerIntegrationMockData[] = [
       services: { total: 0 },
       stacks: { total: 0 },
     },
-    containersList: [
+    containers: [
       {
         Id: 'c3df8c1a733a',
         Names: ['/radarr'],
@@ -178,6 +179,7 @@ export const dockerMock: DockerIntegrationMockData[] = [
     integration: {
       id: 'docker:local:125',
       name: 'Docker Local (192.168.10.125)',
+      url: 'http://192.168.10.125:2375',
       kind: 'docker',
     },
     stats: {
@@ -201,7 +203,7 @@ export const dockerMock: DockerIntegrationMockData[] = [
       services: { total: 0 },
       stacks: { total: 0 },
     },
-    containersList: [
+    containers: [
       {
         Id: '1749295984c2',
         Names: ['/freellmapi-1'],

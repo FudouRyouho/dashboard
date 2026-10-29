@@ -1,4 +1,4 @@
-import type { ServerMetrics } from '@dashboard/integrations';
+import type { ServerMetrics } from '@dashboard/contracts';
 
 export const systemHealthMock: ServerMetrics[] = [
   {
