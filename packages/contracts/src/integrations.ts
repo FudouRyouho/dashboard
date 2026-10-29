@@ -97,3 +97,5 @@ export const integrationPublicSchema = z.object({
   name: z.string(),
   url: z.string(),
 });
+
+export type IntegrationPublic = z.infer<typeof integrationPublicSchema>;

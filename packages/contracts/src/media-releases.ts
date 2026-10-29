@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { withResultStatus } from './result';
+import { withResultStatus, type ResultStatus } from './result';
 import { integrationPublicSchema } from './integrations';
 
 const mediaReleaseMovieSchema = z.object({
@@ -46,7 +46,9 @@ const mediaReleaseSeriesSchema = z.object({
   releaseDate: z.string().datetime({ offset: true }).nullable(),
   firstAired: z.string().datetime({ offset: true }).nullable(),
   childCount: z.number().nullable(),
-  status: z.string().nullable(),
+  // NOTE: removed `status: z.string().nullable()` to avoid collision with
+  // `withResultStatus` which adds `status: resultStatusSchema` to the group.
+  // Series status (continuing/ended/etc.) is not surfaced by the API yet.
   studio: z.string().nullable(),
   rating: z.number().nullable(),
   genres: z.array(z.string()).default([]),
@@ -82,4 +84,12 @@ export const mediaReleasesResultSchema = withResultStatus(
 
 export const mediaReleasesResultArraySchema = z.array(mediaReleasesResultSchema);
 
-export type MediaReleasesResult = z.infer<typeof mediaReleasesResultSchema>;
+/**
+ * Tipado explícito para evitar que Zod infiera `unknown` en el campo `status`.
+ * `z.infer` no propaga correctamente el tipo extendido en algunas versiones.
+ */
+export type MediaReleasesResult = {
+  integration: z.infer<typeof integrationPublicSchema>;
+  releases: z.infer<typeof mediaReleasesResponseSchema>;
+  status: ResultStatus;
+};

@@ -1,33 +1,19 @@
 import { Integration } from './integration';
-import type { DockerContainer, DockerSystemStats, DockerContainerStats, DockerContainerLogOptions } from '@dashboard/contracts';
+import type {
+  DockerContainer,
+  DockerSystemStats,
+  DockerContainerStats,
+  DockerContainerLogOptions,
+  DockerDashboardStats,
+} from '@dashboard/contracts';
 
-export type { DockerContainer, DockerSystemStats, DockerContainerStats, DockerContainerLogOptions };
-
-export interface DockerDashboardStats {
-  containers: {
-    running: number;
-    stopped: number;
-    healthy: number;
-    unhealthy: number;
-    total: number;
-  };
-  images: {
-    total: number;
-    size: number;
-  };
-  networks: {
-    total: number;
-  };
-  services?: {
-    total: number;
-  };
-  stacks?: {
-    total: number;
-  };
-  volumes: {
-    total: number;
-  };
-}
+export type {
+  DockerContainer,
+  DockerSystemStats,
+  DockerContainerStats,
+  DockerContainerLogOptions,
+  DockerDashboardStats,
+};
 
 export interface IDockerIntegration {
   getDashboardStatsAsync(options?: {

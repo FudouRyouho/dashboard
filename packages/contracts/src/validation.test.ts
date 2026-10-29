@@ -116,6 +116,7 @@ test('validateMediaReleaseEvent validates episode', () => {
     seriesId: 'series-1',
     seasonNumber: 1,
     episodeNumber: 1,
+    runtimeMs: null,
     imageUrls: {
       poster: 'https://example.com/poster.jpg',
       backdrop: 'https://example.com/backdrop.jpg',
@@ -135,7 +136,9 @@ test('validateMediaReleaseEvent validates series', () => {
     releaseDate: '2026-01-15T10:00:00.000Z',
     firstAired: '2025-01-01T00:00:00.000Z',
     childCount: 10,
-    status: 'Continuing',
+    // NOTE: removed `status` to avoid collision with `withResultStatus`
+    studio: 'Studio Name',
+    rating: 8.5,
     imageUrls: {
       poster: 'https://example.com/poster.jpg',
       backdrop: 'https://example.com/backdrop.jpg',

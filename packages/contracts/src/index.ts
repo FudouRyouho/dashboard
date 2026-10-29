@@ -5,5 +5,7 @@ export * from './data-view';
 export * from './media-releases';
 export * from './integrations';
 export * from './docker';
+export * from './docker-stats';
+export * from './system-health-types';
 export * from './validation';
 export * from './download-client';

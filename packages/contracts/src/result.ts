@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { integrationPublicSchema } from './integrations';
+import type { ServerMetrics } from './system-health-types';
 
 export const integrationErrorReasons = [
   'unauthorized',
@@ -15,8 +17,8 @@ const isoDate = z.string().datetime({ offset: true });
 
 const dataFactsSchema = z.object({
   obtainedAt: isoDate,
-  from: isoDate,
-  to: isoDate,
+  from: isoDate.nullable(),
+  to: isoDate.nullable(),
 }).nullable();
 
 const attemptFactsSchema = z
@@ -40,3 +42,19 @@ export type ResultStatus = z.infer<typeof resultStatusSchema>;
 export function withResultStatus<T extends z.AnyZodObject>(schema: T) {
   return schema.extend({ status: resultStatusSchema });
 }
+
+/**
+ * Entry from systemHealth.getAllMetrics - one per Prometheus instance with its aggregated metrics.
+ * The server digests (discovers, normalizes, aggregates); the client consumes.
+ */
+export const systemHealthEntrySchema = z.object({
+  integration: integrationPublicSchema,
+  server: z.string(),
+  metrics: z.custom<ServerMetrics[]>(),
+});
+
+export const systemHealthEntryArraySchema = z.array(systemHealthEntrySchema);
+
+export type SystemHealthEntry = z.infer<typeof systemHealthEntrySchema>;
+export type SystemHealthEntryArray = z.infer<typeof systemHealthEntryArraySchema>;
+

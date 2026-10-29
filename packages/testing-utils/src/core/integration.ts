@@ -4,7 +4,7 @@ import type {
   DownloadClientJobsAndStatus,
   GetClientJobsAndStatusInput,
 } from '@dashboard/contracts';
-import type { DockerDashboardStats } from '@dashboard/integrations';
+import type { DockerDashboardStats } from '@dashboard/contracts';
 import type { CalendarEvent } from '@dashboard/contracts';
 import type {
   PrometheusNormalized,

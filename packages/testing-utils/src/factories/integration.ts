@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import type { IntegrationKind } from '@dashboard/contracts';
-import type { DockerDashboardStats } from '@dashboard/integrations';
+import type { DockerDashboardStats } from '@dashboard/contracts';
 import type { CalendarEvent } from '@dashboard/contracts';
 import type {
   TestIntegration,

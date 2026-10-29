@@ -130,7 +130,8 @@ export class JellyfinIntegration
       type: 'series',
       firstAired: item.PremiereDate ?? null,
       childCount: item.ChildCount,
-      status: item.Status ?? null,
+      // NOTE: removed `status` to avoid collision with `withResultStatus`
+      // which adds `status: resultStatusSchema` to the group.
       studio: item.Studios?.[0]?.Name ?? null,
       rating: item.CommunityRating ?? null,
     };
