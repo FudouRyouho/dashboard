@@ -21,7 +21,6 @@ import {
   Group,
   Menu,
   SimpleGrid,
-  Stack,
   Text,
 } from '@mantine/core';
 import {
@@ -31,6 +30,7 @@ import {
 import { integrationDefs } from '@dashboard/definitions';
 
 import type { IntegrationOutput } from '@dashboard/contracts';
+import { EmptyState } from '../../components/EmptyState';
 import { assertIntegrationsMockValid } from '../../mock/integrations.mock';
 
 import { IntegrationCard } from './IntegrationCard';

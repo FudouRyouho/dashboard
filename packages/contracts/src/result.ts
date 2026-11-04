@@ -39,7 +39,16 @@ export const resultStatusSchema = z.object({
 
 export type ResultStatus = z.infer<typeof resultStatusSchema>;
 
-export function withResultStatus<T extends z.AnyZodObject>(schema: T) {
+/**
+ * Adds `status` to an object schema, keeping the input shape in the return type.
+ *
+ * Bound to `z.ZodObject<T>` instead of `z.AnyZodObject` on purpose: with an
+ * unresolved constraint-only generic, `.extend()` resolves against
+ * `AnyZodObject`, whose shape is `any`, so every `z.infer` of the result
+ * collapses to `any` for all consumers. Naming `T` through the object keeps
+ * each key concrete across the package boundary.
+ */
+export function withResultStatus<T extends z.ZodRawShape>(schema: z.ZodObject<T>) {
   return schema.extend({ status: resultStatusSchema });
 }
 

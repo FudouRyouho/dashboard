@@ -8,9 +8,8 @@ import type {
   CalendarResult,
   DockerContainer,
   DockerContainersResult,
-  DownloadClientItem,
+  DownloadClientJobsWithIntegration,
   IntegrationOutput,
-  IntegrationPublic,
   MediaReleasesResult,
   SystemHealthEntry,
 } from '@dashboard/contracts';
@@ -42,11 +41,10 @@ interface TRPCResponseError {
 }
 
 function toQueryString(input: unknown): string {
-  if (!input) return '';
-  const keys = Object.keys(input);
-  if (keys.length === 0) return '';
+  if (input === undefined || input === null) return '';
   const params = new URLSearchParams();
-  // tRPC expects input as a JSON string in the 'input' query param
+  // tRPC expects input as a JSON string in the 'input' query param.
+  // An empty object is still an input: the procedure's schema may carry defaults.
   params.append('input', JSON.stringify(input));
   return params.toString();
 }
@@ -57,7 +55,8 @@ async function callProcedure<TData>(
   method: 'mutation' | 'query' = 'query',
 ): Promise<TData | null> {
   const isQuery = method === 'query';
-  const url = `${TRPC_URL}/${path}${isQuery ? `?${toQueryString(input)}` : ''}`;
+  const query = isQuery ? toQueryString(input) : '';
+  const url = `${TRPC_URL}/${path}${query ? `?${query}` : ''}`;
 
   const options: RequestInit = {
     method: isQuery ? 'GET' : 'POST',
@@ -101,7 +100,7 @@ export const fetchMediaReleases = () =>
 
 // ─── Downloads ───────────────────────────────────────────────
 export const fetchDownloads = () =>
-  callProcedure<DownloadClientItem[]>('downloads.getAllJobs');
+  callProcedure<DownloadClientJobsWithIntegration[]>('downloads.getAllJobs', {});
 
 // ─── Docker ──────────────────────────────────────────────────
 export const fetchDockerContainers = () =>

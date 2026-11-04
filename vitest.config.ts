@@ -7,7 +7,11 @@ module.exports = defineConfig({
     environment: 'node',
     singleThread: true,
     testTimeout: 120000,
-    include: ['packages/*/src/**/*.test.ts', 'apps/server/src/**/*.test.ts'],
+    include: [
+      'packages/*/src/**/*.test.ts',
+      'apps/server/src/**/*.test.ts',
+      'apps/clients/react/src/**/*.test.ts',
+    ],
     exclude: [
       'apps/server/src/scripts/trpc-error-smoke.test.ts',
       'apps/server/src/trpc-client.test.ts',

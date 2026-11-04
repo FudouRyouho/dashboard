@@ -174,6 +174,10 @@ export const dockerMock: DockerContainersResultEntry[] = [
         Mounts: [],
       },
     ],
+    status: {
+      data: { obtainedAt: '2026-08-01T12:00:00.000Z', from: null, to: null },
+      attempt: { outcome: 'success', at: '2026-08-01T12:00:00.000Z' },
+    },
   },
   {
     integration: {
@@ -247,5 +251,9 @@ export const dockerMock: DockerContainersResultEntry[] = [
         Mounts: [],
       },
     ],
+    status: {
+      data: { obtainedAt: '2026-08-01T12:00:00.000Z', from: null, to: null },
+      attempt: { outcome: 'success', at: '2026-08-01T12:00:00.000Z' },
+    },
   },
 ];

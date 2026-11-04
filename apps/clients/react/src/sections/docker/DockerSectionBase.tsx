@@ -57,7 +57,7 @@ function value(container: DockerContainerEntry, key: DockerSortKey): number | st
   }
 }
 
-export function DockerSectionBase({ servers }: DockerSectionBaseProps) {
+export function DockerSectionBase({ servers, error }: DockerSectionBaseProps) {
   const allContainers = useMemo<DockerContainerEntry[]>(
     () =>
       servers.flatMap((server, serverIndex) =>

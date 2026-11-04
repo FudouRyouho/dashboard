@@ -6,8 +6,7 @@ import type {
   IntegrationOutput,
   MediaReleasesResult,
   SystemHealthEntry,
-  ResultStatus,
-  DownloadClientJobsAndStatus,
+  DownloadClientJobsWithIntegration,
 } from '@dashboard/contracts';
 import type { ServerMetrics } from '@dashboard/contracts';
 
@@ -34,7 +33,7 @@ export function MainBody() {
   const [healthError, setHealthError] = useState<FetchError>(null);
   const [ints, setInts] = useState<IntegrationOutput[]>([]);
   const [intsError, setIntsError] = useState<FetchError>(null);
-  const [downloadsClients, setDownloadsClients] = useState<DownloadClientJobsAndStatus[]>([]);
+  const [downloadsClients, setDownloadsClients] = useState<DownloadClientJobsWithIntegration[]>([]);
   const [downloadsError, setDownloadsError] = useState<FetchError>(null);
   const [loading, setLoading] = useState(true);
 

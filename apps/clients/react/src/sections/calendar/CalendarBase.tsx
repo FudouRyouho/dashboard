@@ -1,7 +1,7 @@
 import { Calendar } from '@mantine/dates';
 import { useMemo, useState } from 'react';
 import { CalendarDay } from './CalendarDay';
-import type { CalendarResult, ResultStatus } from '@dashboard/contracts';
+import type { CalendarResult } from '@dashboard/contracts';
 import { splitMultiDayEvents, toLocalDay } from '@dashboard/core';
 import { integrationIndicatorColor } from './calendar-colors';
 import { EmptyState } from '../../components/EmptyState';

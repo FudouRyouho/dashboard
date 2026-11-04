@@ -17,9 +17,9 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({ icon, filtered = false, error }: EmptyStateProps) {
-  const isError = Boolean(error);
-  const message = isError
-    ? `Failed to load: ${error.reason ?? error.message ?? 'unknown error'}`
+  const isError = error != null;
+  const message = error
+    ? `Failed to load: ${error.reason ?? error.message}`
     : filtered
       ? 'No results with the active filters'
       : 'No data';

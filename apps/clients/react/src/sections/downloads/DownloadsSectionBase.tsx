@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { ActionIcon, Card, Stack, Text, Tooltip } from '@mantine/core';
 import { IconDownload, IconFilter, IconUpload } from '@tabler/icons-react';
 
-import type { DownloadClientJobsAndStatus } from '@dashboard/contracts';
+import type { DownloadClientJobsWithIntegration } from '@dashboard/contracts';
 import { formatByteRate } from '@dashboard/core';
 import { EmptyState } from '../../components/EmptyState';
 import { isFilterActive } from '../../components/filter-selection';
@@ -16,7 +16,7 @@ import { type DownloadState, stateColorMap } from './downloads-colors';
 
 interface DownloadsSectionBaseProps {
   /** One per download-client integration (router groups by `integration`) */
-  clients: DownloadClientJobsAndStatus[];
+  clients: DownloadClientJobsWithIntegration[];
   error?: { message: string; reason?: string } | null;
 }
 
@@ -42,7 +42,7 @@ function compare(a: DownloadsTableRow, b: DownloadsTableRow, key: DownloadsSortK
 }
 
 
-export function DownloadsSectionBase({ clients }: DownloadsSectionBaseProps) {
+export function DownloadsSectionBase({ clients, error }: DownloadsSectionBaseProps) {
   const allItems = useMemo<DownloadsTableRow[]>(
     () =>
       clients.flatMap((client, clientIndex) =>
