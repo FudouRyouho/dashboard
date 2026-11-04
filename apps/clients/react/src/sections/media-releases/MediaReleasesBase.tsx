@@ -15,7 +15,7 @@ interface MediaReleasesBaseProps {
   error?: { message: string; reason?: string } | null;
 }
 
-export function MediaReleasesBase({ groups, error }: MediaReleasesBaseProps) {
+export function MediaReleasesBase({ groups }: MediaReleasesBaseProps) {
   const [imgDisplay] = useState<keyof MediaReleaseEvent['imageUrls']>('backdrop');
   const [showDescriptionTooltip] = useState(true);
   const [showType] = useState(true);
@@ -23,11 +23,23 @@ export function MediaReleasesBase({ groups, error }: MediaReleasesBaseProps) {
 
   const releases = groups.flatMap((group) => group.releases);
 
+  const failedAttempt = groups.find(
+    (g): g is typeof g & { status: { attempt: { outcome: 'failure'; reason: string } } } =>
+      g.status?.attempt?.outcome === 'failure',
+  );
+
   return (
     <Card withBorder p="md">
       <Stack gap="sm">
         {releases.length === 0 ? (
-          <EmptyState icon={<IconPhoto size={36} />} filtered={false} error={error} />
+          <EmptyState
+            icon={<IconPhoto size={36} />}
+            filtered={false}
+            error={failedAttempt
+              ? { message: failedAttempt.status.attempt.reason, reason: failedAttempt.status.attempt.reason }
+              : null
+            }
+          />
         ) : (
           groups.map((group) => {
             const def = integrationDefs[group.integration.kind];
