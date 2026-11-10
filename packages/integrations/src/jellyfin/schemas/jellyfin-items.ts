@@ -22,7 +22,7 @@ const jellyfinItemBaseSchema = z
     Name: z.string(),
     ServerId: z.string(),
     Id: z.string(),
-    DateCreated: z.string().datetime({ offset: true }),
+    DateCreated: z.string().datetime({ offset: true }).nullable().optional(),
     PremiereDate: z.string().datetime({ offset: true }).nullable().optional(),
     EndDate: z.string().datetime({ offset: true }).nullable().optional(),
     ChannelId: z.string().nullable().optional(),
@@ -32,13 +32,13 @@ const jellyfinItemBaseSchema = z
     GenreItems: z.array(nameIdPairSchema).default([]),
     CommunityRating: z.number().nullable().optional(),
     OfficialRating: z.string().nullable().optional(),
-    RunTimeTicks: z.number(),
+    RunTimeTicks: z.number().nullable().optional(),
     ProductionYear: z.number().nullable().optional(),
     Studios: z.array(studioSchema).default([]),
     UserData: userDataSchema,
-    ChildCount: z.number(),
+    ChildCount: z.number().nullable().optional(),
     LocationType: z.string().optional(),
-    MediaType: z.string(),
+    MediaType: z.string().nullable().optional(),
     ImageTags: z.record(z.string(), z.string()).default({}),
     BackdropImageTags: z.array(z.string()).default([]),
     ImageBlurHashes: z
@@ -77,6 +77,11 @@ export const jellyfinItemSchema = z.discriminatedUnion('Type', [
   jellyfinItemBaseSchema.extend({
     Type: z.literal('Movie'),
     IsFolder: z.literal(false),
+  }),
+  // Jellyfin 12.4.0 devuelve Seasons en /Items/Latest; se tratan como serie.
+  jellyfinItemBaseSchema.extend({
+    Type: z.literal('Season'),
+    IsFolder: z.literal(true),
   }),
 ]);
 

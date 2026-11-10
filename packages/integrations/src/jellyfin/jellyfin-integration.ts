@@ -34,7 +34,9 @@ export class JellyfinIntegration
     // Resolve userId dynamically (Homarr pattern: /Users → first user)
     const usersUrl = this.url('/Users');
     const usersResponse = await this.fetchJson<{ Id: string }[]>(usersUrl, {
-      headers: { 'X-Emby-Token': this.getSecretValue('apiKey') },
+      headers: {
+        Authorization: `MediaBrowser Token="${this.getSecretValue('apiKey')}"`,
+      },
       signal: options?.signal,
     });
 
@@ -50,7 +52,9 @@ export class JellyfinIntegration
     });
 
     const rawData = await this.fetchJson<unknown>(url, {
-      headers: { 'X-Emby-Token': this.getSecretValue('apiKey') },
+      headers: {
+        Authorization: `MediaBrowser Token="${this.getSecretValue('apiKey')}"`,
+      },
       signal: options?.signal,
     });
 
@@ -129,7 +133,7 @@ export class JellyfinIntegration
       ...baseFields,
       type: 'series',
       firstAired: item.PremiereDate ?? null,
-      childCount: item.ChildCount,
+      childCount: item.ChildCount ?? null,
       // NOTE: removed `status` to avoid collision with `withResultStatus`
       // which adds `status: resultStatusSchema` to the group.
       studio: item.Studios?.[0]?.Name ?? null,
