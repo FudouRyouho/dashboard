@@ -22,6 +22,13 @@ export const theme = createTheme({
   },
   fontFamily: 'Inter, sans-serif',
   defaultRadius: 'md',
+  breakpoints: {
+    xs: '576px',
+    sm: '768px',
+    md: '922px',
+    lg: '1200px',
+    xl: '1408px',
+  },
 });
 
 export const getMantineColor = (color: DefaultMantineColor, shade: MantineColorShade) =>

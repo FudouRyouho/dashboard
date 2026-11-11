@@ -1,0 +1,68 @@
+.grid {
+  height: 100%;
+  /* base: apilado, scroll de página (aún sin snap-page). */
+  overflow: auto;
+  display: grid;
+  gap: var(--shell-gap, 12px);
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-template-areas:
+    'cal'
+    'media'
+    'dl'
+    'docker'
+    'sys';
+}
+
+.wrapper {
+  height: 100%;
+}
+
+@media (min-width: 576px) {
+  .grid {
+    /* Desktop: grid 6×8 (cal 2/4, media 4/4, dl/docker 3/3, sys full) */
+    overflow: hidden;
+    height: 100%;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+      "cal cal media media media media"
+      "cal cal media media media media"
+      "cal cal media media media media"
+      "dl dl dl docker docker docker"
+      "dl dl dl docker docker docker"
+      "dl dl dl docker docker docker"
+      "sys sys sys sys sys sys"
+      "sys sys sys sys sys sys";
+  }
+}
+
+.cal {
+  grid-area: cal;
+  align-self: start;
+  /* altura natural, no se estira al alto de media; media manda el alto de la fila */
+}
+
+.media {
+  grid-area: media;
+  min-height: 0;
+  height: 100%;
+}
+
+.dl {
+  grid-area: dl;
+  min-height: 0;
+  height: 100%;
+}
+
+.docker {
+  grid-area: docker;
+  min-height: 0;
+  height: 100%;
+}
+
+.sys {
+  grid-area: sys;
+  min-height: 0;
+  height: 100%;
+}

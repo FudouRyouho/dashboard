@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
+import './global.css';
 import App from './App';
 import { MantineProvider } from '@mantine/core';
 import { theme } from './theme';

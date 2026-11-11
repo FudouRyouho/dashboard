@@ -1,0 +1,5 @@
+/* Fix: Mantine AppShell-main debe respetar altura del flex parent */
+.mantine-AppShell-main {
+  height: 100%;
+  min-height: 0;
+}

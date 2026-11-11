@@ -1,4 +1,4 @@
-import { Badge, Box, Card, Group, Stack, Text, Tooltip } from '@mantine/core';
+import { Badge, Box, Group, ScrollArea, Stack, Text, Tooltip } from '@mantine/core';
 import { IconCpu, IconDatabase, IconHeart, IconServer, IconTemperature } from '@tabler/icons-react';
 
 import type { ServerMetrics } from '@dashboard/contracts';
@@ -21,20 +21,18 @@ interface SystemHealthBaseProps {
 export function SystemHealthBase({ metrics, error }: SystemHealthBaseProps) {
   if (metrics.length === 0) {
     return (
-      <Card withBorder p="md">
-        <EmptyState icon={<IconHeart size={36} />} filtered={false} error={error} />
-      </Card>
+      <EmptyState icon={<IconHeart size={36} />} filtered={false} error={error} />
     );
   }
 
   return (
-    <Card withBorder p="md">
-      <Stack gap="sm">
+    <ScrollArea h="100%" type="auto" style={{ minHeight: 0 }}>
+      <Stack gap="sm" style={{ minHeight: 0 }}>
         {metrics.map((metric, index) => (
           <ServerMetricsCard key={`${metric.server}-${index}`} metric={metric} />
         ))}
       </Stack>
-    </Card>
+    </ScrollArea>
   );
 }
 
