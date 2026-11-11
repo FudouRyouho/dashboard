@@ -1,4 +1,4 @@
-import { Box, Card, Group, Stack, Text } from '@mantine/core';
+import { ScrollArea, Stack } from '@mantine/core';
 import { useState } from 'react';
 import { IconPhoto } from '@tabler/icons-react';
 
@@ -7,7 +7,6 @@ import { integrationDefs } from '@dashboard/definitions';
 
 import { EmptyState } from '../../components/EmptyState';
 import { MediaReleaseItem } from './MediaReleaseItem';
-import { statusDotColor } from './media-releases-colors';
 import type { MediaReleaseSourceProps } from './types';
 
 interface MediaReleasesBaseProps {
@@ -29,8 +28,8 @@ export function MediaReleasesBase({ groups }: MediaReleasesBaseProps) {
   );
 
   return (
-    <Card withBorder p="md">
-      <Stack gap="sm">
+    <ScrollArea h="100%" type="auto" style={{ minHeight: 0 }}>
+      <Stack gap="sm" style={{ minHeight: 0 }}>
         {releases.length === 0 ? (
           <EmptyState
             icon={<IconPhoto size={36} />}
@@ -49,19 +48,6 @@ export function MediaReleasesBase({ groups }: MediaReleasesBaseProps) {
             };
             return (
               <Stack key={group.integration.id} gap={4}>
-                <Group gap={6}>
-                  <Box
-                    w={8}
-                    h={8}
-                    style={{
-                      backgroundColor: statusDotColor(group.status),
-                      borderRadius: 999,
-                    }}
-                  />
-                  <Text size="xs" c="dimmed">
-                    {def.name}
-                  </Text>
-                </Group>
                 {group.releases.map((release: MediaReleaseEvent) => (
                   <MediaReleaseItem
                     key={`${group.integration.id}-${release.id}`}
@@ -78,6 +64,6 @@ export function MediaReleasesBase({ groups }: MediaReleasesBaseProps) {
           })
         )}
       </Stack>
-    </Card>
+    </ScrollArea>
   );
 }

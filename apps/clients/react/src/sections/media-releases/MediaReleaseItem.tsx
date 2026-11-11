@@ -39,7 +39,6 @@ export function MediaReleaseItem({
   return (
     <TooltipFloating
       label={release.description}
-      w={300}
       multiline
       disabled={release.description === undefined || !showDescriptionTooltip}
     >
