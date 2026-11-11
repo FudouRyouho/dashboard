@@ -1,6 +1,7 @@
 import type { CSSProperties, MouseEvent } from 'react';
 
 import { DataTable, type DataTableColumn, type DataTableSort } from '../../components/DataTable';
+import { TABLE_MIN_WIDTH } from '../../constants/table';
 import { DockerContainerRow } from './DockerContainerRow';
 import type { DockerContainerEntry } from './types';
 
@@ -36,7 +37,7 @@ export function DockerContainerTable({
   style,
 }: DockerContainerTableProps) {
   return (
-    <DataTable columns={COLUMNS} sort={sort} onSortChange={onSortChange} style={style}>
+    <DataTable columns={COLUMNS} sort={sort} onSortChange={onSortChange} minWidth={TABLE_MIN_WIDTH.docker} style={style}>
       {containers.map((container) => (
         <DockerContainerRow
           key={container.Id}

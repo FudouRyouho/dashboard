@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import type { DownloadClientItem } from '@dashboard/contracts';
 
 import { DataTable, type DataTableColumn, type DataTableSort } from '../../components/DataTable';
+import { TABLE_MIN_WIDTH } from '../../constants/table';
 import { TorrentRow, type DownloadsTableRow } from './TorrentRow';
 
 /**
@@ -52,7 +53,7 @@ export function DownloadTable({ items, sort, onSortChange, onContextMenu, style 
       columns={COLUMNS}
       sort={sort}
       onSortChange={onSortChange}
-      minWidth={600}
+      minWidth={TABLE_MIN_WIDTH.downloads}
       style={style}
     >
       {items.map((item) => (
