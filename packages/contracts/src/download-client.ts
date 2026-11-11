@@ -61,4 +61,6 @@ export type DownloadClientJobsWithIntegration = z.infer<
 
 export interface GetClientJobsAndStatusInput {
   limit?: number;
+  /** Optional category filter; qBittorrent only. Omit to fetch all torrents. */
+  category?: string;
 }

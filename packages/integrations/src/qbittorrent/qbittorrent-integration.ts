@@ -115,15 +115,25 @@ export class QbittorrentIntegration
   ): Promise<DownloadClientJobsAndStatus> {
     const limit = input.limit ?? 50;
 
+    const params: Record<string, string | number> = { limit };
+    // qBittorrent's `category` param is a filter: passing an empty string
+    // (`category=`) restricts results to torrents WITHOUT a category, not "all".
+    // Omit it entirely to fetch every torrent.
+    if (input.category) {
+      params.category = input.category;
+    }
+
     const torrents = await this.qbRequest(
       '/api/v2/torrents/info',
-      { limit, category: '' },
+      params,
       { signal: options?.signal },
     ).catch((error) => {
       // If auth failed during request, clear cookie and retry once
       if (error instanceof IntegrationError && error.reason === 'unauthorized') {
         this.authCookie = null;
-        return this.qbRequest('/api/v2/torrents/info', { limit }, { signal: options?.signal });
+        return this.qbRequest('/api/v2/torrents/info', params, {
+          signal: options?.signal,
+        });
       }
       throw error;
     }) as Awaited<ReturnType<typeof this.qbRequest<any>>>;
