@@ -1,6 +1,6 @@
 import { IntegrationKind } from '@dashboard/contracts';
 
-interface IntegrationDef {
+export interface IntegrationDef {
   name: string;
   iconUrl: string;
   /** Brand color as hex, extracted from the icon in ../icons/. Framework-agnostic. */
