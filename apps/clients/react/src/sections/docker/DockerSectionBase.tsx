@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { MouseEvent } from 'react';
-import { ActionIcon, Card, Stack, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Flex, Text, Tooltip } from '@mantine/core';
 import { IconBrandDocker, IconFilter } from '@tabler/icons-react';
 
 import { isFilterActive } from '../../components/filter-selection';
@@ -125,74 +125,73 @@ export function DockerSectionBase({ servers, error }: DockerSectionBaseProps) {
   const closeContextMenu = () => setContextMenu(null);
 
   return (
-    <Card withBorder p="md">
-      <Stack gap="sm">
-        {visibleContainers.length === 0 ? (
-          <EmptyState icon={<IconBrandDocker size={36} />} filtered={active} error={error} />
-        ) : (
-          <DockerContainerTable
-            containers={visibleContainers}
-            sort={sort}
-            onSortChange={setSort}
-            onContextMenu={openContextMenu}
-          />
-        )}
-
-        <SectionBar
-          tools={
-            <Tooltip label="Filter">
-              <ActionIcon
-                size="xs"
-                variant={active ? 'filled' : 'subtle'}
-                onClick={() => setFilterOpen(true)}
-                aria-label="Filter"
-              >
-                <IconFilter size={14} />
-              </ActionIcon>
-            </Tooltip>
-          }
-          status={
-            <Text size="xs" fw={600}>
-              {running}/{total} corriendo
-            </Text>
-          }
+    <Flex direction="column" gap="sm" style={{ minHeight: 0, height: '100%' }}>
+      {visibleContainers.length === 0 ? (
+        <EmptyState icon={<IconBrandDocker size={36} />} filtered={active} error={error} />
+      ) : (
+        <DockerContainerTable
+          containers={visibleContainers}
+          sort={sort}
+          onSortChange={setSort}
+          onContextMenu={openContextMenu}
+          style={{ flex: 1, minHeight: 0 }}
         />
+      )}
 
-        <FilterSurface
-          opened={filterOpen}
-          onClose={() => setFilterOpen(false)}
-          search={{ value: search, onChange: setSearch, placeholder: 'Search containers' }}
-          dimensions={[
-            {
-              label: 'State',
-              options: CONTAINER_STATES.map((state) => ({
-                value: state,
-                label: containerStateLabel[state],
-                color: containerStateColorMap[state],
-              })),
-            },
-            {
-              label: 'Health',
-              options: HEALTH_STATUSES.map((status) => ({
-                value: status,
-                label: status,
-                color: containerHealthColorMap[status],
-              })),
-            },
-            {
-              label: 'Host',
-              options: servers.map((server) => ({
-                value: server.integration.id,
-                label: server.integration.name,
-              })),
-            },
-          ]}
-          selection={filters}
-          onChange={(next) => setFilters(next as Record<'Health' | 'Host' | 'State', string | undefined>)}
-        />
+      <SectionBar
+        tools={
+          <Tooltip label="Filter">
+            <ActionIcon
+              size="xs"
+              variant={active ? 'filled' : 'subtle'}
+              onClick={() => setFilterOpen(true)}
+              aria-label="Filter"
+            >
+              <IconFilter size={14} />
+            </ActionIcon>
+          </Tooltip>
+        }
+        status={
+          <Text size="xs" fw={600}>
+            {running}/{total} corriendo
+          </Text>
+        }
+      />
 
-        <DockerContainerContextMenu contextMenu={contextMenu} onClose={closeContextMenu} />
-      </Stack>
-    </Card>
+      <FilterSurface
+        opened={filterOpen}
+        onClose={() => setFilterOpen(false)}
+        search={{ value: search, onChange: setSearch, placeholder: 'Search containers' }}
+        dimensions={[
+          {
+            label: 'State',
+            options: CONTAINER_STATES.map((state) => ({
+              value: state,
+              label: containerStateLabel[state],
+              color: containerStateColorMap[state],
+            })),
+          },
+          {
+            label: 'Health',
+            options: HEALTH_STATUSES.map((status) => ({
+              value: status,
+              label: status,
+              color: containerHealthColorMap[status],
+            })),
+          },
+          {
+            label: 'Host',
+            options: servers.map((server) => ({
+              value: server.integration.id,
+              label: server.integration.name,
+            })),
+          },
+        ]}
+        selection={filters}
+        onChange={(next) => setFilters(next as Record<'Health' | 'Host' | 'State', string | undefined>)}
+      />
+
+      <DockerContainerContextMenu contextMenu={contextMenu} onClose={closeContextMenu} />
+    </Flex>
   );
 }

@@ -1,8 +1,7 @@
-import { Group, Table } from '@mantine/core';
-import { IconArrowDown, IconArrowUp } from '@tabler/icons-react';
-
+import type { CSSProperties } from 'react';
 import type { DownloadClientItem } from '@dashboard/contracts';
 
+import { DataTable, type DataTableColumn, type DataTableSort } from '../../components/DataTable';
 import { TorrentRow, type DownloadsTableRow } from './TorrentRow';
 
 /**
@@ -19,18 +18,9 @@ export type DownloadsSortKey =
   | 'time'
   | 'upSpeed';
 
-export interface DownloadsSort {
-  key: DownloadsSortKey;
-  dir: 'asc' | 'desc';
-}
+export type DownloadsSort = DataTableSort<DownloadsSortKey>;
 
-interface Column {
-  key: DownloadsSortKey | null;
-  label: string;
-  w?: number;
-}
-
-const COLUMNS: Column[] = [
+const COLUMNS: DataTableColumn<DownloadsSortKey>[] = [
   { key: 'name', label: 'Name' },
   { key: 'progress', label: 'Progress', w: 120 },
   { key: 'size', label: 'Size', w: 80 },
@@ -45,6 +35,8 @@ interface DownloadTableProps {
   items: DownloadsTableRow[];
   sort: DownloadsSort;
   onSortChange: (sort: DownloadsSort) => void;
+  /** Pass through to the DataTable scroll container. */
+  style?: CSSProperties;
   /** Opens the row context menu at the pointer position. */
   onContextMenu: (target: {
     x: number;
@@ -54,42 +46,18 @@ interface DownloadTableProps {
   }) => void;
 }
 
-export function DownloadTable({ items, sort, onSortChange, onContextMenu }: DownloadTableProps) {
-  const toggle = (key: DownloadsSortKey) =>
-    onSortChange(
-      sort.key === key
-        ? { key, dir: sort.dir === 'asc' ? 'desc' : 'asc' }
-        : { key, dir: 'asc' },
-    );
-
+export function DownloadTable({ items, sort, onSortChange, onContextMenu, style }: DownloadTableProps) {
   return (
-    <Table highlightOnHover verticalSpacing="xs">
-      <Table.Thead>
-        <Table.Tr>
-          {COLUMNS.map((column) => {
-            const active = column.key !== null && sort.key === column.key;
-            return (
-              <Table.Th
-                key={column.label}
-                w={column.w}
-                onClick={column.key ? () => toggle(column.key as DownloadsSortKey) : undefined}
-                style={{ cursor: column.key ? 'pointer' : undefined, userSelect: 'none' }}
-              >
-                <Group gap={3} wrap="nowrap">
-                  {column.label}
-                  {active &&
-                    (sort.dir === 'asc' ? <IconArrowUp size={11} /> : <IconArrowDown size={11} />)}
-                </Group>
-              </Table.Th>
-            );
-          })}
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {items.map((item) => (
-          <TorrentRow key={item.id} item={item} onContextMenu={onContextMenu} />
-        ))}
-      </Table.Tbody>
-    </Table>
+    <DataTable
+      columns={COLUMNS}
+      sort={sort}
+      onSortChange={onSortChange}
+      minWidth={600}
+      style={style}
+    >
+      {items.map((item) => (
+        <TorrentRow key={item.id} item={item} onContextMenu={onContextMenu} />
+      ))}
+    </DataTable>
   );
 }

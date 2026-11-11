@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ActionIcon, Card, Stack, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Flex, Text, Tooltip } from '@mantine/core';
 import { IconDownload, IconFilter, IconUpload } from '@tabler/icons-react';
 
 import type { DownloadClientJobsWithIntegration } from '@dashboard/contracts';
@@ -83,71 +83,70 @@ export function DownloadsSectionBase({ clients, error }: DownloadsSectionBasePro
   const closeContextMenu = () => setContextMenu(null);
 
   return (
-    <Card withBorder p="md">
-      <Stack gap="sm">
-        {visibleItems.length === 0 ? (
-          <EmptyState icon={<IconDownload size={36} />} filtered={filtered || search !== ''} error={error} />
-        ) : (
-          <DownloadTable
-            items={visibleItems}
-            sort={sort}
-            onSortChange={setSort}
-            onContextMenu={setContextMenu}
-          />
-        )}
-
-        <SectionBar
-          tools={
-            <Tooltip label="Filter">
-              <ActionIcon
-                size="xs"
-                variant={isFilterActive({ State: stateFilter }) ? 'filled' : 'subtle'}
-                onClick={() => setFilterOpen(true)}
-                aria-label="Filter"
-              >
-                <IconFilter size={14} />
-              </ActionIcon>
-            </Tooltip>
-          }
-          status={
-            <>
-              <Text size="xs" fw={600} c="blue">
-                <IconDownload size={10} style={{ verticalAlign: 'middle', marginRight: 2 }} />
-                {formatByteRate(totalSpeed)}
-              </Text>
-              {totalUpSpeed > 0 && (
-                <Text size="xs" fw={600} c="green">
-                  <IconUpload size={10} style={{ verticalAlign: 'middle', marginRight: 2 }} />
-                  {formatByteRate(totalUpSpeed)}
-                </Text>
-              )}
-              <Text size="xs" c="dimmed">
-                {visibleItems.length}/{allItems.length}
-              </Text>
-            </>
-          }
+    <Flex direction="column" gap="sm" style={{ minHeight: 0, height: '100%' }}>
+      {visibleItems.length === 0 ? (
+        <EmptyState icon={<IconDownload size={36} />} filtered={filtered || search !== ''} error={error} />
+      ) : (
+        <DownloadTable
+          items={visibleItems}
+          sort={sort}
+          onSortChange={setSort}
+          onContextMenu={setContextMenu}
+          style={{ flex: 1, minHeight: 0 }}
         />
+      )}
 
-        <FilterSurface
-          opened={filterOpen}
-          onClose={() => setFilterOpen(false)}
-          search={{ value: search, onChange: setSearch, placeholder: 'Search torrents' }}
-          dimensions={[
-            {
-              label: 'State',
-              options: ALL_STATES.map((state) => ({
-                value: state,
-                label: state,
-                color: stateColorMap[state],
-              })),
-            },
-          ]}
-          selection={{ State: stateFilter }}
-          onChange={(next) => setStateFilter(next.State)}
-        />
+      <SectionBar
+        tools={
+          <Tooltip label="Filter">
+            <ActionIcon
+              size="xs"
+              variant={isFilterActive({ State: stateFilter }) ? 'filled' : 'subtle'}
+              onClick={() => setFilterOpen(true)}
+              aria-label="Filter"
+            >
+              <IconFilter size={14} />
+            </ActionIcon>
+          </Tooltip>
+        }
+        status={
+          <>
+            <Text size="xs" fw={600} c="blue">
+              <IconDownload size={10} style={{ verticalAlign: 'middle', marginRight: 2 }} />
+              {formatByteRate(totalSpeed)}
+            </Text>
+            {totalUpSpeed > 0 && (
+              <Text size="xs" fw={600} c="green">
+                <IconUpload size={10} style={{ verticalAlign: 'middle', marginRight: 2 }} />
+                {formatByteRate(totalUpSpeed)}
+              </Text>
+            )}
+            <Text size="xs" c="dimmed">
+              {visibleItems.length}/{allItems.length}
+            </Text>
+          </>
+        }
+      />
 
-        {contextMenu && <DownloadContextMenu contextMenu={contextMenu} onClose={closeContextMenu} />}
-      </Stack>
-    </Card>
+      <FilterSurface
+        opened={filterOpen}
+        onClose={() => setFilterOpen(false)}
+        search={{ value: search, onChange: setSearch, placeholder: 'Search torrents' }}
+        dimensions={[
+          {
+            label: 'State',
+            options: ALL_STATES.map((state) => ({
+              value: state,
+              label: state,
+              color: stateColorMap[state],
+            })),
+          },
+        ]}
+        selection={{ State: stateFilter }}
+        onChange={(next) => setStateFilter(next.State)}
+      />
+
+      {contextMenu && <DownloadContextMenu contextMenu={contextMenu} onClose={closeContextMenu} />}
+    </Flex>
   );
 }
