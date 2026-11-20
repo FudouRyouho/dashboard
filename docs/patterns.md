@@ -1,128 +1,81 @@
-# Patrones de Diseño en el Monorepo
+# Patrones de diseño del monorepositorio
 
-Este documento describe los **patrones arquitectónicos recurrentes** que estructuran el código de este proyecto. Su objetivo es explicar cómo se resuelven problemas comunes (registro de servicios, gestión de estado asíncrono, modelado de errores y filtrado por capacidades) de forma consistente.
+Estos patrones describen el registro actual de integraciones, la persistencia de tareas, el estado de los resultados y la selección por capacidades. Para conocer la distinción entre lecturas de instantáneas y llamadas en directo de cada procedimiento, véase la [arquitectura](architecture.md#3-current-query-and-mutation-paths).
 
----
+## 1. Registro de integraciones
 
-## 1. Registry Pattern (Registro de Integraciones)
+El servidor crea instancias de integración a partir de la configuración guardada en SQLite mediante fábricas registradas por el paquete de integraciones.
 
-### El Problema
+1. El módulo de registro de cada servicio proporciona una `IntegrationFactory` con metadatos y `create(input)`.
+2. Importar el [punto de entrada del paquete](../packages/integrations/src/index.ts) carga los módulos de registro, incluidos Prowlarr y qBittorrent.
+3. [`registerIntegration`](../packages/integrations/src/registry.ts) almacena las fábricas por tipo y rechaza los tipos duplicados.
+4. La [inicialización del servidor](../apps/server/src/bootstrap/integrations.ts) lee las filas configuradas, valida los secretos obligatorios e instancia las fábricas correspondientes. Se omiten las filas sin una fábrica correspondiente.
 
-El servidor necesita instanciar dinámicamente servicios externos (Sonarr, Radarr, Jellyfin, Docker, etc.) basándose en las filas guardadas en la base de datos al arrancar, sin que el servidor tenga que conocer de antemano todos los tipos de integración ni importar directamente cada archivo de clase.
+El registro evita que el código de inicialización tenga que importar cada clase concreta. **No** hace que añadir una integración sea un cambio limitado a una carpeta: la incorporación también requiere los contratos, las definiciones, la importación del registro en el punto de entrada, las pruebas y la configuración del servidor pertinentes. Véase [Añadir una integración](../packages/integrations/README.md#adding-an-integration).
 
-### La Solución
+Los metadatos de capacidad de la fábrica describen el registro; la selección en tiempo de ejecución utiliza guardas de métodos, no esa lista de metadatos. No debe suponerse que ambos sean idénticos sin comprobar la implementación.
 
-Cada paquete de integración implementa un mecanismo de autorregistro utilizando el módulo central `packages/integrations/src/registry.ts`.
+## 2. Snapshot + RunLog
 
-1. **Factory por Integración**: Cada servicio expone un `IntegrationFactory` que declara su metaindata (`kind`, puerto por defecto, capacidades) y una función `create(input)`.
-2. **Auto-registro al Importar**: Al cargar el módulo, la integración se registra a sí misma llamando a `registerIntegration(factory)`.
-3. **Instanciación en el Bootstrap**: Al arrancar el servidor (`apps/server/src/bootstrap/integrations.ts`), se leen las instancias guardadas en SQLite y se busca la fábrica correspondiente por su `kind`.
+El paquete de tareas separa los datos obtenidos correctamente del historial de intentos:
+
+| Interfaz        | Responsabilidad                                                | Persistencia incorporada                                |
+| --------------- | ------------------------------------------------------------- | --------------------------------------------------- |
+| `SnapshotStore` | Últimos datos obtenidos correctamente y momento de obtención para una clave de tarea | Consultas de instantáneas en SQLite mediante `createSnapshotStoreDB` |
+| `RunLog`        | Momento, duración y resultado del intento, con causa o detalle opcionales | Consultas de ejecuciones de tareas en SQLite mediante `createRunLogDB` |
+
+El [planificador](../packages/tasks/src/scheduler.ts) escribe una instantánea tras una ejecución correcta. Las tareas fallidas o abortadas registran un intento sin sustituir los datos anteriores. La política de fallos controla el período de espera tras fallos repetidos; la cancelación se registra como `aborted`, por separado de `failure`.
+
+Las interfaces se inyectan, por lo que las pruebas pueden proporcionar simulaciones. Los adaptadores incorporados del servidor son almacenes persistidos en una base de datos, no cachés en memoria ni búferes circulares. Los registros antiguos, incluidas las instantáneas, están sujetos a la tarea de purga configurada. Véase la [guía del paquete de tareas](../packages/tasks/README.md) para consultar la API y la [arquitectura](architecture.md#2-scheduled-data-and-sqlite-persistence) para la configuración de retención del servidor.
+
+Este patrón conserva los datos obtenidos previamente ante fallos transitorios de obtención, a la vez que retiene el resultado del último intento. Se aplica a los datos programados, no a todos los procedimientos de lectura: Docker combina estadísticas almacenadas del panel con una lista de contenedores obtenida en directo, mientras que las descargas y el estado del sistema usan llamadas directas a las integraciones.
+
+## 3. Estado del resultado en dos ejes
+
+[`ResultStatus`](../packages/contracts/src/result.ts) mantiene separadas la disponibilidad de los datos y el resultado del intento. Su estructura de transmisión es:
 
 ```typescript
-// Ejemplo conceptual en packages/integrations/src/sonarr/registration.ts
-const factory: IntegrationFactory = {
-  metadata: {
-    kind: 'sonarr',
-    defaultPort: 8989,
-    displayName: 'Sonarr',
-    capabilities: ['calendar'],
-  },
-  create(input) {
-    return new SonarrIntegration(input);
-  },
+type ResultStatus = {
+  data: {
+    obtainedAt: string; // ISO datetime
+    from: string | null;
+    to: string | null;
+  } | null;
+  attempt:
+    | { outcome: 'success'; at: string }
+    | { outcome: 'failure'; at: string; reason: IntegrationErrorReason }
+    | null;
 };
-registerIntegration(factory);
 ```
 
-### Por qué este patrón
+[`dataViewOf`](../packages/contracts/src/data-view.ts) deriva una etiqueta sin añadir una enumeración de estados al contrato de transmisión:
 
-Permite agregar una nueva integración (ej. Lidarr o Prowlarr) **sin modificar el código core del servidor ni de la base de datos**. Solo se añade el paquete/carpeta, se registra, y el sistema lo reconoce automáticamente.
+| Último intento | Datos    | Vista derivada    |
+| -------------- | ------- | --------------- |
+| `null`         | Con o sin datos | `never-queried` |
+| `success`      | Con o sin datos | `fresh`         |
+| `failure`      | Presentes | `outdated`      |
+| `failure`      | `null`  | `missing`       |
 
----
+Estas etiquetas reflejan el resultado del intento y la presencia de datos, **no un cálculo de tiempo de vida**. En particular, `fresh` no demuestra que una marca temporal sea reciente, y la ausencia de un intento produce `never-queried` aunque exista una instantánea.
 
-## 2. Snapshot + RunLog Pattern (Gestión de Estado Asíncrono)
+La función [`toStatus`](../apps/server/src/tasks/to-status.ts) del servidor convierte la información de la instantánea y la ejecución a este contrato. Suprime el intento si la instantánea proporcionada carece de ID de tarea o tiene un ID de tarea distinto al de la ejecución. Una ejecución no satisfactoria, incluida `aborted`, se convierte en un intento fallido con su causa o `unknown`. Los campos de cobertura se leen del nivel superior del objeto de instantánea y su valor predeterminado es `null`; esta función auxiliar no extrae la cobertura de un contenido anidado.
 
-### El Problema
+## 4. Guardas de capacidad
 
-Las tareas en segundo plano que consultan APIs externas pueden fallar, demorarse o ser canceladas. Necesitamos persistir tanto el **último dato exitoso** como el **historial de intentos** para saber qué pasó sin bloquear las consultas de la UI.
-
-### La Solución
-
-El paquete `@dashboard/tasks` divide la persistencia en dos conceptos independientes:
-
-- **`SnapshotStore`**: Guarda el último payload válido obtenido por una tarea (ej. los eventos de calendario). Si una tarea falla, el snapshot anterior **se conserva intacto**, garantizando que la UI nunca se quede sin datos por un fallo transitorio de la red.
-- **`RunLog`**: Un registro cronológico de cada ejecución de tarea (`task_runs`), guardando la duración, el estado (`success`, `failure`, `aborted`), y la razón del error en caso de fallo.
-
----
-
-## 3. ResultStatus Model (Modelo de Dos Ejes)
-
-### El Problema
-
-¿Cómo le informamos al cliente el estado de un servicio o dato? Un simple booleano (`success/error`) no alcanza porque mezcla dos cosas distintas: **¿tenemos el dato?** y **¿cómo salió el último intento?**
-
-### La Solución
-
-En `@dashboard/contracts/src/result.ts`, el estado se modela en **dos ejes independientes**:
-
-```typescript
-ResultStatus = {
-  data: { obtainedAt: ISOString } | null,
-  attempt: { outcome: 'success' | 'failure', at: ISOString, reason?: IntegrationErrorReason } | null
-}
-```
-
-Mediante la función puramente funcional `dataViewOf(status)`, se combinan ambos ejes para derivar un veredicto claro para la UI:
-
-| `attempt`          | `data`   | `dataViewOf`    | Significado                                                     |
-| ------------------ | -------- | --------------- | --------------------------------------------------------------- |
-| `null`             | —        | `never-queried` | La tarea aún no corrió nunca                                    |
-| `outcome: success` | —        | `fresh`         | Todo en orden, dato reciente                                    |
-| `outcome: failure` | Hay dato | `outdated`      | La última llamada falló, pero mostramos el último dato conocido |
-| `outcome: failure` | `null`   | `missing`       | Falló y no hay datos previos disponibles                        |
-
-### Por qué este modelo
-
-Evita los falsos positivos de "error total" cuando una API externa parpadea 5 minutos pero el dashboard sigue mostrando el calendario gracias al último snapshot válido.
-
----
-
-## 4. Capability Guard Pattern (Guardias de Capacidad)
-
-### El Problema
-
-Diferentes integraciones soportan distintas operaciones. Sonarr y Radarr tienen calendario (`calendar`), Jellyfin tiene lanzamientos (`mediaReleases`), Docker y Prometheus tienen métricas de sistema/salud. ¿Cómo sabe el servidor qué integraciones pueden ejecutar qué tarea o responder a qué router sin caer en jerarquías de clases rígidas o herencia múltiple profunda?
-
-### La Solución
-
-Se utiliza **duck-typing tipado** mediante funciones _guards_ (ej. `supportsCalendar`, `supportsMediaReleases`) definidas en `packages/integrations/src/base/`.
-
-```typescript
-export function supportsCalendar(
-  integration: Integration,
-): integration is Integration & ICalendarIntegration {
-  return typeof (integration as any).getCalendarEventsAsync === 'function';
-}
-```
-
-Los routers tRPC usan estos guards en tiempo de ejecución para filtrar las instancias activas:
+Las clases de integración exponen métodos de capacidad independientes en lugar de exigir una jerarquía de herencia profunda. Las guardas de los [módulos base de integración](../packages/integrations/src/base/calendar.ts) acotan el tipo según la presencia de métodos. Por ejemplo, la guarda de calendario comprueba la existencia de `getCalendarEventsAsync`:
 
 ```typescript
 const calendarIntegrations = ctx.integrations.filter(supportsCalendar);
 ```
 
-### Por qué este patrón
+Los enrutadores y el constructor de definiciones de tareas del servidor usan estas guardas para seleccionar las instancias aptas. Calendario, lanzamientos multimedia, Docker, descargas, estado del sistema y gestión de indexadores tienen interfaces de capacidad separadas.
 
-Mantiene las clases de integración planas y desacopladas. Una integración puede implementar una, dos o ninguna capacidad de forma independiente, y el sistema se adapta dinámicamente consultando sus capacidades.
+Una guarda comprueba la presencia de determinados métodos, no la validez de las respuestas ni la disponibilidad del servicio remoto. Por ejemplo, `supportsDocker` comprueba los métodos de estadísticas del panel y de mutación, no todos los métodos de Docker; `supportsSystemHealth` comprueba `getSystemMetricsAsync`. La validación de las respuestas del servicio y la clasificación de errores siguen siendo responsabilidad de los adaptadores. Los metadatos de capacidad por sí solos no constituyen una validación en tiempo de ejecución.
 
-## Relación con Documentación de Testing
+## Verificación y referencias
 
-Este patrón arquitectónico debe validarse según las convenciones de testing descritas en [docs/TESTING.md], específicamente en las secciones de [Patrones de Diseño] y [Pruebas de Integración]. Las funciones de guarda deben probarse para asegurar que solo las integraciones con las capacidades requeridas sean ejecutables, y los estados resultantes (`fresh`, `outdated`, `missing`, `never-queried`) deben alinearse con la gestión de estados definida en [docs/TESTING.md].
-
----
-
-## Referencias Cruzadas
-
-- Ver [architecture.md](architecture.md) para entender cómo este flujo se conecta con el monorepo.
-- Ver [decisions.md](decisions.md) para conocer las alternativas descartadas al diseñar estos patrones.
-- Código fuente de referencia: `packages/integrations/src/registry.ts`, `packages/contracts/src/result.ts`.
+- [Guía de pruebas](TESTING.md) — convenciones para probar guardas, límites de integración y comportamiento de los estados.
+- [Utilidades de pruebas](../packages/testing-utils/README.md) — simulaciones, datos de prueba y manejadores HTTP disponibles; los contextos simulados no proporcionan una base de datos real de forma predeterminada.
+- [Arquitectura](architecture.md) — responsabilidades de los paquetes, composición del servidor y rutas de consulta actuales.
+- [Decisiones técnicas](decisions.md) — justificación y contexto histórico. Su historial de Prowlarr no indica una limitación pendiente: la integración está exportada y registrada actualmente.

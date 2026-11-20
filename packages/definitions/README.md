@@ -1,13 +1,19 @@
-# @dashboard/definitions
+# `@dashboard/definitions`
 
-Catálogos del dominio (kind → nombre, ícono). Lo consumen `integrations` y los clientes.
+Catálogos de presentación independientes del framework, compartidos por el panel y sus clientes. Las clases del dominio y sus tipos de TypeScript provienen de `@dashboard/contracts`.
 
-## Estructura
+## Catálogos
 
-- `src/external-service.ts` — definición de servicios externos (kind, nombre, color, ícono)
-- `src/integration.ts` — tipo `IntegrationKind` y mapa de kinds a nombres + íconos
-- `src/index.ts` — reexporta todo lo anterior
+- `integrationDefs` asocia cada `IntegrationKind` con su nombre para mostrar, URL del icono, color de marca e indicador de contraste de color.
+- `externalServiceDefs` asocia las clases de servicio externo con metadatos de presentación.
+- `mediaTypeDefs` y `mediaTypeColor(type)` asocian los tipos de estrenos de contenido multimedia con colores de etiquetas; las cadenas desconocidas usan `#94a3b8` como valor predeterminado.
 
-## Íconos
+El mapa de integraciones se comprueba con `Record<IntegrationKind, IntegrationDef>`, por lo que añadir una clase al contrato requiere una definición correspondiente. Lo mismo se aplica a las clases de servicio externo y a los tipos de estrenos de contenido multimedia.
 
-Los íconos son archivos `.svg` en `icons/` (fuente única). El servidor los sirve estáticamente en `/icons/{name}.svg` vía `@fastify/static`.
+## Iconos
+
+Los recursos SVG se encuentran en `packages/definitions/icons/`. Las definiciones de integración utilizan URL con el formato `/icons/<name>.svg`; el servidor publica estos recursos bajo `/icons/`. Mantén alineados los nombres de archivo de los iconos y las URL de las definiciones.
+
+## Dependencias
+
+Este paquete depende de `@dashboard/contracts` para sus tipos de clases y de estrenos de contenido multimedia. No depende de ningún framework de interfaz de usuario.

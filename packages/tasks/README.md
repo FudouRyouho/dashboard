@@ -1,38 +1,23 @@
-# @dashboard/tasks
+# `@dashboard/tasks`
 
-Tareas programadas, ejecuta funciones cada x tiempo, guarda el ultimo "estado del dato" o de la tarea.
+Planificador de trabajo periódico, con interfaces tipadas para instantáneas e historial de ejecuciones, además de adaptadores con persistencia en SQLite para el servidor.
 
-| Librería         | Qué resuelve                                    |
-| ---------------- | ----------------------------------------------- |
-| `toad-scheduler` | los timers y el solapamiento (`preventOverrun`) |
-| `p-queue`        | el techo de corridas simultáneas del proceso    |
+## API pública
 
-## Estructura
+- `TaskDefinition`, `TaskPolicy`, `FailurePolicy`, `TaskRun`, `Snapshot`, `SnapshotKey`, `SnapshotStore` y `RunLog` describen las tareas y sus resultados.
+- `createScheduler(definitions, options)` programa las definiciones, aplica las políticas de concurrencia y fallos, y devuelve un planificador con `stop()`.
+- `createSnapshotStoreDB(db)` adapta las consultas de instantáneas de `@dashboard/db` a `SnapshotStore`.
+- `createRunLogDB(db)` adapta las consultas de ejecuciones de `@dashboard/db` a `RunLog`.
+- `createPurgeTask({ db, daysToKeep, logger? })` crea una tarea que elimina los registros antiguos del historial de ejecuciones y de instantáneas.
 
-- `types.ts` — `TaskDefinition`, `TaskRun`, `FailurePolicy`, `TaskPolicy`
-- `store.ts` — `SnapshotKey<T>` y el almacén en memoria
-- `run-log.ts` — anillo de corridas por tarea
-- `scheduler.ts` — el motor: arma un job por definición y devuelve `stop()`
+El planificador recibe sus interfaces de almacenamiento del código que lo invoca; no crea una base de datos. Los adaptadores de base de datos integrados almacenan las instantáneas y el historial de ejecuciones en SQLite. No son almacenes en memoria ni búferes circulares.
 
-## Una corrida
+## Ciclo de vida de las tareas
 
-1. El timer dispara. Si el proceso está parando, o la tarea está en cooldown,
-   no arranca.
-2. Se crea un `AbortController` propio de esa corrida.
-3. El trabajo entra a la cola; corre cuando hay lugar bajo el techo de
-   concurrencia.
-4. Sale bien → escribe el almacén, borra el conteo de fallos, registra
-   `success`.
-5. Sale mal → clasifica el error, suma un fallo y, si llegó a `maxAttempts`,
-   fija el cooldown.
-6. Fue cancelada → registra `aborted`, que **no** cuenta como fallo.
+Una definición proporciona su intervalo, si se ejecuta al inicio, la duración prevista, la política de fallos y el trabajo asíncrono que recibe un `AbortSignal`. Las ejecuciones se registran como `success`, `failure` o `aborted`. El planificador encola el trabajo hasta el límite de concurrencia configurado y aplica el periodo de espera configurado tras fallos repetidos. La cancelación se registra por separado del fallo.
 
-## Persistencia
+`createPurgeTask` se ejecuta inmediatamente y, después, a diario. El código que lo invoca elige el periodo de retención mediante `daysToKeep`; la tarea elimina tanto las ejecuciones antiguas como las instantáneas antiguas y devuelve el número de registros eliminados.
 
-Los tests en `scheduler.db.test.ts` verifican el comportamiento de las tareas cuando se persisten en SQLite a través de `@dashboard/db`.
+## Dependencias y pruebas
 
-> [!NOTE]
-> **`SnapshotKey<T>` lleva el tipo del dato en la clave.** El campo `__data?: T` no existe en runtime: sólo hace que `store.set(key, data)` y `store.get(key)` hablen del mismo tipo sin castear en cada lectura.
-> **El anillo de corridas devuelve una copia** (`forTask`): mutar lo que sale no toca el historial.
-> **El almacén es memoria.** Se pierde en cada reinicio; el primer request después de arrancar ve `never-queried` hasta que corra la tarea.
-> **`aborted` no es `failure`.** Apagar el server no debe empujar una tarea sana al cooldown.
+`@dashboard/tasks` depende de `@dashboard/db` para sus adaptadores de SQLite, y de `toad-scheduler` y `p-queue` para la planificación y la concurrencia. El comportamiento del planificador está cubierto por las pruebas unitarias y las pruebas con base de datos del paquete; ejecuta la suite del repositorio con `pnpm test` desde la raíz del espacio de trabajo.

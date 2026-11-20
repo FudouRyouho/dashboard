@@ -1,34 +1,42 @@
-# @dashboard/contracts
+# `@dashboard/contracts`
 
-La forma de los datos que cruzan el límite servidor ↔ cliente, y nada más.
-Schemas de Zod, los tipos que salen de ellos y las funciones que **leen** ese
-contrato sin agregarle campos.
+Esquemas de validación en tiempo de ejecución y tipos de TypeScript compartidos para los datos que cruzan los límites de la aplicación. Los esquemas de Zod definen las estructuras aceptadas; los tipos inferidos mantienen el código consumidor alineado con esos esquemas.
 
-## Estructura
+## Áreas del contrato
 
-- `kinds.ts` — `integrationKinds` y el tipo `IntegrationKind`
-- `calendar.ts` — `CalendarEvent`, `CalendarImage`, `CalendarLink` y el grupo por integración
-- `integrations.ts` — schemas de integración (configuración, instancias); exporta `type IntegrationOutput = z.infer<typeof integrationOutputSchema>`
-- `download-client.ts` — tipos y schemas de trabajos de descarga
-- `media-releases.ts` — tipos y schemas de liberaciones multimedia
-- `validation.ts` — helpers de validación Zod compartidos
-- `result.ts` — `ResultStatus`: los hechos del último intento
-- `data-view.ts` — `dataViewOf` y `inRange`: lectura derivada, no contrato
+- `kinds` — clases de integración, clases de servicio externo y capacidades admitidas.
+- `integrations` — entradas de las integraciones, requisitos de secretos y salida pública de las integraciones.
+- `calendar` — eventos del calendario y resultados del calendario por integración.
+- `media-releases` — eventos de estrenos de contenido multimedia y resultados por integración.
+- `download-client` — tareas de descarga y estado del cliente.
+- `docker` y `docker-stats` — entradas de consulta de Docker y estructuras de respuesta.
+- `system-health-types` — métricas del sistema y tipos de resultados de estado.
+- `result` — datos de la instantánea y del último intento expuestos como `ResultStatus`.
+- `validation` — funciones auxiliares compartidas de validación con Zod.
+- `data-view` — funciones auxiliares de lectura derivada, como `dataViewOf` e `inRange`; no añaden campos al contrato de datos transmitidos.
 
-## `ResultStatus`: dos ejes, no un enum
+## Estado del resultado
 
-El server manda **hechos**, no un veredicto: por un lado si hay dato y de
-cuándo es, por el otro cómo salió el último intento.
+`ResultStatus` registra dos hechos independientes: si existen datos y cuándo se obtuvieron, y el resultado, el momento y el motivo del último intento. No los combina en una única enumeración de estado. `dataViewOf()` deriva de esos hechos una vista como `never-queried`, `fresh`, `outdated` o `missing`.
 
-    { data: { obtainedAt } | null, attempt: { outcome, at, reason? } | null }
+```ts
+{
+  data: { obtainedAt: Date } | null,
+  attempt: { outcome: 'success' | 'failure' | 'aborted', at: Date, reason?: string } | null
+}
+```
 
-`dataViewOf()` cruza los dos ejes y devuelve el veredicto. La tabla completa:
+Los resultados del calendario y de los estrenos de contenido multimedia incluyen este estado por integración. El código consumidor debe validar los datos de entrada en los límites de la aplicación con los esquemas exportados y derivar el estado de presentación con las funciones auxiliares, en lugar de inventar un contrato alternativo.
 
-| `attempt`          | `data` | `dataViewOf`  |
-| ------------------ | ------ | ------------- |
-| `null`             | —      | never-queried |
-| `outcome: success` | —      | fresh         |
-| `outcome: failure` | hay    | outdated      |
-| `outcome: failure` | `null` | missing       |
+## Uso
 
-> **Nota:** `ResultStatus` se consume en `mediaReleases.getLatest` y `calendar.getEvents`.
+Importa los esquemas y los tipos inferidos desde el punto de entrada del paquete:
+
+```ts
+import {
+  integrationOutputSchema,
+  type IntegrationOutput,
+} from '@dashboard/contracts';
+```
+
+El paquete depende de Zod; no se encarga de la persistencia, los clientes de servicios ni los componentes de interfaz de usuario.

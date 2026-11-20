@@ -1,237 +1,166 @@
-# Decisiones Arquitectónicas y Contexto
+# Decisiones arquitectónicas y contexto
 
-Este documento registra el **por qué** de las decisiones tecnológicas y de diseño más importantes tomadas durante el proyecto, así como los caminos alternativos que se descartaron y los temas que se dejaron deliberadamente abiertos.
+Este documento recoge la justificación del diseño y sus alternativas. El **comportamiento actual** describe el código de hoy; el **contexto histórico** conserva decisiones anteriores sin tratarlas como contratos vigentes. Los detalles de las API de los paquetes corresponden a los [README de los paquetes](../packages/integrations/README.md).
 
----
+## 1. tRPC y transporte de datos
 
-## 1. tRPC y Transporte de Datos
+### Decisión actual
 
-### Contexto
+Usar el **transporte JSON predeterminado** de tRPC, con tipos y esquemas compartidos de `@dashboard/contracts`. `initTRPC.context<TRPCContext>().create()` en [trpc.ts](../apps/server/src/trpc.ts) no configura ningún transformador personalizado. Las fechas enviadas por HTTP se serializan como cadenas JSON; una llamada dentro del mismo proceso no prueba ese límite de serialización.
 
-Al comunicar el servidor Fastify con los clientes mediante tRPC, se requiere un mecanismo robusto para serializar y deserializar tipos de datos entre el backend y el cliente.
+Véase la [decisión 11](#11-superjson-removal-historical-context) para conocer la justificación histórica de la eliminación de SuperJSON.
 
-### La Decisión
+## 2. Planificador de tareas: toad-scheduler + p-queue
 
-Se utiliza tRPC con transformadores estándar y tipos seguros definidos en `@dashboard/contracts`.
+### Decisión y justificación
 
----
+`@dashboard/tasks` combina:
 
-## 2. Elección del Task Scheduler: toad-scheduler + p-queue
+- **toad-scheduler** para tareas periódicas con `preventOverrun: true`, lo que evita ejecuciones superpuestas de la misma tarea.
+- **p-queue** para el límite de concurrencia compartido del planificador. La inicialización del servidor proporciona `concurrency: 4`; no es un límite global para las llamadas directas a los enrutadores.
 
-### Contexto
+### Alternativas consideradas
 
-El servidor necesita ejecutar consultas periódicas a servicios externos (Sonarr, Radarr, etc.) en segundo plano, controlando intervalos de tiempo y evitando sobrecargar la red o los servicios destino.
+- **`setInterval` nativo**: requeriría prevenir explícitamente las superposiciones y gestionar la concurrencia.
+- **BullMQ / Redis**: los procesos de trabajo externos y Redis añaden complejidad de infraestructura a un panel personal respaldado por SQLite.
 
-### La Decisión
+Fuentes: [scheduler.ts](../packages/tasks/src/scheduler.ts), [server.ts](../apps/server/src/server.ts).
 
-Se combinaron dos librerías especializadas en `@dashboard/tasks`:
+## 3. Enrutadores organizados por capacidad en lugar de proveedor
 
-1. **`toad-scheduler`**: Gestiona los temporizadores (cron-like / intervalos) y previene el solapamiento de ejecuciones (`preventOverrun: true`), asegurando que si una tarea se extiende más allá de su intervalo, no se dispare una segunda instancia en paralelo.
-2. **`p-queue`**: Controla el techo de concurrencia global del proceso (ej. máximo 4 requests concurrentes hacia la red local), evitando saturar las APIs de los servicios domésticos.
+### Decisión
 
-### Alternativas Consideradas y Descartadas
+Organizar los enrutadores de negocio por capacidad (`calendar`, `mediaReleases`, `downloads`, `systemHealth`) en lugar de por proveedor (`sonarr`, `radarr`, etc.).
 
-- **`setInterval` nativo de Node.js**: Descartado porque no maneja prevención de solapamientos (si un request se traba, `setInterval` apila ejecuciones infinitamente) ni ofrece colas de concurrencia.
-- **BullMQ / Redis**: Descartado por completo. Introducir Redis y workers externos en un dashboard personal de uso local añade una complejidad de infraestructura injustificada para un proyecto monolítico en SQLite.
+Esto mantiene las lecturas agregadas independientes del proveedor. Por ejemplo, las consultas de calendario seleccionan integraciones que implementan `supportsCalendar`. Añadir otro proveedor de esa capacidad no tiene por qué introducir otro enrutador de negocio.
 
----
+La configuración y las operaciones dirigidas siguen siendo excepciones explícitas (decisión 5).
 
-## 3. Routers Organizados por Capacidad (en vez de por Integración)
+## 4. Alcance y temas de diseño pendientes
 
-### Contexto
+| Tema                        | Estado actual                                                                                                                                                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prowlarr                     | Implementado, exportado y registrado con la capacidad `indexerManager`. Proporciona `getIndexersAsync()` y `testAllIndexersAsync()`. No hay un enrutador de negocio de gestión de indexadores ni una tarea programada conectados al servidor. |
+| Control de Docker y descargas | Mutaciones directas implementadas, no meras posibilidades futuras de lectura y escritura. Véanse las decisiones 5 y 8.                                                                                                             |
+| Autenticación multiusuario   | Se asume un despliegue personal en una LAN/VPN de confianza; las sesiones y los roles de aplicación quedan fuera del diseño actual. Esta suposición no es un mecanismo de control de acceso.                                       |
 
-Un sistema inspirado en Homarr maneja múltiples servicios (Sonarr, Radarr, Jellyfin). ¿Cómo deben estructurarse los endpoints del servidor tRPC?
+**Contexto histórico:** antes, Prowlarr figuraba solo en el catálogo y como no implementado. Esa descripción ya no se aplica al paquete de integraciones; su exposición desde el servidor sigue incompleta.
 
-### La Decisión
+Fuentes: [implementación de Prowlarr](../packages/integrations/src/prowlarr/prowlarr-integration.ts), [registro](../packages/integrations/src/prowlarr/registration.ts), [exportaciones del paquete](../packages/integrations/src/index.ts), [enrutador de la aplicación](../apps/server/src/index.ts), [definiciones de tareas](../apps/server/src/tasks/create-task-definitions.ts).
 
-Los routers se organizan por **capacidad de negocio** (`calendar`, `mediaReleases`, `downloads`, `systemHealth`) y no por proveedor (`sonarr`, `radarr`, etc.).
+## 5. Excepciones a la organización por capacidades
 
-### Por qué
+### 5.1 Operaciones dirigidas de descargas y Docker
 
-- **Independencia del Cliente**: La UI del dashboard quiere mostrar "el calendario unificado de películas y series", sin importarle si los datos vienen de Sonarr, Radarr o de tres instancias distintas de Sonarr. El router `calendar.getEvents` agrupa automáticamente todas las integraciones que implementan `supportsCalendar`.
-- **Extensibilidad**: Si mañana agregamos un nuevo proveedor de calendario, la UI no cambia; el router simplemente lo incluye en el resultado agregado.
+`downloads.getAllJobs` agrega clientes de descargas. `getJobs`, `pauseQueue`, `pauseItem`, `resumeQueue`, `resumeItem` y `deleteItem` requieren un `integrationId` explícito. Las operaciones sobre elementos también identifican un torrent mediante `torrentHash`.
 
----
+El control de Docker requiere igualmente `{ integrationId, ids }`. Los ID de contenedores no seleccionan implícitamente una integración. Un comando debe dirigirse a un proveedor concreto aunque las lecturas puedan agregar varios proveedores.
 
-## 4. Estado Abierto: Temas de Diseño y Alcance Futuro
+Fuentes: [enrutador de descargas](../apps/server/src/routers/downloads.ts), [enrutador de Docker](../apps/server/src/routers/docker.ts).
 
-Para mantener el proyecto enfocado y evitar una complejidad innecesaria en esta etapa inicial, se definieron los siguientes criterios sobre componentes y capacidades:
+### 5.2 Configuración de integraciones
 
-- **Prowlarr**: Aunque se encuentra referenciado en catálogos de definiciones, su integración en runtime no está implementada y se evaluará cuando exista un caso de uso concreto.
-- **Capacidades de Escritura (Read/Write en Docker y Descargas)**: Docker y los clientes de descarga (como qBittorrent) son naturalmente bidireccionales (lectura y escritura). Aunque el proyecto prioriza la visualización y monitoreo (read), el diseño debe contemplar o permitir operaciones de control (como pausa/reanudación de tareas o gestión de contenedores) donde tenga sentido práctico para un dashboard personal.
-- **Autenticación Multi-usuario**: El proyecto asume una red LAN/VPN confiable y de uso personal (single-user). No hay manejo de sesiones, cookies de aplicación ni roles en esta etapa.
+El enrutador `integrations` gestiona la configuración de proveedores, no una capacidad de negocio. `upsertIntegrationInputSchema` es una unión discriminada estricta por `kind`: `sonarr`, `radarr`, `jellyfin`, `qbittorrent`, `docker`, `prometheus` y `prowlarr`.
 
----
+Es necesario conocer el proveedor para validar sus credenciales obligatorias y su puerto predeterminado. Fuente: [contratos de integración](../packages/contracts/src/integrations.ts).
 
-## 5. Excepciones a la Regla de Organización por Capacidad
+## 6. Lecturas de datos: instantáneas persistidas y consultas directas
 
-Aunque la decisión principal es organizar los routers por capacidad de negocio, existen casos donde esto no es práctico o semánticamente correcto. Las siguientes excepciones están documentadas explícitamente:
+### Comportamiento actual
 
-### 5.1 Router `downloads.ts` - Operaciones de Control Requieren `integrationId`
+El servidor utiliza `ctx.store` y `ctx.runLog` respaldados por SQLite, creados mediante `createSnapshotStoreDB(db)` y `createRunLogDB(db)`. No son cachés exclusivamente en memoria.
 
-El router `downloads.ts` incluye un endpoint de lectura agregado `getAllJobs` que retorna trabajos de todos los clientes de descarga (siguiendo el patrón de capacidad). Sin embargo, los endpoints de escritura/control (`pauseQueue`, `pauseItem`, `resumeQueue`, `resumeItem`, `deleteItem`) y el endpoint de lectura específico `getJobs` requieren `integrationId` explícito.
+| Ruta de lectura                   | Fuente de datos                                                                                                 |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `calendar`, `mediaReleases` | Instantáneas programadas más historial de ejecuciones                                                        |
+| `docker.getContainers`      | Estadísticas del panel y estado de ejecución de la instantánea, más una solicitud **en directo** de la lista de contenedores por integración Docker |
+| Consultas de detalle de Docker | Llamadas directas a la integración para la lista de contenedores, registros, estadísticas de contenedores y del sistema |
+| `downloads`, `systemHealth` | Llamadas directas a las integraciones durante la consulta                                                     |
 
-**Justificación**: Las operaciones de control sobre un cliente de descargas (qBittorrent) son inherentemente específicas de un proveedor. Un cliente no puede pausar la cola de otro cliente. Requerir `integrationId` en estas operaciones refleja la semántica real del dominio y no viola la independencia del cliente para operaciones de lectura agregada.
+Las mutaciones llaman directamente a las integraciones; no pasan por el planificador ni actualizan las instantáneas. Los metadatos de instantáneas y registros de ejecuciones separan los últimos datos obtenidos correctamente del último intento, lo que conserva datos útiles tras un sondeo fallido.
 
-### 5.2 Router `integrations.ts` - Administración de Configuración por Proveedor
+### Justificación y corrección histórica
 
-El router `integrations.ts` gestiona el ciclo de vida completo de las integraciones (crear, leer, actualizar, eliminar). Utiliza una union discriminada por `kind` (`sonarr`, `radarr`, `jellyfin`, `docker`, `qbittorrent`) en `upsertIntegrationInputSchema`.
+Las instantáneas desacoplan las lecturas programadas de la latencia del servicio de origen y conservan los datos obtenidos correctamente entre reinicios. Las llamadas de control directas actúan de inmediato en lugar de esperar al siguiente sondeo.
 
-**Justificación**: Este es un router de **administración de configuración**, no de capacidades de negocio. Para crear una integración, la UI debe especificar qué tipo de proveedor es (es mandatorio conocer el `kind` para configurar credenciales específicas como `apiKey`, `port`, etc.). No tiene sentido conceptual un "upsertIntegration" genérico sin conocer el tipo de proveedor. Es una excepción aceptable y necesaria a la regla de organización por capacidad.
+**Contexto histórico:** la regla anterior «todas las consultas usan instantáneas» era demasiado amplia, y su descripción de «memoria local» está obsoleta. Las consultas directas siguen dependiendo de la red; la latencia de las instantáneas no debe generalizarse a todos los puntos de acceso.
 
----
+Fuentes: [inicialización del servidor](../apps/server/src/server.ts), [adaptador de instantáneas](../packages/tasks/src/store.ts), [adaptador del registro de ejecuciones](../packages/tasks/src/run-log.ts), [enrutador de Docker](../apps/server/src/routers/docker.ts), [enrutador de descargas](../apps/server/src/routers/downloads.ts), [enrutador del estado del sistema](../apps/server/src/routers/systemHealth.ts).
 
-## 6. Estrategia de Lectura de Datos: Snapshot + RunLog para Lecturas, Llamadas Directas para Mutaciones
+## 7. Invalidación de instantáneas bajo demanda: aplazada
 
-### Contexto
+### Decisión y justificación
 
-El sistema ejecuta tareas periódicas (calendar, mediaReleases, docker) que consultan APIs externas y guardan resultados en un almacén de snapshots (`ctx.store`) junto con un registro de ejecuciones (`ctx.runLog`).
+Las instantáneas programadas se actualizan mediante sondeo, no mediante invalidación activada por mutaciones. Coordinar la mutación, la invalidación y la reejecución inmediata añadiría estado compartido y condiciones de carrera mientras la API sigue evolucionando.
 
-### La Decisión
+La tarea de Docker usa de forma predeterminada un intervalo de 30 segundos y `runOnStart: true`. Las lecturas directas de Docker pueden devolver datos de contenedores más recientes que la instantánea de estadísticas. No debe interpretarse esta decisión como una prohibición de consultas en directo ni como una garantía de una ventana exacta de vigencia de los datos.
 
-- **Todas las lecturas (queries tRPC)** usan **snapshot + runLog**: leen el último resultado guardado en `ctx.store` y el estado de la última ejecución en `ctx.runLog`, sin disparar llamadas de red en tiempo de respuesta.
-- **Todas las mutaciones** (control de Docker, pausa/reanudación de descargas, etc.) usan **llamadas directas** a la integración correspondiente, sin pasar por el scheduler ni el snapshot store.
+**Contexto histórico:** se dejó pendiente reconsiderar la invalidación bajo demanda, la actualización manual y las actualizaciones enviadas por el servidor tras estabilizar la API; esto es una justificación, no un compromiso de entrega.
 
-### Por qué
+Fuente: [tarea de Docker](../apps/server/src/tasks/docker-task.ts).
 
-- **Latencia predecible**: Las queries responden en milisegundos desde memoria local, no dependen de la latencia de red de Sonarr/Radarr/Docker/Prometheus.
-- **Consistencia**: El cliente siempre ve el estado "confirmado" por la última ejecución exitosa de la tarea, junto con metadatos de cuándo fue y si hubo errores.
-- **Control de concurrencia**: Las mutaciones ejecutan directamente contra la API del servicio, permitiendo control fino (pausar un torrent específico, reiniciar un contenedor específico) sin esperar al siguiente ciclo de la tarea periódica.
-- **Separación de responsabilidades**: El scheduler se encarga de _observar_ (polling), las mutaciones se encargan de _actuar_ (comandos).
+## 8. Docker: lectura agregada y control dirigido
 
-### Implementación
+### Contratos actuales
 
-- Routers `calendar`, `mediaReleases`, `docker.getContainers`: usan `ctx.store.get(key)` + `ctx.runLog.last(taskId)`.
-- Router `docker` mutaciones (`startAll`, `stopAll`, `restartAll`, `removeAll`): iteran integraciones Docker y llaman `startContainerAsync`/`stopContainerAsync`/etc. directamente.
-- Router `downloads` mutaciones: llaman `pauseQueueAsync`/`resumeQueueAsync`/`pauseItemAsync`/etc. directamente.
+| Procedimiento                                        | Entrada y salida                                                                                                                                                                                                                            |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `getContainers`                                  | Sin entrada; devuelve entradas `{ integration, status, stats, containers }`. `stats` procede de la instantánea programada (estadísticas a cero si no existe); `containers` se obtiene en directo. Las solicitudes fallidas a integraciones se omiten del agregado. |
+| `getContainerList`                               | `{ integrationId }`; devuelve `DockerContainer[]` validado mediante esquema a partir de una solicitud en directo.                                                                                                                             |
+| `getContainerLogs`                               | `{ integrationId, containerId, ...logOptions }`; devuelve `string[]`. Los valores predeterminados incluyen `tail: 100`, stdout/stderr habilitados y marcas temporales/seguimiento deshabilitados.                                               |
+| `getContainerStats`                              | `{ integrationId, containerId }`; solicitud en directo, la salida del enrutador es `z.unknown()`.                                                                                                                                             |
+| `getSystemStats`                                 | `{ integrationId }`; solicitud en directo, la salida del enrutador es `z.unknown()`.                                                                                                                                                          |
+| `startAll`, `stopAll`, `restartAll`, `removeAll` | `{ integrationId, ids: string[] }`; se dirigen a una integración Docker y se resuelven con `void` si tienen éxito.                                                                                                                             |
 
----
+Las operaciones de control intentan procesar cada ID proporcionado de forma secuencial. Los fallos se registran; cualquier fallo provoca un error tRPC al terminar los intentos, aunque las operaciones sobre otros contenedores hayan tenido éxito. No es una transacción atómica. El enrutador acepta un arreglo `ids` vacío; el esquema independiente `dockerContainerActionInputSchema` exige al menos un ID, por lo que esos validadores no son intercambiables.
 
-## 7. Evaluación de Caché On-Demand: Diferida hasta Estabilidad de API
+`dockerTask` sondea `getDashboardStatsAsync()` y almacena estadísticas, no la lista de contenedores devuelta por la consulta agregada. Existen contratos de políticas de Docker, pero el arranque del servidor solo copia actualmente las políticas de calendario y lanzamientos multimedia al mapa de políticas de tareas; las personalizaciones persistidas de Docker no se aplican ahí.
 
-### Contexto
+**Contexto histórico:** la descripción original del enrutador solo cubría `getContainers` y cuatro mutaciones, omitía el estado y los datos de contenedores en directo, y describía incorrectamente `{ ids }` como entrada suficiente para el enrutamiento.
 
-Los snapshots actuales se actualizan en intervalos fijos (30s para Docker, configurable para calendar/mediaReleases). Un patrón alternativo sería invalidar/actualizar el caché on-demand tras una mutación exitosa.
+Fuentes: [enrutador de Docker](../apps/server/src/routers/docker.ts), [contratos de Docker](../packages/contracts/src/docker.ts), [tarea de Docker](../apps/server/src/tasks/docker-task.ts), [inicialización del servidor](../apps/server/src/server.ts).
 
-### La Decisión
+## 9. Prometheus: métricas normalizadas, sin enrutadores por métrica
 
-**No implementar invalidación de caché on-demand en esta fase.** Se mantiene el intervalo fijo del scheduler como única fuente de actualización de snapshots.
+### Decisión y salida actual
 
-### Por qué
+Mantener `systemHealth.getAllMetrics` y `getMetrics`; no añadir procedimientos separados para CPU, memoria, disco o red sin una necesidad concreta.
 
-- **Complejidad vs. valor**: Invalidar on-demand requiere coordinar mutación + invalidación + posible re-ejecución inmediata de la tarea, añadiendo estado compartido y race conditions.
-- **API inestable**: Los contratos tRPC y las integraciones aún están en evolución. Añadir lógica de caché reactiva ahora crea deuda técnica que se descartaría al estabilizar la API.
-- **Acceptable UX**: Con intervalos de 30s (Docker) y configurables (otros), la stale-read window es aceptable para un dashboard de monitoreo personal.
-- **Deferred decision**: Cuando la API sea estable (v1.0), se evaluará: invalidación on-demand, `refetch` manual en UI, o WebSockets/push para updates en tiempo real.
+- `getAllMetrics` descubre, normaliza y agrega métricas en el servidor. Devuelve una entrada `{ integration, server, metrics: ServerMetrics[] }` por instancia descubierta, que actualmente contiene un agregado en `metrics`. Las integraciones fallidas no aportan entradas.
+- `getMetrics({ server })` busca primero una integración cuyo **ID** sea igual a `server` y después pasa la misma cadena a `getServerMetricsAsync`, reutilizando los datos descubiertos. Devuelve `null` si no existe una integración compatible que coincida; en caso contrario, devuelve `{ integration, metrics }` con un arreglo vacío cuando las métricas no están disponibles o falla su obtención. El parámetro no es un selector independiente de instancias.
+- `ServerMetrics` agrupa CPU, memoria, discos, red y sensores. Los contratos usan `z.custom<ServerMetrics[]>()`, que proporciona el tipo de TypeScript pero no valida en profundidad esa estructura de métricas en tiempo de ejecución.
 
----
+**Contexto histórico:** la descripción anterior de datos sin procesar de tipo `unknown[]` está obsoleta. La normalización ya existe; aplazar los puntos de acceso por métrica no implica aplazar los datos estructurados.
 
-## 8. Integración Docker: Router Completo con getContainers + Mutaciones
+Fuentes: [enrutador del estado del sistema](../apps/server/src/routers/systemHealth.ts), [contratos de resultados](../packages/contracts/src/result.ts), [tipos de métricas](../packages/contracts/src/system-health-types.ts).
 
-### Contexto
+## 10. Credenciales de qBittorrent: nombre de usuario y contraseña obligatorios
 
-Docker es una integración bidireccional natural: monitoreo de contenedores (read) + control de ciclo de vida (start/stop/restart/remove).
+### Decisión y contrato actual
 
-### La Decisión
+Admitir en esta integración el inicio de sesión mediante formulario con nombre de usuario y contraseña:
 
-Crear `dockerRouter` completo con:
+- La rama de qBittorrent de `upsertIntegrationInputSchema` exige `username` y `password` no vacíos; su puerto predeterminado es `8080`.
+- El objeto es `.strict()`. `apiKey` no es un campo de esa rama y se rechaza como clave desconocida, no mediante un campo explícito `z.never()`.
+- La inicialización valida los secretos obligatorios y asigna los campos de credenciales a `secrets[]`.
+- La integración envía una solicitud POST a `/api/v2/auth/login` y reutiliza la cookie SID devuelta.
 
-- **Query**: `getContainers` — retorna array de `{ integration, stats: DockerDashboardStats }` leyendo de `ctx.store` (snapshot del task `docker`).
-- **Mutaciones**: `startAll`, `stopAll`, `restartAll`, `removeAll` — input `{ ids: string[] }`, llaman directamente a métodos de la integración Docker (`startContainerAsync`, etc.) con `toIntegrationTRPCError` para errores.
+Una única vía de autenticación implementada mantiene alineados la configuración y el comportamiento en tiempo de ejecución. Es un contrato de esta integración, no una afirmación sobre la compatibilidad con claves de API en versiones concretas de qBittorrent ni sobre columnas no anulables de la base de datos.
 
-### Por qué
+**Corrección histórica:** la afirmación anterior sobre claves de API según la versión, la descripción de `z.never()` y la afirmación sobre nulabilidad de la base de datos específica del proveedor no estaban respaldadas por el contrato actual.
 
-- **Paridad con downloads**: Siguiendo el patrón del router `downloads` (lectura agregada + mutaciones por `integrationId` implícito via `ids` array).
-- **Task `docker` dedicada**: Nuevo task `dockerTask` con intervalo 30s, `runOnStart: true`, que ejecuta `getDashboardStatsAsync()` y guarda en snapshot store.
-- **Políticas de tarea**: Extendido enum `taskType` en DB y router `policies` para incluir `'docker'`, permitiendo configurar intervalo/cooldown por integración.
+Fuentes: [contratos de integración](../packages/contracts/src/integrations.ts), [inicialización](../apps/server/src/bootstrap/integrations.ts), [integración de qBittorrent](../packages/integrations/src/qbittorrent/qbittorrent-integration.ts).
 
-### Referencias
+<a id="11-superjson-removal-historical-context"></a>
 
-- `apps/server/src/routers/docker.ts` — router completo
-- `apps/server/src/tasks/docker-task.ts` — task definition
-- `apps/server/src/tasks/task-ids.ts` — `dockerSnapshot` helper
+## 11. Eliminación de SuperJSON (contexto histórico)
 
----
+La decisión de transporte anterior eliminó SuperJSON para simplificar los clientes de CLI y depuración y las pruebas HTTP: los consumidores de JSON convencional no deberían necesitar un transformador personalizado correspondiente. Esto sigue siendo coherente con la decisión 1.
 
-## 9. Prometheus: Solo getAllMetrics, Endpoints Estructurados Diferidos
+La antigua lista de archivos por fase o tarea y la nota sobre la comprobación de tipos eran notas históricas de implementación, no resultados de verificación actuales. La evidencia actual es la ausencia de un transformador personalizado en la [inicialización de tRPC](../apps/server/src/trpc.ts); este documento no afirma que todos los valores públicos conserven su tipo JavaScript original tras un recorrido de ida y vuelta por JSON.
 
-### Contexto
+## Véase también
 
-Prometheus expone métricas vía PromQL. El router `systemHealth` provee dos endpoints:
-
-- `getAllMetrics`: métricas de todas las instancias descubiertas (11 queries PromQL en paralelo)
-- `getMetrics`: métricas de un servidor específico
-
-### La Decisión
-
-**Mantener solo `getAllMetrics` y `getMetrics` (reutilizando datos descubiertos). Diferir endpoints estructurados por tipo de métrica (CPU, memoria, disco, red, etc.).**
-
-### Por qué
-
-- **Optimización existente**: `getMetrics` ya reutiliza `getDiscoveredDataAsync()` + `getServerMetricsAsync()` para evitar doble discovery + 11 queries (ver Fase 1, Task 2).
-- **YAGNI**: Endpoints estructurados (`getCpuMetrics`, `getMemoryMetrics`, etc.) requieren normalización y mapeo adicionales que no tienen caso de uso actual.
-- **Flexibilidad**: El array `metrics: unknown[]` en `getAllMetrics` permite a la UI consumir lo que necesite sin acoplar el backend a formas de presentación específicas.
-- **Future-proof**: Cuando la UI requiera vistas específicas, se añadirán normalizadores y endpoints tipados sin breaking changes.
-
----
-
-## 10. qBittorrent Credenciales: username/password requerido, apiKey prohibido
-
-### Contexto
-
-qBittorrent WebUI soporta autenticación via:
-
-- **apiKey** (header `X-Api-Key`, introducido en v4.5.0)
-- **username/password** (form login, legacy pero universal)
-
-### La Decisión
-
-Soportar **exclusivamente** `username`+`password` en la integración qBittorrent:
-
-- Schema `upsertIntegrationInputSchema` REQUIERE `username` Y `password` (ambos string.min(1)).
-- `apiKey` está explícitamente prohibido (`z.never()`). No se acepta.
-- DB: columnas `username` y `password` requeridos, `apiKey` nullable pero no usado.
-- Bootstrap: `toInput()` mapea `username`+`password` a `secrets[]` array.
-- Integración: `getClientAsync()` usa siempre `username`+`password`.
-
-### Por qué
-
-- **Simplicidad**: Un solo camino de autenticación reduce complejidad y errores.
-- **Compatibilidad**: Usuarios en versiones antiguas de qBittorrent (< 4.5) necesitan username/password (y es el único método disponible en esas versiones).
-- **Seguridad**: username/password es el método soportado universalmente; apiKey es opcional en nuevas versiones pero no necesario.
-- **Type safety**: El schema discrimine garantiza que no se pueda crear una integración qBittorrent con apiKey (el error sería silencioso en runtime).
-
----
-
-## 11. SuperJSON: Eliminado para Simplicidad CLI/Testing
-
-### Contexto
-
-SuperJSON era usado como transformer tRPC para serializar tipos como `Date`, `Set`, `Map`, `undefined`, etc.
-
-### La Decisión
-
-**Eliminar SuperJSON completamente.** Usar transformador por defecto de tRPC (JSON estándar).
-
-### Por qué
-
-- **Simplicidad CLI**: Scripts de testing y debugging (`trpc-client.test.ts`, smoke tests) fallaban o requerían setup extra para deserializar fechas.
-- **Testing directo**: `fetch` + `JSON.parse` funciona out-of-the-box contra endpoints tRPC sin transformer especial.
-- **Tipos usados**: El proyecto usa principalmente tipos primitivos + `Date` (serializados como ISO string nativo por JSON). No se usan `Set`, `Map`, `undefined`, `NaN`, `Infinity` en contratos públicos.
-- **Bundle size**: Una dependencia menos en cliente y servidor.
-
-### Cambios Realizados (Fase 1, Task 1)
-
-- Eliminado `import superjson` y `transformer: superjson` de 4 archivos:
-  - `apps/server/src/trpc.ts`
-  - `apps/server/src/trpc-client.test.ts`
-  - `apps/server/src/scripts/trpc-error-smoke.test.ts`
-  - `package.json` (dependencia removida)
-- Typecheck pasa sin errores nuevos.
-
----
-
-## Referencias Cruzadas
-
-- Ver [architecture.md](architecture.md) para la arquitectura general del sistema.
-- Ver [patterns.md](patterns.md) para el funcionamiento interno del scheduler y el registry.
+- [Arquitectura](architecture.md)
+- [Patrones](patterns.md)
+- [Guía de pruebas](TESTING.md)

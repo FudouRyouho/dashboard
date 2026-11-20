@@ -1,41 +1,21 @@
-# @dashboard/db
+# `@dashboard/db`
 
-Capa de acceso a datos con drizzle y better-sqlite3.
-Esquemas, migraciones y consultas preparadas.
+Capa de persistencia SQLite implementada con Drizzle ORM y `better-sqlite3`. Gestiona el esquema de la base de datos, las migraciones y las funciones de consulta que utilizan el servidor y los adaptadores de tareas.
 
-## Estructura
+## API pública
 
-- `src/connection.ts` — creación de conexión y tipo `DB`
-- `src/bootstrap.ts` — inicialización de la base de datos y configuración
-- `src/migrate.ts` — ejecución de migraciones
-- `src/schemas/` — esquemas de drizzle para tablas (tasks, integrations)
-- `src/queries/` — consultas preparadas para operaciones comunes (task-runs, task-snapshots)
-- `src/index.ts` — reexporta todo lo necesario para usar la capa de datos
+- `createConnection(path)` abre una conexión a la base de datos y devuelve el objeto de conexión tipado `DB` de Drizzle. No ejecuta migraciones.
+- `initializeDatabase({ path, migrationsFolder? })` abre la base de datos y aplica las migraciones. El directorio de migraciones predeterminado es la carpeta de migraciones del paquete.
+- `connect(path)` crea el directorio padre cuando es necesario y, a continuación, inicializa la base de datos y aplica las migraciones.
+- `runMigrations(db, migrationsFolder?)` aplica las migraciones a una conexión existente.
+- `schemas/` y `queries/` exponen el esquema y las funciones de consulta preparadas a través del punto de entrada del paquete.
 
-## Uso
+`@dashboard/db` no declara scripts de paquete para generar migraciones, ejecutar un comando de migración por CLI ni abrir una herramienta de exploración del esquema. Utiliza las funciones públicas de inicialización desde el código; no dependas de comandos `pnpm --filter @dashboard/db` sin documentar.
 
-Este paquete proporciona una capa de abstracción sobre la base de datos SQLite mediante drizzle-orm.
-Incluye funcionalidades para:
+## Áreas de almacenamiento
 
-1. Conexión y configuración de la base de datos
-2. Migraciones de esquema
-3. Consultas preparadas para operaciones frecuentes
-4. Tipos seguros para interactuar con los datos
+Los módulos de esquema y consultas abarcan la configuración de integraciones, las políticas de tareas, las instantáneas de tareas y el historial de ejecuciones. Las instantáneas son registros serializados como JSON y las ejecuciones de tareas se almacenan como filas; la tarea de purga de la capa de tareas realiza la limpieza según la política de retención.
 
-### Generar migraciones
+## Dependencias y pruebas
 
-```bash
-pnpm --filter @dashboard/db generate
-```
-
-### Ejecutar migraciones
-
-```bash
-pnpm --filter @dashboard/db migrate
-```
-
-### Ver el esquema
-
-```bash
-pnpm --filter @dashboard/db studio
-```
+El paquete utiliza Drizzle ORM y `better-sqlite3`. Las pruebas del repositorio comprueban el comportamiento de las consultas y las migraciones; ejecútalas desde la raíz del espacio de trabajo con `pnpm test`. Las pruebas que utilizan bases de datos deben usar bases de datos desechables y limpiar sus archivos.
